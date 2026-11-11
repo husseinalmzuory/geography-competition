@@ -109,6 +109,6 @@ header>.header-turn{grid-column:2;grid-row:1;min-width:190px;max-width:min(32vw,
 @media(max-width:720px){.choices .choice span{font-size:25px}}
 
 /* Larger question text in a clearer medium indigo. */
-.arena h1,.arena:has(.choices) h1{color:#4b46ad;font-size:clamp(32px,3.3vw,49px);line-height:1.65}
-.presentation-fit .arena h1,.presentation-fit .arena:has(.choices) h1{color:#4b46ad;font-size:max(26px,calc(40px * var(--fit)));line-height:1.55}
+.arena h1,.arena:has(.choices) h1{color:#005A9C;font-size:clamp(32px,3.3vw,49px);line-height:1.65}
+.presentation-fit .arena h1,.presentation-fit .arena:has(.choices) h1{color:#005A9C;font-size:max(26px,calc(40px * var(--fit)));line-height:1.55}
 @media(max-width:720px){.arena h1,.arena:has(.choices) h1{font-size:30px}}
