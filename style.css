@@ -171,3 +171,9 @@ header>.header-turn{grid-column:2;grid-row:1;min-width:190px;max-width:min(32vw,
 .presentation-fit .mcq-arena{gap:calc(18px * var(--fit))}
 .mcq-arena>.clockline,.presentation-fit .mcq-arena>.clockline{flex:none;margin-top:0}
 @media(max-width:720px){.mcq-layout{--clock-size:88px;--notch:55px;--half-gap:8px;min-height:270px;padding:30px 0}.mcq-layout .choices{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.mcq-layout .choice{padding:14px 12px;min-height:125px;grid-template-columns:1fr;justify-items:center;align-content:center;row-gap:6px}.mcq-layout .choice b{grid-column:1;grid-row:1}.mcq-layout .choice span{grid-column:1;grid-row:2;font-size:22px}.mcq-layout .choice em{grid-column:1;grid-row:3}.mcq-layout .choice[data-choice-label="0"],.mcq-layout .choice[data-choice-label="2"]{padding-left:28px}.mcq-layout .choice[data-choice-label="1"],.mcq-layout .choice[data-choice-label="3"]{padding-right:28px}.mcq-clock .timer{font-size:36px}.mcq-clock #timerStatus{font-size:9px}}
+
+/* Softer, slimmer time bar; red only during the final five seconds. */
+.clockline,.presentation-fit .clockline{height:12px;background:#f7edf2;border-color:#e4cbd7;border-radius:8px}
+.clockline div{background:#eab2cd;border-radius:6px;transition:width .2s linear,background-color .25s ease}
+.clockline div.time-warning{background:#d93b48}
+@media(max-width:720px){.clockline{height:12px}}
