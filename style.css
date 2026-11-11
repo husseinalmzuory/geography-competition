@@ -203,3 +203,19 @@ header>.header-turn{grid-column:2;grid-row:1;min-width:190px;max-width:min(32vw,
 .mcq-arena .mcq-layout .choices{grid-area:1/1;margin:0}
 .mcq-layout .mcq-clock{position:relative;grid-area:1/1;top:auto;left:auto;transform:none;align-self:center;justify-self:center}
 @media(max-width:720px){.mcq-arena{padding-top:40px}}
+
+/* Fixed 109px toolbar, matching the measured home-page height. */
+:root{--toolbar-height:109px}
+header,.presentation-fit header{height:var(--toolbar-height);min-height:var(--toolbar-height);max-height:var(--toolbar-height);flex:0 0 var(--toolbar-height);box-sizing:border-box;padding:12px 3%;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);grid-template-rows:1fr;align-items:center;gap:12px}
+.scoreboard[hidden]{display:none}
+@media(max-width:800px){
+ header,.presentation-fit header{padding:7px 12px;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:44px 44px;gap:5px 10px}
+ header>.brand{grid-column:1;grid-row:1;justify-self:start;gap:6px;font-size:22px;max-width:100%}
+ header>.brand span{font-size:clamp(11px,2.5vw,17px);line-height:1.5}
+ header>.brand small{font-size:8px;line-height:1.4;letter-spacing:0}
+ header>.header-turn{grid-column:2;grid-row:1;min-width:0;max-width:100%;width:100%;max-height:44px;padding:2px 6px}
+ header>.header-turn strong{font-size:clamp(15px,3vw,22px);line-height:1.4}
+ header>nav{grid-column:1/-1;grid-row:2;justify-self:stretch;width:100%;gap:6px}
+ header>nav button{min-width:0;padding:6px;font-size:11px}
+ header:has(.header-turn[hidden])>.brand{grid-column:1/-1;justify-self:center}
+}
