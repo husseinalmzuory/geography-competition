@@ -78,3 +78,23 @@ body.presentation-fit{height:100dvh;min-height:0;display:flex;flex-direction:col
 .presentation-fit .current-team small{font-size:11px}
 .presentation-fit .current-team strong{font-size:max(21px,calc(29px * var(--fit)));line-height:1.4}
 @media(max-width:720px){.current-team{min-width:0;max-width:52vw;padding:6px 12px}.current-team small{font-size:11px}.current-team strong{font-size:23px}}
+
+/* Active team centered in the persistent top toolbar. */
+header{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:12px}
+header>.brand{grid-column:1;grid-row:1;justify-self:start;min-width:0}
+header>nav{grid-column:3;grid-row:1;justify-self:end}
+header>.header-turn{grid-column:2;grid-row:1;min-width:190px;max-width:min(32vw,400px);padding:4px 18px}
+.header-turn[hidden]{display:none}
+.header-turn small{font-size:11px}.header-turn strong{font-size:clamp(21px,2vw,29px);line-height:1.45}
+.presentation-fit header>.header-turn{min-width:180px;padding:3px 14px}
+.presentation-fit .header-turn strong{font-size:max(20px,calc(25px * var(--fit)))}
+.presentation-fit .header-turn small{font-size:10px}
+/* Equal side tracks keep each option text centered in its entire box. */
+.choices .choice{display:grid;grid-template-columns:35px minmax(0,1fr) 35px;align-content:center;align-items:center;column-gap:10px;text-align:center}
+.choices .choice b{grid-column:1;grid-row:1;justify-self:center}
+.choices .choice span{grid-column:2;grid-row:1;text-align:center;overflow-wrap:anywhere}
+.choices .choice em{grid-column:1/-1;grid-row:2;text-align:center;margin:4px 0 0;max-width:none}
+.presentation-fit .choices .choice{grid-template-columns:27px minmax(0,1fr) 27px}
+.presentation-fit .choice em{max-width:none}
+@media(min-width:801px) and (max-width:1200px){header .brand span{font-size:17px}header .brand small{font-size:9px}header nav button{padding:8px 9px;font-size:11px}}
+@media(max-width:800px){header{grid-template-columns:1fr;gap:8px}header>.brand{grid-column:1;grid-row:1;justify-self:center}header>.header-turn{grid-column:1;grid-row:2;max-width:90vw;width:max-content}header>nav{grid-column:1;grid-row:3;width:100%;justify-self:stretch}.header-turn strong{font-size:24px}}
