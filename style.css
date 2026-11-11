@@ -67,3 +67,14 @@ body.presentation-fit{height:100dvh;min-height:0;display:flex;flex-direction:col
 .presentation-fit .speed-count-panel{flex:1;min-height:0;padding:0}
 .presentation-fit .speed-count{font-size:clamp(64px,calc(18vh * var(--fit)),180px)}
 .presentation-fit .speed-count-panel .hint{font-size:12px;margin:3px 0}
+
+/* Clearly identify the team receiving the current question in every round. */
+.current-team{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 24px;border:2px solid #6896ab;border-radius:12px;background:#edf5f9;color:#275e79;min-width:230px;max-width:min(48vw,580px);text-align:center}
+.current-team.b{border-color:#b99750;background:#fff6df;color:#805d1f}
+.current-team small{font-size:13px;font-weight:500;line-height:1.5}
+.current-team strong{font-size:clamp(24px,2.5vw,36px);font-weight:800;line-height:1.55;overflow-wrap:anywhere}
+.question-head>div:has(.current-team)>p{text-align:center;margin-top:4px}
+.presentation-fit .current-team{padding:calc(5px * var(--fit)) 20px;min-width:230px}
+.presentation-fit .current-team small{font-size:11px}
+.presentation-fit .current-team strong{font-size:max(21px,calc(29px * var(--fit)));line-height:1.4}
+@media(max-width:720px){.current-team{min-width:0;max-width:52vw;padding:6px 12px}.current-team small{font-size:11px}.current-team strong{font-size:23px}}
