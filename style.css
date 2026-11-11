@@ -133,3 +133,8 @@ header>.header-turn{grid-column:2;grid-row:1;min-width:190px;max-width:min(32vw,
 .presentation-fit .choices .choice{grid-template-columns:1.8em minmax(0,1fr) 1.8em}
 .presentation-fit .choices .choice b,.presentation-fit .choices .choice span{font-size:var(--option-font-size)}
 @media(max-width:720px){.choices{--option-font-size:25px}}
+
+/* Prominent audience-facing time bar: green → amber → red as time runs out. */
+.clockline,.presentation-fit .clockline{height:18px;flex-shrink:0;border-radius:10px;background:#dce3e9;border:1px solid #b5c3cd;box-shadow:inset 0 1px 3px #17365720;margin:10px 0}
+.clockline div{--time-hue:120;border-radius:8px;background:linear-gradient(180deg,hsl(var(--time-hue) 70% 48%),hsl(var(--time-hue) 78% 35%));transition:width .2s linear}
+@media(max-width:720px){.clockline{height:16px}}
