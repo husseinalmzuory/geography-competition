@@ -177,3 +177,16 @@ header>.header-turn{grid-column:2;grid-row:1;min-width:190px;max-width:min(32vw,
 .clockline div{background:#eab2cd;border-radius:6px;transition:width .2s linear,background-color .25s ease}
 .clockline div.time-warning{background:#d93b48}
 @media(max-width:720px){.clockline{height:12px}}
+
+/* Draw the complete concave border, including the arc around the timer. */
+.mcq-layout .choices .choice{isolation:isolate;position:relative;border:0;background:transparent;mask-image:none;--card-outline:#d2deeb;--card-fill:#f4f8fc}
+.mcq-layout .choices .choice.selected{--card-outline:#176cb3;--card-fill:#e8f3ff;background:transparent}
+.mcq-layout .choices .choice.correct{--card-outline:#2c7b47;--card-fill:#e6f4e7;background:transparent}
+.mcq-layout .choices .choice.incorrect{--card-outline:#b95340;--card-fill:#faeae6;background:transparent}
+.mcq-layout .choices .choice:before,.mcq-layout .choices .choice:after{content:"";position:absolute;pointer-events:none;border-radius:12px}
+.mcq-layout .choices .choice:before{inset:0;z-index:-2;background:var(--card-outline);mask-image:var(--outer-cut)}
+.mcq-layout .choices .choice:after{inset:2px;z-index:-1;border-radius:10px;background:var(--card-fill);mask-image:var(--inner-cut)}
+.mcq-layout .choices .choice[data-choice-label="0"]{--outer-cut:radial-gradient(circle at calc(0% - var(--half-gap)) calc(100% + var(--half-gap)),transparent var(--notch),#000 calc(var(--notch) + 1px));--inner-cut:radial-gradient(circle at calc(0% - var(--half-gap) - 2px) calc(100% + var(--half-gap) + 2px),transparent calc(var(--notch) + 2px),#000 calc(var(--notch) + 3px))}
+.mcq-layout .choices .choice[data-choice-label="1"]{--outer-cut:radial-gradient(circle at calc(100% + var(--half-gap)) calc(100% + var(--half-gap)),transparent var(--notch),#000 calc(var(--notch) + 1px));--inner-cut:radial-gradient(circle at calc(100% + var(--half-gap) + 2px) calc(100% + var(--half-gap) + 2px),transparent calc(var(--notch) + 2px),#000 calc(var(--notch) + 3px))}
+.mcq-layout .choices .choice[data-choice-label="2"]{--outer-cut:radial-gradient(circle at calc(0% - var(--half-gap)) calc(0% - var(--half-gap)),transparent var(--notch),#000 calc(var(--notch) + 1px));--inner-cut:radial-gradient(circle at calc(0% - var(--half-gap) - 2px) calc(0% - var(--half-gap) - 2px),transparent calc(var(--notch) + 2px),#000 calc(var(--notch) + 3px))}
+.mcq-layout .choices .choice[data-choice-label="3"]{--outer-cut:radial-gradient(circle at calc(100% + var(--half-gap)) calc(0% - var(--half-gap)),transparent var(--notch),#000 calc(var(--notch) + 1px));--inner-cut:radial-gradient(circle at calc(100% + var(--half-gap) + 2px) calc(0% - var(--half-gap) - 2px),transparent calc(var(--notch) + 2px),#000 calc(var(--notch) + 3px))}
