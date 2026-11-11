@@ -59,3 +59,11 @@ body.presentation-fit{height:100dvh;min-height:0;display:flex;flex-direction:col
 .presentation-fit #stage>.progress{flex:none;font-size:11px;line-height:1.4;margin:0}
 .presentation-fit footer{flex:none;width:100%;max-width:1500px;padding:calc(6px * var(--fit)) 3%;font-size:10px}
 @media(max-width:999px){#stage>.controls{flex-wrap:wrap}.rounds{grid-template-columns:1fr}.roundtile{border-bottom:1px solid var(--line)}}
+
+/* Per-challenge tally, independent of team scores and timer. */
+.speed-count-panel{min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px}
+.speed-count{display:block;font-size:clamp(88px,16vh,180px);line-height:1.15;font-weight:800;font-variant-numeric:tabular-nums;color:#493c2e;text-align:center;overflow-wrap:anywhere}
+.speed-count-panel .hint{margin:4px 0 8px}
+.presentation-fit .speed-count-panel{flex:1;min-height:0;padding:0}
+.presentation-fit .speed-count{font-size:clamp(64px,calc(18vh * var(--fit)),180px)}
+.presentation-fit .speed-count-panel .hint{font-size:12px;margin:3px 0}
