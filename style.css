@@ -14,3 +14,29 @@ main{padding-top:25px}.team{border-color:#85d6fa}.team.b{border-color:#f3c94f}.t
 footer{color:#bddbf0;border-top-color:#91c3e866}footer button{color:#d0e7f7}footer button:hover{background:#ffffff15}dialog{background:#f5f9fd;color:#173657}dialog .primary{background:#075ca8;color:white;border-color:#075ca8}dialog .actions button:not(.primary),.dialoghead button{color:#173657;background:white;border-color:#cad7e5}.dialoghead{gap:12px;flex-wrap:wrap}.dialoghead h2{margin-left:auto}#error{color:#b4392d}
 @media(max-width:800px){header{padding:12px 18px;gap:11px;flex-wrap:wrap}.brand span{font-size:18px}.brand small{font-size:10px}nav{width:100%;justify-content:center;gap:6px}nav button{flex:1;font-size:12px;padding:8px 9px;white-space:nowrap}.hero{padding-top:22px}.hero h1{font-size:35px}.gaw-word{font-size:60px}.hero p{font-size:15px}.roundtile strong{font-size:19px}.question-head{gap:14px}html{scroll-padding-top:155px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* Gentle 64-second cloud → rain → snow → sunshine cycle. */
+body{isolation:isolate;background:linear-gradient(180deg,#73c5ee 0%,#a6ddf7 65%,#d5effb 100%);color:#143d60}
+.weather{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;contain:strict}
+.weather-clouds{position:absolute;inset:0;animation:cloud-phase 64s linear infinite}
+.weather-cloud{position:absolute;left:0;top:var(--top);width:240px;height:70px;border-radius:100px;background:#fffffff0;box-shadow:0 8px 30px #79a9c61a;animation:cloud-drift var(--duration) linear infinite;animation-delay:var(--delay);transform:translateX(110vw);opacity:.85}
+.weather-cloud:before,.weather-cloud:after{content:"";position:absolute;background:inherit;border-radius:50%}
+.weather-cloud:before{width:100px;height:100px;left:38px;bottom:15px}.weather-cloud:after{width:125px;height:125px;right:27px;bottom:5px}
+.weather-rain,.weather-snow{position:absolute;inset:0;opacity:0}
+.weather-rain{animation:rain-phase 64s linear infinite}.weather-snow{animation:snow-phase 64s linear infinite}
+.weather-rain i,.weather-snow i{position:absolute;top:-30px;left:var(--x);animation:precip-fall var(--fall) linear infinite;animation-delay:var(--delay)}
+.weather-rain i{width:2px;height:22px;background:#458cb799;border-radius:3px}
+.weather-snow i{width:var(--size);height:var(--size);border-radius:50%;background:#fff;box-shadow:0 0 7px #ffffff99;animation-name:snow-fall}
+.weather-sun{position:absolute;top:13%;right:9%;width:110px;height:110px;background:#ffe28a;border-radius:50%;box-shadow:0 0 40px 18px #ffe59a77,0 0 95px 35px #fff4c455;opacity:0;animation:sun-phase 64s linear infinite}
+@keyframes cloud-drift{from{transform:translateX(calc(100vw + 280px))}to{transform:translateX(-300px)}}
+@keyframes cloud-phase{0%,58%{opacity:1}68%,90%{opacity:.08}100%{opacity:1}}
+@keyframes rain-phase{0%,19%{opacity:0}25%,39%{opacity:.65}45%,100%{opacity:0}}
+@keyframes snow-phase{0%,40%{opacity:0}47%,59%{opacity:.85}67%,100%{opacity:0}}
+@keyframes sun-phase{0%,61%{opacity:0;transform:translateY(20px)}72%,90%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(20px)}}
+@keyframes precip-fall{to{transform:translate(-70px,calc(100vh + 60px))}}
+@keyframes snow-fall{50%{margin-left:22px}to{transform:translate(-95px,calc(100vh + 60px))}}
+.hero h1,.team strong{color:#123d61}.hero p,.hero .resume,.question-head p,.progress,.hint,.versus,.versus small,.roundtile span,footer,footer button{color:#285577!important}
+.gaw-word,.hero .eyebrow,.roundtile small,.question-head .eyebrow,.team.b strong,.end .big{color:#8b5e08}
+.rounds,footer{border-color:#5487aa66}.roundtile{color:#173f61;border-color:#5487aa44}.roundtile:hover{background:#ffffff55}
+.team{border-color:#1675b1}.team.b{border-color:#bd8c28}.team button,.controls button,.end button{color:#173f61;background:#ffffffbb;border-color:#78a7c4}.team button:hover,.controls button:hover{background:#fff}.turn{color:#075c91}.turn.b{color:#8b5e08}
+@media(prefers-reduced-motion:reduce){.weather *{animation:none!important}.weather-clouds{opacity:.65}.weather-cloud{transform:translateX(15vw)}.weather-cloud:nth-child(2n){transform:translateX(65vw)}.weather-rain,.weather-snow{display:none}.weather-sun{opacity:1}}
