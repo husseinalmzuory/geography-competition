@@ -194,3 +194,12 @@ header>.header-turn{grid-column:2;grid-row:1;min-width:190px;max-width:min(32vw,
 /* Match the existing toolbar brown; keep red for the final five seconds. */
 .clockline div{background:#64513fed}
 .clockline div.time-warning{background:#d93b48}
+
+/* Double the space above MCQ text and tighten the question-to-options gap. */
+.mcq-arena{padding-top:60px}
+.presentation-fit .mcq-arena{padding-top:calc(28px * var(--fit))}
+.mcq-arena,.presentation-fit .mcq-arena{gap:10px}
+.mcq-arena .mcq-layout{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:max-content;align-content:start;justify-items:center;align-items:start;padding-top:12px;padding-bottom:24px}
+.mcq-arena .mcq-layout .choices{grid-area:1/1;margin:0}
+.mcq-layout .mcq-clock{position:relative;grid-area:1/1;top:auto;left:auto;transform:none;align-self:center;justify-self:center}
+@media(max-width:720px){.mcq-arena{padding-top:40px}}
