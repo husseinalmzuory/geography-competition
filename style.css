@@ -226,3 +226,11 @@ header>.home-logos[hidden]{display:none}
 .home-logos img{display:block;height:78px;width:auto;max-width:86px;object-fit:contain;flex:none}
 .logo-divider{height:48px;width:1px;background:#d9c5a877;flex:none}
 @media(max-width:800px){header>.home-logos{grid-column:2;grid-row:1;height:44px;min-width:0;gap:12px}.home-logos img{height:42px;max-width:47px}.logo-divider{height:30px}header:has(.home-logos:not([hidden]))>.brand{grid-column:1;justify-self:start}}
+
+/* University marks flank the active team label in question toolbars. */
+header>.header-turn,.presentation-fit header>.header-turn{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:12px;width:max-content;min-width:0;max-width:min(44vw,560px);height:83px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+header>.header-turn[hidden]{display:none}
+.header-turn .team-toolbar-logo{display:block;height:68px;width:auto;max-width:75px;object-fit:contain;flex:none}
+header>.header-turn strong{min-width:150px;max-width:300px;padding:7px 15px;border:2px solid #6896ab;border-radius:12px;background:#edf5f9;color:#275e79;line-height:1.4;overflow-wrap:anywhere}
+header>.header-turn.b strong{border-color:#b99750;background:#fff6df;color:#805d1f}
+@media(max-width:800px){header>.header-turn,.presentation-fit header>.header-turn{width:100%;max-width:100%;height:44px;max-height:44px;gap:5px}.header-turn .team-toolbar-logo{height:32px;max-width:34px}header>.header-turn strong{flex:1;min-width:0;max-width:100%;padding:3px 5px;font-size:clamp(12px,2.4vw,19px);line-height:1.3;border-radius:8px}}
