@@ -285,7 +285,14 @@ window.GEOGRAPHY_BANK = [
     "team": 0,
     "q": "ما اسم الظاهرة النهرية في الصورة؟",
     "answer": "الالتواءات النهرية (المياندرات)",
-    "image": "assets/river.jpg"
+    "image": "assets/river.jpg",
+    "options": [
+      "الالتواءات النهرية (المياندرات)",
+      "الشلالات",
+      "الأودية الخانقية",
+      "المراوح الفيضية"
+    ],
+    "correctIndex": 0
   },
   {
     "id": "visual1",
@@ -293,7 +300,14 @@ window.GEOGRAPHY_BANK = [
     "team": 1,
     "q": "ما الشكل الترسيبي الظاهر عند مصب النهر؟",
     "answer": "الدلتا النهرية، وتظهر هنا دلتا النيل.",
-    "image": "assets/delta.jpg"
+    "image": "assets/delta.jpg",
+    "options": [
+      "المروحة الفيضية",
+      "الدلتا النهرية، وتظهر هنا دلتا النيل.",
+      "الكثبان الرملية",
+      "السهل الفيضي"
+    ],
+    "correctIndex": 1
   },
   {
     "id": "visual2",
@@ -301,7 +315,14 @@ window.GEOGRAPHY_BANK = [
     "team": 0,
     "q": "ما الظاهرة الجوية في الصورة؟",
     "answer": "الإعصار القمعي (التورنادو)",
-    "image": "assets/tornado.jpg"
+    "image": "assets/tornado.jpg",
+    "options": [
+      "العاصفة الرملية",
+      "الضباب",
+      "الإعصار القمعي (التورنادو)",
+      "الشفق القطبي"
+    ],
+    "correctIndex": 2
   },
   {
     "id": "visual3",
@@ -309,7 +330,14 @@ window.GEOGRAPHY_BANK = [
     "team": 1,
     "q": "ما اسم هذا التشكّل الصخري؟",
     "answer": "الأعمدة البازلتية",
-    "image": "assets/basalt.jpg"
+    "image": "assets/basalt.jpg",
+    "options": [
+      "الكثبان الرملية",
+      "الهوابط الكهفية",
+      "المصاطب النهرية",
+      "الأعمدة البازلتية"
+    ],
+    "correctIndex": 3
   },
   {
     "id": "visual4",
@@ -317,7 +345,14 @@ window.GEOGRAPHY_BANK = [
     "team": 0,
     "q": "ما اسم الدولة التي يمثّلها الشكل الجغرافي؟",
     "answer": "العراق",
-    "image": "assets/map-irq.svg"
+    "image": "assets/map-irq.svg",
+    "options": [
+      "العراق",
+      "سوريا",
+      "الأردن",
+      "إيران"
+    ],
+    "correctIndex": 0
   },
   {
     "id": "visual5",
@@ -325,7 +360,14 @@ window.GEOGRAPHY_BANK = [
     "team": 1,
     "q": "ما اسم الدولة التي يمثّلها الشكل الجغرافي؟",
     "answer": "مصر",
-    "image": "assets/map-egy.svg"
+    "image": "assets/map-egy.svg",
+    "options": [
+      "ليبيا",
+      "مصر",
+      "السودان",
+      "الجزائر"
+    ],
+    "correctIndex": 1
   },
   {
     "id": "visual6",
@@ -333,7 +375,14 @@ window.GEOGRAPHY_BANK = [
     "team": 0,
     "q": "ما اسم الدولة التي يمثّلها الشكل الجغرافي؟",
     "answer": "إيطاليا",
-    "image": "assets/map-ita.svg"
+    "image": "assets/map-ita.svg",
+    "options": [
+      "اليونان",
+      "إسبانيا",
+      "إيطاليا",
+      "البرتغال"
+    ],
+    "correctIndex": 2
   },
   {
     "id": "visual7",
@@ -341,7 +390,14 @@ window.GEOGRAPHY_BANK = [
     "team": 1,
     "q": "ما اسم الدولة التي يمثّلها الشكل الجغرافي؟",
     "answer": "اليابان",
-    "image": "assets/map-jpn.svg"
+    "image": "assets/map-jpn.svg",
+    "options": [
+      "إندونيسيا",
+      "الفلبين",
+      "نيوزيلندا",
+      "اليابان"
+    ],
+    "correctIndex": 3
   },
   {
     "id": "visual8",
@@ -349,7 +405,14 @@ window.GEOGRAPHY_BANK = [
     "team": 0,
     "q": "ما اسم الدولة التي يمثّلها الشكل الجغرافي؟",
     "answer": "السعودية",
-    "image": "assets/map-sau.svg"
+    "image": "assets/map-sau.svg",
+    "options": [
+      "السعودية",
+      "اليمن",
+      "عُمان",
+      "الإمارات"
+    ],
+    "correctIndex": 0
   },
   {
     "id": "visual9",
@@ -357,7 +420,14 @@ window.GEOGRAPHY_BANK = [
     "team": 1,
     "q": "ما اسم الدولة التي يمثّلها الشكل الجغرافي؟",
     "answer": "الهند",
-    "image": "assets/map-ind.svg"
+    "image": "assets/map-ind.svg",
+    "options": [
+      "باكستان",
+      "الهند",
+      "بنغلاديش",
+      "تايلاند"
+    ],
+    "correctIndex": 1
   },
   {
     "id": "visual10",
@@ -365,7 +435,14 @@ window.GEOGRAPHY_BANK = [
     "team": 0,
     "q": "ما اسم الدولة التي يمثّلها الشكل الجغرافي؟",
     "answer": "البرازيل",
-    "image": "assets/map-bra.svg"
+    "image": "assets/map-bra.svg",
+    "options": [
+      "الأرجنتين",
+      "المكسيك",
+      "البرازيل",
+      "كولومبيا"
+    ],
+    "correctIndex": 2
   },
   {
     "id": "visual11",
@@ -373,7 +450,14 @@ window.GEOGRAPHY_BANK = [
     "team": 1,
     "q": "ما اسم الدولة التي يمثّلها الشكل الجغرافي؟",
     "answer": "أستراليا",
-    "image": "assets/map-aus.svg"
+    "image": "assets/map-aus.svg",
+    "options": [
+      "غرينلاند",
+      "مدغشقر",
+      "آيسلندا",
+      "أستراليا"
+    ],
+    "correctIndex": 3
   },
   {
     "id": "visual12",
@@ -381,7 +465,14 @@ window.GEOGRAPHY_BANK = [
     "team": 0,
     "q": "ما اسم الدولة التي يمثّلها الشكل الجغرافي؟",
     "answer": "إسبانيا",
-    "image": "assets/map-esp.svg"
+    "image": "assets/map-esp.svg",
+    "options": [
+      "إسبانيا",
+      "البرتغال",
+      "فرنسا",
+      "إيطاليا"
+    ],
+    "correctIndex": 0
   },
   {
     "id": "visual13",
@@ -389,7 +480,14 @@ window.GEOGRAPHY_BANK = [
     "team": 1,
     "q": "ما اسم الدولة التي يمثّلها الشكل الجغرافي؟",
     "answer": "ألمانيا",
-    "image": "assets/map-deu.svg"
+    "image": "assets/map-deu.svg",
+    "options": [
+      "بولندا",
+      "ألمانيا",
+      "النمسا",
+      "رومانيا"
+    ],
+    "correctIndex": 1
   },
   {
     "id": "visual14",
@@ -397,7 +495,14 @@ window.GEOGRAPHY_BANK = [
     "team": 0,
     "q": "ما اسم الدولة التي يمثّلها الشكل الجغرافي؟",
     "answer": "تركيا",
-    "image": "assets/map-tur.svg"
+    "image": "assets/map-tur.svg",
+    "options": [
+      "اليونان",
+      "إيران",
+      "تركيا",
+      "سوريا"
+    ],
+    "correctIndex": 2
   },
   {
     "id": "visual15",
@@ -405,7 +510,14 @@ window.GEOGRAPHY_BANK = [
     "team": 1,
     "q": "ما اسم الدولة التي يمثّلها الشكل الجغرافي؟",
     "answer": "إيران",
-    "image": "assets/map-irn.svg"
+    "image": "assets/map-irn.svg",
+    "options": [
+      "أفغانستان",
+      "باكستان",
+      "العراق",
+      "إيران"
+    ],
+    "correctIndex": 3
   },
   {
     "id": "visual16",
@@ -413,7 +525,14 @@ window.GEOGRAPHY_BANK = [
     "team": 0,
     "q": "ما اسم الدولة التي يمثّلها الشكل الجغرافي؟",
     "answer": "مدغشقر",
-    "image": "assets/map-mdg.svg"
+    "image": "assets/map-mdg.svg",
+    "options": [
+      "مدغشقر",
+      "سريلانكا",
+      "نيوزيلندا",
+      "كوبا"
+    ],
+    "correctIndex": 0
   },
   {
     "id": "visual17",
@@ -421,7 +540,14 @@ window.GEOGRAPHY_BANK = [
     "team": 1,
     "q": "ما اسم الدولة التي يمثّلها الشكل الجغرافي؟",
     "answer": "جنوب أفريقيا",
-    "image": "assets/map-zaf.svg"
+    "image": "assets/map-zaf.svg",
+    "options": [
+      "ناميبيا",
+      "جنوب أفريقيا",
+      "بوتسوانا",
+      "أنغولا"
+    ],
+    "correctIndex": 1
   },
   {
     "id": "visual18",
@@ -429,7 +555,14 @@ window.GEOGRAPHY_BANK = [
     "team": 0,
     "q": "ما اسم الدولة التي يمثّلها الشكل الجغرافي؟",
     "answer": "الأرجنتين",
-    "image": "assets/map-arg.svg"
+    "image": "assets/map-arg.svg",
+    "options": [
+      "تشيلي",
+      "البرازيل",
+      "الأرجنتين",
+      "بيرو"
+    ],
+    "correctIndex": 2
   },
   {
     "id": "visual19",
@@ -437,7 +570,14 @@ window.GEOGRAPHY_BANK = [
     "team": 1,
     "q": "ما اسم الدولة التي يمثّلها الشكل الجغرافي؟",
     "answer": "المملكة المتحدة",
-    "image": "assets/map-gbr.svg"
+    "image": "assets/map-gbr.svg",
+    "options": [
+      "إيرلندا",
+      "آيسلندا",
+      "النرويج",
+      "المملكة المتحدة"
+    ],
+    "correctIndex": 3
   },
   {
     "id": "speed0",
