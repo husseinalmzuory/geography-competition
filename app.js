@@ -3,18 +3,27 @@ const rounds=[{name:'هەلبژارتن',description:'پرسیار و چار ه�
 const defaults=window.GEOGRAPHY_BANK.map(q=>({...q,round:q.round===2?3:q.round===3?2:q.round})).sort((a,b)=>a.round-b.round);
 const BANK_VERSION=9;
 const KEY='geography-competition-v1';
-const DEFAULT_TEAM_NAMES=['هێزا جوگراڤی','دلێ جوگرافيێ'];
-const DEFAULT_TEAM_MEMBERS=[["پیلان کمال فخرالدین","رێژين فرحان حامد","دیدار خیر الدین نجم الدین","سفیان حازم خدر","دلفين نقيب صبري","جنان الياس جمعه","لؤي صدقي محمدسعيد"],["رويدة جاسم عمران","نقار عمران محمد صديق","دلگه ش أحمد زبير","مينا محمدعلي حازم","نەوزاد شاهين طه","رنگين سكتان محمد","شرمين مصطفى شينو"]];
+const TEAM_ROSTER_VERSION=1;
+const DEFAULT_TEAM_NAMES=["هيزا جوكرافي","دلئ جوكرافي"];
+const DEFAULT_TEAM_MEMBERS=[["پیلان کمال فخر الدین","رێژین فرحان حامد","دیدار خیر الدین نجم الدین","دلڤين نقیب صبری","سفيان حازم خدر","جنان الياس جمعه","شەرمین مصطفى شينو"],["رويدة جاسم عران","نڤار عمران محمد صديق","مینا محمدعلی حازم","دلگه ش أحمد زبير","نەوزاد شاهین طە","رنگين سگڤان محمد","لؤي صدقي محمدسعيد"]];
 const DEFAULT_AUDIENCE_QUESTION='مەزنترین ئۆقیانووسێ جیهانێ کیژە؟';
 const DEFAULT_AUDIENCE_ANSWER='ئۆقیانووسا ئارام (Pacific)';
-function fresh(){return {roundIntro:null,visualIntro:null,speedIntro:null,audience:null,audienceQuestion:DEFAULT_AUDIENCE_QUESTION,audienceAnswer:DEFAULT_AUDIENCE_ANSWER,names:[...DEFAULT_TEAM_NAMES],members:structuredClone(DEFAULT_TEAM_MEMBERS),scores:[0,0],index:-1,resumeIndex:null,questions:structuredClone(defaults),awarded:{},revealed:{},sound:true,choices:{},speedCounts:{},buzzerAwards:{},unlocked:{},bankVersion:BANK_VERSION};}
-let state;try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved&&!saved.bankVersion)saved.bankVersion=1;state=saved&&Array.isArray(saved.questions)&&saved.questions.length&&Array.isArray(saved.names)&&Array.isArray(saved.scores)?{...fresh(),...saved}:fresh();}catch{state=fresh();}
+function fresh(){return {teamRosterVersion:TEAM_ROSTER_VERSION,roundIntro:null,visualIntro:null,speedIntro:null,audience:null,audienceQuestion:DEFAULT_AUDIENCE_QUESTION,audienceAnswer:DEFAULT_AUDIENCE_ANSWER,names:[...DEFAULT_TEAM_NAMES],members:structuredClone(DEFAULT_TEAM_MEMBERS),scores:[0,0],index:-1,resumeIndex:null,questions:structuredClone(defaults),awarded:{},revealed:{},sound:true,choices:{},speedCounts:{},buzzerAwards:{},unlocked:{},bankVersion:BANK_VERSION};}
+let state;try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved&&!saved.bankVersion)saved.bankVersion=1;state=saved&&Array.isArray(saved.questions)&&saved.questions.length&&Array.isArray(saved.names)&&Array.isArray(saved.scores)?{...fresh(),...saved,teamRosterVersion:saved.teamRosterVersion||0}:fresh();}catch{state=fresh();}
 // Update old generic names, preserving names already customized in Settings.
 let namesUpdated=false;
 state.names=state.names.map((name,i)=>{if(!name||name===['الفريق الأول','الفريق الثاني'][i]||(i===1&&name==='لێدانا جوگرافیایێ')){namesUpdated=true;return DEFAULT_TEAM_NAMES[i];}return name;});
 if(namesUpdated)save();
 // Preserve editable rosters in older locally saved games, without resetting scores.
 if(!Array.isArray(state.members)||state.members.length!==2||state.members.some(m=>!Array.isArray(m)))state.members=structuredClone(DEFAULT_TEAM_MEMBERS);
+// Apply the corrected team names and ordered rosters once to existing browsers.
+// Scores, questions, intro screens and progress stay exactly as saved.
+if(state.teamRosterVersion<TEAM_ROSTER_VERSION){
+ state.names=[...DEFAULT_TEAM_NAMES];
+ state.members=structuredClone(DEFAULT_TEAM_MEMBERS);
+ state.teamRosterVersion=TEAM_ROSTER_VERSION;
+ save();
+}
 // Keep accumulated scores and custom questions; remap progress by question ID once.
 if(state.bankVersion<4){
  const previous=state.questions,active=previous[state.index],finished=state.index>=previous.length;
