@@ -169,23 +169,24 @@ function renderSpeedIntro(){
  .speed-intro .speed-clock-hand{animation:speed-hand 18s linear infinite;transform-origin:0 0;stroke:#a1814b;stroke-width:2.5;stroke-linecap:round}
  .speed-intro .speed-clock-fast .speed-clock-hand{animation-duration:1.15s;stroke:#9e6f2a}
  .speed-intro .speed-clock-pin{fill:#a1814b;stroke:none}
- .speed-intro .speed-runner{animation:speed-runner .6s ease-in-out infinite;transform-origin:350px 180px}
- .speed-intro .speed-limb{animation:speed-stride .32s ease-in-out infinite alternate;transform-origin:350px 197px}
- .speed-intro .speed-limb.reverse{animation-delay:-.32s}
- .speed-intro .speed-arm{animation:speed-arm .32s ease-in-out infinite alternate;transform-origin:366px 144px}
- .speed-intro .speed-arm.reverse{animation-delay:-.32s}
+
+
+
+
+
  .speed-intro .speed-streak{animation:speed-streak .7s linear infinite;animation-delay:var(--delay,0s);transform-origin:center;stroke-linecap:round}
- .speed-intro .speed-ground{animation:speed-streak .4s linear infinite}
- .speed-intro .speed-bolt{animation:speed-bolt .45s ease-in-out infinite alternate;transform-origin:350px 160px}
+
+
  .speed-intro .speed-controls{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:16px;padding-top:18px;border-top:1px solid #c7b395}
  .speed-intro .speed-controls button{white-space:normal;line-height:1.6;padding:12px 20px}
  .speed-intro #speedIntroStart{background:#64513f;border-color:#64513f;color:#fffaf1;font-size:clamp(17px,1.8vw,23px);min-width:200px;box-shadow:0 4px 13px #64513f30}
+ .speed-intro .speed-orbit{animation:speed-hand 2.1s linear infinite;transform-origin:0 0}
+ .speed-intro .speed-orbit-reverse{animation-direction:reverse;animation-duration:3.7s}
+ .speed-intro .speed-main-hand{animation:speed-hand .9s linear infinite;transform-origin:0 0}
+ .speed-intro .speed-chevron{animation:speed-chevron .8s ease-in-out infinite}
+ @keyframes speed-chevron{0%,100%{opacity:.25}50%{opacity:1;transform:translateX(3px)}}
  @keyframes speed-hand{to{transform:rotate(360deg)}}
- @keyframes speed-stride{from{transform:rotate(-17deg)}to{transform:rotate(18deg)}}
- @keyframes speed-arm{from{transform:rotate(-14deg)}to{transform:rotate(17deg)}}
- @keyframes speed-runner{50%{transform:translate(5px,-4px)}}
  @keyframes speed-streak{from{transform:translateX(65px);opacity:0}20%{opacity:.8}to{transform:translateX(-100px);opacity:0}}
- @keyframes speed-bolt{to{opacity:.5;transform:translateX(-5px)}}
  @media(max-width:600px){.speed-intro{padding:20px 12px}.speed-intro .speed-controls{gap:8px}.speed-intro #speedIntroStart{width:100%;order:-1}}
  @media(prefers-reduced-motion:reduce){.speed-intro *{animation:none!important}}
  </style><section class="speed-intro" aria-labelledby="speedIntroTitle">
@@ -193,25 +194,34 @@ function renderSpeedIntro(){
  <h1 id="speedIntroTitle">${esc(rounds[2].name)}</h1>
  <p class="speed-caption">ئامادە بن… ل ڤێرێ لەزاتی جیاوازیێ دروست دکەت!</p>
  <svg class="speed-art" viewBox="0 0 700 320" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
- <defs><linearGradient id="speedSuit" x1="0" y1="0" x2="1" y2=".6"><stop stop-color="#f36b4a"/><stop offset=".38" stop-color="#c9342b"/><stop offset="1" stop-color="#7f2729"/></linearGradient><radialGradient id="speedAura"><stop stop-color="#f2cd7b" stop-opacity=".48"/><stop offset="1" stop-color="#f2cd7b" stop-opacity="0"/></radialGradient></defs>
- <ellipse cx="355" cy="177" rx="225" ry="135" fill="url(#speedAura)"/>
- ${clock(130,91,51,false)}${clock(566,97,57,true)}${clock(530,245,34,false)}${clock(210,250,29,true)}
- <g fill="none" stroke="#b18b48" stroke-width="3" opacity=".7"><path class="speed-streak" d="M128 132H302"/><path class="speed-streak" style="--delay:-.24s" d="M78 161H280"/><path class="speed-streak" style="--delay:-.5s" d="M152 205H288"/><path class="speed-streak" style="--delay:-.1s" d="M228 101H335"/></g>
- <g class="speed-bolt" fill="none" stroke="#e8b74e" stroke-width="3" stroke-linejoin="round"><path d="m330 113-45 29 21 4-49 40 45-11-20 34 49-26"/><path d="m374 181-28 34 17-1-30 34"/></g>
- <ellipse cx="361" cy="283" rx="109" ry="10" fill="#75624b" opacity=".13"/>
- <g class="speed-runner" stroke-linejoin="round" stroke-linecap="round">
- <!-- Receding limbs and red motion suit. -->
- <path class="speed-limb reverse" d="m350 197-28 43-65-4" fill="none" stroke="#872b2a" stroke-width="19"/>
- <path class="speed-arm reverse" d="m366 144-43-18-28 22" fill="none" stroke="#912c2a" stroke-width="14"/>
- <path d="M372 132q-18 5-27 28l-12 36 29 13 20-45 9-19Z" fill="url(#speedSuit)" stroke="#8c2d2a" stroke-width="1.5"/>
- <path d="m337 188 32 13-6 10-31-12Z" fill="#e5bc63"/>
- <path class="speed-limb" d="m351 201 36 29-9 42 17 3" fill="none" stroke="url(#speedSuit)" stroke-width="20"/>
- <path class="speed-arm" d="m366 145 30 23 30-28" fill="none" stroke="url(#speedSuit)" stroke-width="15"/>
- <g transform="rotate(16 389 111)"><path d="M373 93q17-17 32 1l3 19-8 17-23-5-9-17Z" fill="url(#speedSuit)" stroke="#8c2d2a" stroke-width="1.2"/><path d="m393 103 15 4-2 10-12-1-8-7Z" fill="#f1cf9e"/><path d="m389 102 15 3" stroke="#ffe8a5" stroke-width="3"/><path d="m373 103-12 4 6 7" fill="#edc25e"/></g>
- <circle cx="365" cy="162" r="10" fill="#fff5d3"/><path d="m369 151-11 13 7-1-4 11 12-15-8 2Z" fill="#d7a12d"/>
- <path d="m374 135 6 4" stroke="#f7c985" stroke-width="3"/>
+ <defs>
+ <radialGradient id="speedAura"><stop stop-color="#e3bf77" stop-opacity=".42"/><stop offset="1" stop-color="#e3bf77" stop-opacity="0"/></radialGradient>
+ <linearGradient id="speedDialGold" x2="1" y2="1"><stop stop-color="#fff1bd"/><stop offset=".32" stop-color="#bd924b"/><stop offset=".62" stop-color="#f6d991"/><stop offset="1" stop-color="#8e682d"/></linearGradient>
+ <radialGradient id="speedDialFace" cx=".35" cy=".25" r=".85"><stop stop-color="#41636b"/><stop offset="1" stop-color="#173b45"/></radialGradient>
+ </defs>
+ <ellipse cx="350" cy="174" rx="242" ry="140" fill="url(#speedAura)"/>
+ ${clock(130,91,51,false)}${clock(566,97,57,true)}${clock(530,245,34,false)}${clock(160,250,29,true)}
+ <g fill="none" stroke="#b18b48" stroke-width="3" opacity=".7">
+ <path class="speed-streak" d="M105 135H250"/><path class="speed-streak" style="--delay:-.24s" d="M70 171H248"/>
+ <path class="speed-streak" style="--delay:-.5s" d="M133 208H250"/><path class="speed-streak" style="--delay:-.1s" d="M444 149H602"/>
+ <path class="speed-streak" style="--delay:-.37s" d="M451 193H628"/>
  </g>
- <g class="speed-ground" stroke="#a38d6e" stroke-width="2" opacity=".5"><path d="M260 291h52M350 291h68M440 291h28"/></g>
+ <g transform="translate(350 174)">
+ <ellipse cy="123" rx="100" ry="8" fill="#64513f" opacity=".12"/>
+ <circle r="113" fill="none" stroke="#9aaea6" stroke-width="1" opacity=".5"/>
+ <g class="speed-orbit"><circle r="109" fill="none" stroke="#b18b48" stroke-width="3" stroke-dasharray="78 22 5 22 33 22"/><circle cy="-109" r="4" fill="#fff4cc" stroke="#b18b48" stroke-width="1.5"/></g>
+ <g class="speed-orbit speed-orbit-reverse"><circle r="100" fill="none" stroke="#698e91" stroke-width="2" stroke-dasharray="33 124"/></g>
+ <path d="M-10-79v-16h20v16" fill="url(#speedDialGold)" stroke="#a58143"/>
+ <rect x="-23" y="-107" width="46" height="14" rx="5" fill="url(#speedDialGold)" stroke="#a58143"/>
+ <path d="m58-61 12-12 9 9-12 12" fill="url(#speedDialGold)" stroke="#a58143"/>
+ <circle r="85" fill="url(#speedDialGold)" stroke="#947540" stroke-width="1.5"/>
+ <circle r="77" fill="url(#speedDialFace)" stroke="#f4dba2" stroke-width="1.5"/>
+ <g fill="none" stroke="#e4d2a4" opacity=".8"><path d="M0-67v9" transform="rotate(0)" stroke-width="2.5"/><path d="M0-67v4" transform="rotate(6)" stroke-width="1"/><path d="M0-67v4" transform="rotate(12)" stroke-width="1"/><path d="M0-67v4" transform="rotate(18)" stroke-width="1"/><path d="M0-67v4" transform="rotate(24)" stroke-width="1"/><path d="M0-67v9" transform="rotate(30)" stroke-width="2.5"/><path d="M0-67v4" transform="rotate(36)" stroke-width="1"/><path d="M0-67v4" transform="rotate(42)" stroke-width="1"/><path d="M0-67v4" transform="rotate(48)" stroke-width="1"/><path d="M0-67v4" transform="rotate(54)" stroke-width="1"/><path d="M0-67v9" transform="rotate(60)" stroke-width="2.5"/><path d="M0-67v4" transform="rotate(66)" stroke-width="1"/><path d="M0-67v4" transform="rotate(72)" stroke-width="1"/><path d="M0-67v4" transform="rotate(78)" stroke-width="1"/><path d="M0-67v4" transform="rotate(84)" stroke-width="1"/><path d="M0-67v9" transform="rotate(90)" stroke-width="2.5"/><path d="M0-67v4" transform="rotate(96)" stroke-width="1"/><path d="M0-67v4" transform="rotate(102)" stroke-width="1"/><path d="M0-67v4" transform="rotate(108)" stroke-width="1"/><path d="M0-67v4" transform="rotate(114)" stroke-width="1"/><path d="M0-67v9" transform="rotate(120)" stroke-width="2.5"/><path d="M0-67v4" transform="rotate(126)" stroke-width="1"/><path d="M0-67v4" transform="rotate(132)" stroke-width="1"/><path d="M0-67v4" transform="rotate(138)" stroke-width="1"/><path d="M0-67v4" transform="rotate(144)" stroke-width="1"/><path d="M0-67v9" transform="rotate(150)" stroke-width="2.5"/><path d="M0-67v4" transform="rotate(156)" stroke-width="1"/><path d="M0-67v4" transform="rotate(162)" stroke-width="1"/><path d="M0-67v4" transform="rotate(168)" stroke-width="1"/><path d="M0-67v4" transform="rotate(174)" stroke-width="1"/><path d="M0-67v9" transform="rotate(180)" stroke-width="2.5"/><path d="M0-67v4" transform="rotate(186)" stroke-width="1"/><path d="M0-67v4" transform="rotate(192)" stroke-width="1"/><path d="M0-67v4" transform="rotate(198)" stroke-width="1"/><path d="M0-67v4" transform="rotate(204)" stroke-width="1"/><path d="M0-67v9" transform="rotate(210)" stroke-width="2.5"/><path d="M0-67v4" transform="rotate(216)" stroke-width="1"/><path d="M0-67v4" transform="rotate(222)" stroke-width="1"/><path d="M0-67v4" transform="rotate(228)" stroke-width="1"/><path d="M0-67v4" transform="rotate(234)" stroke-width="1"/><path d="M0-67v9" transform="rotate(240)" stroke-width="2.5"/><path d="M0-67v4" transform="rotate(246)" stroke-width="1"/><path d="M0-67v4" transform="rotate(252)" stroke-width="1"/><path d="M0-67v4" transform="rotate(258)" stroke-width="1"/><path d="M0-67v4" transform="rotate(264)" stroke-width="1"/><path d="M0-67v9" transform="rotate(270)" stroke-width="2.5"/><path d="M0-67v4" transform="rotate(276)" stroke-width="1"/><path d="M0-67v4" transform="rotate(282)" stroke-width="1"/><path d="M0-67v4" transform="rotate(288)" stroke-width="1"/><path d="M0-67v4" transform="rotate(294)" stroke-width="1"/><path d="M0-67v9" transform="rotate(300)" stroke-width="2.5"/><path d="M0-67v4" transform="rotate(306)" stroke-width="1"/><path d="M0-67v4" transform="rotate(312)" stroke-width="1"/><path d="M0-67v4" transform="rotate(318)" stroke-width="1"/><path d="M0-67v4" transform="rotate(324)" stroke-width="1"/><path d="M0-67v9" transform="rotate(330)" stroke-width="2.5"/><path d="M0-67v4" transform="rotate(336)" stroke-width="1"/><path d="M0-67v4" transform="rotate(342)" stroke-width="1"/><path d="M0-67v4" transform="rotate(348)" stroke-width="1"/><path d="M0-67v4" transform="rotate(354)" stroke-width="1"/></g>
+ <path d="M-48 36A60 60 0 0 1 49-35" fill="none" stroke="#e8c77d" stroke-width="7" opacity=".13"/>
+ <g class="speed-main-hand"><path d="M0 16V-58" fill="none" stroke="#fff0bb" stroke-width="3" stroke-linecap="round"/><path d="M-4-49 0-61 4-49Z" fill="#fff0bb"/></g>
+ <circle r="7" fill="url(#speedDialGold)" stroke="#fff0bb"/>
+ <g transform="translate(0 31)" fill="none" stroke="#d9c18b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path class="speed-chevron" d="m-23-6 7 6-7 6"/><path class="speed-chevron" style="animation-delay:-.2s" d="m-3-6 7 6-7 6"/><path class="speed-chevron" style="animation-delay:-.4s" d="m17-6 7 6-7 6"/></g>
+ </g>
  </svg>
  <div class="speed-controls"><button id="speedIntroPrevious" type="button">یا بەرێ · پرسیارا جەماوەری</button><button id="speedIntroStart" type="button">دەستپێکرنا قۆناغا سێیێ ⚡</button><button id="speedIntroHome" type="button">لاپەڕا سەرەکی</button></div>
  </section>`;
