@@ -1231,3 +1231,9 @@ body.viewport-fit #config button{font-size:12px;line-height:1.4;padding:6px 10px
  body.viewport-fit .cyber-result .award-is-tie{display:block}
 }
 body.viewport-fit #config form{position:absolute;left:12px;top:12px}
+
+
+/* Decorative speed-question context: neutral artwork, with no answer information. */
+body.viewport-fit .arena .buzzer-context-image{width:min(100%,900px);margin:8px auto 12px;flex:none}
+body.viewport-fit .arena .buzzer-context-image>img{display:block;width:100%;height:clamp(100px,24vh,240px);max-height:28vh;margin:0;object-fit:contain;border-radius:14px}
+body.viewport-fit .arena:has(>.answer) .buzzer-context-image>img{height:clamp(70px,17vh,160px)}
