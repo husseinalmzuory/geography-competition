@@ -114,16 +114,20 @@ function tick(){remaining=Math.max(0,Math.ceil((deadline-Date.now())/1000));upda
 function updateTimer(){if(!$('#timer'))return;$('#timer').textContent=remaining;$('#timer').classList.toggle('urgent',remaining<=5);const ratio=Math.max(0,Math.min(1,remaining/rounds[state.questions[state.index].round].seconds));$('#bar').style.width=(ratio*100)+'%';$('#bar').classList.toggle('time-warning',remaining<=5);}
 function startTimer(){if(interval){remaining=Math.max(0,Math.ceil((deadline-Date.now())/1000));stop();$('#startTimer').textContent='دووبارە دەستپێکرن';$('#timerStatus').textContent='دەمژمێر راوه‌ستیایە';}else if(remaining>0){deadline=Date.now()+remaining*1000;interval=setInterval(tick,100);$('#startTimer').textContent='راوەستاندنا دەمژمێری';$('#timerStatus').textContent='دەم دچیت';}}
 function redrawQuestion(){const seconds=remaining;stop();render();remaining=seconds;updateTimer();if(remaining===0){$('#startTimer').disabled=true;$('#startTimer').textContent='دەم تەمام بوو';$('#timerStatus').textContent='دەم تەمام بوو';}else if(remaining<30){$('#startTimer').textContent='دووبارە دەستپێکرن';$('#timerStatus').textContent='دەمژمێر راوه‌ستیایە';}}
-// A single audience interlude after the visual round; never part of the question bank.
-function go(index){
+// A persistent audience stop between rounds two and three, in both navigation directions.
+function go(index,skipAudience=false){
  stop();
  const target=Math.max(-1,Math.min(index,state.questions.length));
  const current=state.questions[state.index],next=state.questions[target];
  const audience=state.audience;
  const exitsSecondRound=current?.round===1&&target>state.index&&(!next||next.round>1);
- if(!audience?.completed&&(exitsSecondRound||(audience?.pending&&target===audience.targetIndex))){
-  state.audience=audience?.pending?{...audience,active:true}:{active:true,pending:true,completed:false,targetIndex:target,questionVisible:false,answerVisible:false,awardedTeam:null};
-  state.resumeIndex=state.audience.targetIndex;
+ const returnsToSecondRound=current?.round>=2&&target<state.index&&next?.round===1;
+ const resumesAudience=audience?.pending&&target===audience.targetIndex;
+ if(!skipAudience&&(exitsSecondRound||returnsToSecondRound||resumesAudience)){
+  const thirdRoundStart=state.questions.findIndex(q=>q.round>1);
+  const destination=returnsToSecondRound?(thirdRoundStart<0?state.questions.length:thirdRoundStart):resumesAudience?audience.targetIndex:target;
+  state.audience={questionVisible:false,answerVisible:false,awardedTeam:null,completed:false,...audience,active:true,pending:true,targetIndex:destination};
+  state.resumeIndex=destination;
   state.revealed={};state.speedCounts={};save();render();return;
  }
  if(audience)audience.active=false;
@@ -181,7 +185,7 @@ function renderAudience(){
  ${audience.questionVisible?`<div class="audience-question"><h2>${esc(state.audienceQuestion||DEFAULT_AUDIENCE_QUESTION)}</h2>
  ${audience.answerVisible?`<p class="audience-answer">${esc(state.audienceAnswer||DEFAULT_AUDIENCE_ANSWER)}</p>
  ${awarded?`<p class="audience-awarded" role="status">✓ دوو خاڵ هاتنە بەخشین بۆ ${esc(state.names[audience.awardedTeam])}</p><button id="audienceUndo" type="button">ڤەگەڕاندنا دوو خاڵان</button>`:`<p class="audience-award-hint">ئەگەر بەرسڤ دروستە، ب هەلبژارتنا وەلاتیێ بەشدار دوو خاڵان بدە تیمەکێ:</p><div class="audience-team-buttons">${state.names.map((name,team)=>`<button type="button" data-audience-team="${team}">＋٢ · ${esc(name)}</button>`).join('')}</div>`}`:'<button id="audienceRevealAnswer" type="button">دیارکرنا بەرسڤێ</button>'}</div>`:'<button id="audienceShowQuestion" class="primary" type="button">دیارکرنا پرسیارا جەماوەری</button>'}
- <div class="audience-continue"><button id="audienceContinue" type="button">${awarded?'بەردەوامبوون بۆ قۆناغا سێیێ':'بەردەوامبوون بێ بەخشینا خاڵان'}</button><button id="audienceHome" type="button">لاپەڕا سەرەکی</button></div>
+ <div class="audience-continue"><button id="audiencePrevious" type="button">یا بەرێ · قۆناغا دووێ</button><button id="audienceContinue" type="button">${awarded?'بەردەوامبوون بۆ قۆناغا سێیێ':'بەردەوامبوون بێ بەخشینا خاڵان'}</button><button id="audienceHome" type="button">لاپەڕا سەرەکی</button></div>
  </section>`;
  if(!audience.questionVisible)$('#audienceShowQuestion').onclick=()=>{audience.questionVisible=true;save();render();};
  if(audience.questionVisible&&!audience.answerVisible)$('#audienceRevealAnswer').onclick=()=>{audience.answerVisible=true;save();render();};
@@ -194,7 +198,11 @@ function renderAudience(){
   if(!Number.isInteger(audience.awardedTeam))return;
   const team=audience.awardedTeam;audience.awardedTeam=null;score(team,-2);render();
  };
- $('#audienceContinue').onclick=()=>{if(!audience.active)return;audience.completed=true;audience.pending=false;audience.active=false;save();go(audience.targetIndex);};
+ $('#audienceContinue').onclick=()=>{if(!audience.active)return;audience.completed=true;audience.pending=false;audience.active=false;save();go(audience.targetIndex,true);};
+ $('#audiencePrevious').onclick=()=>{
+  const lastSecond=state.questions.reduce((last,q,index)=>q.round===1?index:last,-1);
+  audience.pending=false;audience.active=false;save();go(lastSecond,true);
+ };
  $('#audienceHome').onclick=()=>go(-1);
 }
 function render(){renderScores();if(state.audience?.active){renderAudience();return;}$('#homeLogos').hidden=state.index>=0;$('.scoreboard').hidden=state.index<0;const active=state.questions[state.index];$('#headerTurn').hidden=!active;$('#headerTurn').classList.toggle('b',active?.team===1);$('#headerTeamName').textContent=active?(active.round===2?'هەردوو تیم':state.names[active.team]):'';const host=$('#stage');document.body.classList.toggle('question-view',state.index>=0&&state.index<state.questions.length);if(state.index<0||state.index>=state.questions.length)document.body.classList.remove('presentation-fit');if(state.index<0){host.innerHTML=`<div class="hero"><p class="eyebrow">پێشبڕکیا زانینا جوگرافی</p><h1>حەفتییا هۆشیارییا جۆگرافی<span class="gaw-word" lang="en" dir="ltr">GAW</span></h1><p>ب پشکدارییا زانکۆیێن دهۆک و زاخۆ، بۆ پێشخستنا زانین و هۆشیارییا جوگرافی.</p><div class="actions"><button class="primary" id="beginNew">دەست پێ بکە</button><button class="primary" id="resumeCompetition" ${state.resumeIndex===null?'disabled':''}>زڤڕین بۆ پێشبڕکیێ</button></div></div><div class="rounds">${rounds.map((r,i)=>`<button class="roundtile" data-round="${i}"><small>قۆناغا ${['ئێکێ','دووێ','سێیێ','چارێ'][i]}</small><strong>${r.name}</strong><span>${r.description} · ${state.questions.filter(q=>q.round===i).length} پرسیار</span></button>`).join('')}</div>`;$('#beginNew').onclick=()=>{if(state.resumeIndex!==null&&!confirm('دەستپێکرنا پێشبڕکییەکا نوو دێ خاڵێن پێشبڕکییا نوکە و پێشڤەچوونا وێ بکەتە سفر. دێ بەردەوام بی؟'))return;stop();state={...fresh(),names:state.names,members:structuredClone(state.members),questions:state.questions,sound:state.sound,audienceQuestion:state.audienceQuestion,audienceAnswer:state.audienceAnswer};go(0);};$('#resumeCompetition').onclick=()=>{if(state.resumeIndex!==null)go(state.resumeIndex);};host.querySelectorAll('[data-round]').forEach(x=>x.onclick=()=>go(state.questions.findIndex(q=>q.round===+x.dataset.round)));return;}
