@@ -264,80 +264,70 @@ window.GEOGRAPHY_BANK = [
     "round": 3,
     "team": null,
     "q": "کیژ تەنگاڤ هەردوو کیشوەرێن ئاسیا و ئەمریکایێ باکوور ژێک جودا دکەت؟",
-    "answer": "تەنگاڤا بێرینگ.",
-    "contextImage": "assets/buzzer-01-context.svg"
+    "answer": "تەنگاڤا بێرینگ."
   },
   {
     "id": "buzzer2",
     "round": 3,
     "team": null,
     "q": "كیژ جۆرێ داتایان بۆ دەرئێخستنا نەخشەیێن بلنداهی، لێژاتی و ئاڤڕێژا سەر ئەردی دهێتە بكارئینان؟",
-    "answer": "DEM.",
-    "contextImage": "assets/buzzer-02-context.svg"
+    "answer": "DEM."
   },
   {
     "id": "buzzer3",
     "round": 3,
     "team": null,
     "q": "کیژ جوگرافیناس بوو یێ کو قوتابخانا ئیمکانی دامەزراندی؟",
-    "answer": "ڤیدال دی لابلاش.",
-    "contextImage": "assets/buzzer-03-context.svg"
+    "answer": "ڤیدال دی لابلاش."
   },
   {
     "id": "buzzer4",
     "round": 3,
     "team": null,
     "q": "ناڤێ وێ هێلێ چییە کو د ناڤبەرا دوو حەوزێن ئاڤی یێن جیران دا جوداهیێ دکەت؟",
-    "answer": "هێلا دابەشکرنا ئاڤێ.",
-    "contextImage": "assets/buzzer-04-context.svg"
+    "answer": "هێلا دابەشکرنا ئاڤێ."
   },
   {
     "id": "buzzer5",
     "round": 3,
     "team": null,
     "q": "ئەگەرێ سەرەکی یێ لڤینا بای ژ دەڤەرەکێ بۆ دەڤەرەکا دی چییە؟",
-    "answer": "لێژاتییا پەستانا هەوایی.",
-    "contextImage": "assets/buzzer-05-context.svg"
+    "answer": "لێژاتییا پەستانا هەوایی."
   },
   {
     "id": "buzzer6",
     "round": 3,
     "team": null,
     "q": "جوداهیا دەمی د ناڤبەرا دوو هێلێن درێژیێ دا کو ئێک پلە د ناڤبەرا وان دا هەبیت چەندە؟",
-    "answer": "چار خولەک.",
-    "contextImage": "assets/buzzer-06-context.svg"
+    "answer": "چار خولەک."
   },
   {
     "id": "buzzer7",
     "round": 3,
     "team": null,
     "q": "ناڤێ وی دەریایێ كەڤنار یێ كو كیشوەرێن لۆراسیا و گۆندوانا ژ ئێك جودا دكر چییە؟",
-    "answer": "دەریایێ تیسیس (تێثس).",
-    "contextImage": "assets/buzzer-07-context.svg"
+    "answer": "دەریایێ تیسیس (تێثس)."
   },
   {
     "id": "buzzer8",
     "round": 3,
     "team": null,
     "q": "كیژ جۆرێ بەران كۆنیلەدارییا وان یا زۆرە، لێ دەربازبوونا ئاڤێ تێدا یا كێمە؟",
-    "answer": "بەرێ حەڕیێ (قۆڕی).",
-    "contextImage": "assets/buzzer-08-context.svg"
+    "answer": "بەرێ حەڕیێ (قۆڕی)."
   },
   {
     "id": "buzzer9",
     "round": 3,
     "team": null,
     "q": "كیژ جۆرێ نەخشەیان دهێتە بكارئینان بۆ نوێنەرایەتیكرنا دیاردەیەكێ جوگرافی یێ دیاركری، وەك چڕییا ئاكنجیبوونێ؟",
-    "answer": "نەخشەیێن بابەتی.",
-    "contextImage": "assets/buzzer-09-context.svg"
+    "answer": "نەخشەیێن بابەتی."
   },
   {
     "id": "buzzer10",
     "round": 3,
     "team": null,
     "q": "كیژ زاراڤ بۆ رێژەیا زڤڕاندنا تیشكا رۆژێ ژ روویەكی دهێتە بكارئینان؟",
-    "answer": "ئەلبیدۆ (Albedo).",
-    "contextImage": "assets/buzzer-10-context.svg"
+    "answer": "ئەلبیدۆ (Albedo)."
   },
   {
     "id": "speed0",
