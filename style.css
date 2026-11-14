@@ -1267,7 +1267,7 @@ body.viewport-fit.home-view #beginNew:hover,body.viewport-fit.home-view #beginNe
 body.viewport-fit.home-view .gaw-word{animation:home-gaw-drift 7s ease-in-out infinite}
 #homeContours{display:none;position:absolute;inset:-6%;width:112%;height:112%;overflow:hidden;opacity:.26;pointer-events:none;mask-image:radial-gradient(ellipse at center,transparent 12%,#000 85%)}
 body.home-view #homeContours{display:block}
-#homeContours .contour-island{transform-box:fill-box;transform-origin:center;will-change:transform}
+#homeContours .contour-island{transform-box:fill-box;transform-origin:center;will-change:auto}
 @keyframes home-start-pulse{0%,100%{opacity:.9}50%{opacity:1}}
 @keyframes home-gaw-drift{0%,100%{transform:translateY(0);opacity:1}50%{transform:translateY(-3px);opacity:.87}}
 @media(prefers-reduced-motion:reduce){body.viewport-fit.home-view #beginNew,body.viewport-fit.home-view .gaw-word{animation:none}#homeContours .contour-island{will-change:auto}}
