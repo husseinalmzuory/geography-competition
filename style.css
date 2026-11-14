@@ -426,3 +426,52 @@ header>.header-turn.b strong{border-color:#b99750;background:#fff6df;color:#805d
 @media(prefers-reduced-motion:reduce){
  .winner-trophy-spin,.winner-firework i,#stage>.end .winner-name{animation:none}
 }
+
+
+/* Editable student rosters and winner names on the award podium. */
+.roster-settings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.roster-settings label{min-width:0}
+.roster-settings textarea{width:100%;min-height:145px;resize:vertical;line-height:1.65;font-family:var(--kurdish-font,"Noto Sans Arabic",Tahoma,sans-serif)}
+#stage>.end .winner-members-card{
+  width:min(900px,97%);
+  max-width:100%;margin:2px auto;
+  padding:clamp(8px,1.1vh,15px) clamp(12px,2vw,28px);
+  border-radius:19px;
+  border:1px solid #e2bc69;
+  background:linear-gradient(130deg,rgba(255,255,255,.94),rgba(255,244,217,.94));
+  box-shadow:0 8px 23px rgba(107,75,21,.11);
+}
+#stage>.end .winner-members-card h2{
+  margin:0 0 6px;color:#99671d;font-size:clamp(15px,1.5vw,21px);
+  font-family:var(--kurdish-font,"Noto Sans Arabic",Tahoma,sans-serif)
+}
+#stage>.end .winner-members{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:3px clamp(8px,1.8vw,22px);
+  list-style:none;margin:0;padding:0;
+  text-align:center;
+}
+#stage>.end .winner-members li{
+  color:#25435e;font-family:var(--kurdish-font,"Noto Sans Arabic",Tahoma,sans-serif);
+  font-weight:700;font-size:clamp(12px,1.35vw,18px);
+  line-height:1.45;overflow-wrap:anywhere;
+}
+#stage>.end .winner-members li::before{content:"✦";color:#d5a23c;margin-inline-end:7px;font-size:.75em}
+#stage>.end.end-victory:has(.winner-members-card) .winner-trophy-scene{
+  width:clamp(85px,14vh,155px);height:clamp(105px,17vh,188px)
+}
+#stage>.end.end-victory:has(.winner-members-card) .winner-name{
+  font-size:clamp(31px,4.3vw,65px);line-height:1.35
+}
+#stage>.end.end-victory:has(.winner-members-card) .end-content{gap:clamp(2px,.45vh,7px)}
+@media(max-width:720px){
+  .roster-settings{grid-template-columns:1fr}
+  #stage>.end .winner-members-card{padding:9px 10px}
+  #stage>.end .winner-members{gap:3px 10px}
+  #stage>.end .winner-members li{font-size:12px}
+}
+@media(max-height:740px) and (min-width:721px){
+  #stage>.end.end-victory:has(.winner-members-card) .winner-trophy-scene{width:95px;height:116px}
+  #stage>.end .winner-members-card{padding:6px 10px}
+  #stage>.end .winner-members li{font-size:clamp(11px,1.1vw,15px)}
+}
