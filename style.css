@@ -312,3 +312,15 @@ header>.header-turn.b strong{border-color:#b99750;background:#fff6df;color:#805d
   .mcq-layout .choices .choice span{grid-column:1}
   .mcq-layout .choices .choice em{grid-column:1}
 }
+
+
+/* Protect B and D option badges from the timer-side concave cutout.
+   Keep the full-width text layout; move badges inward rather than reducing font size. */
+@media (min-width:721px){
+  .mcq-layout .choices .choice[data-choice-label="1"],
+  .mcq-layout .choices .choice[data-choice-label="3"],
+  .presentation-fit .mcq-layout .choices .choice[data-choice-label="1"],
+  .presentation-fit .mcq-layout .choices .choice[data-choice-label="3"]{
+    padding-inline-start:clamp(56px,5vw,76px);
+  }
+}
