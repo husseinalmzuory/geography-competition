@@ -6,10 +6,11 @@ const KEY='geography-competition-v1';
 const TEAM_ROSTER_VERSION=1;
 const DEFAULT_TEAM_NAMES=["هيزا جوكرافي","دلئ جوكرافي"];
 const DEFAULT_TEAM_MEMBERS=[["پیلان کمال فخر الدین","رێژین فرحان حامد","دیدار خیر الدین نجم الدین","دلڤين نقیب صبری","سفيان حازم خدر","جنان الياس جمعه","شەرمین مصطفى شينو"],["رويدة جاسم عران","نڤار عمران محمد صديق","مینا محمدعلی حازم","دلگه ش أحمد زبير","نەوزاد شاهین طە","رنگين سگڤان محمد","لؤي صدقي محمدسعيد"]];
-const DEFAULT_AUDIENCE_QUESTION='مەزنترین ئۆقیانووسێ جیهانێ کیژە؟';
-const DEFAULT_AUDIENCE_ANSWER='ئۆقیانووسا ئارام (Pacific)';
-function fresh(){return {teamRosterVersion:TEAM_ROSTER_VERSION,roundIntro:null,visualIntro:null,speedIntro:null,audience:null,audienceQuestion:DEFAULT_AUDIENCE_QUESTION,audienceAnswer:DEFAULT_AUDIENCE_ANSWER,names:[...DEFAULT_TEAM_NAMES],members:structuredClone(DEFAULT_TEAM_MEMBERS),scores:[0,0],index:-1,resumeIndex:null,questions:structuredClone(defaults),awarded:{},revealed:{},sound:true,choices:{},speedCounts:{},buzzerAwards:{},unlocked:{},bankVersion:BANK_VERSION};}
-let state;try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved&&!saved.bankVersion)saved.bankVersion=1;state=saved&&Array.isArray(saved.questions)&&saved.questions.length&&Array.isArray(saved.names)&&Array.isArray(saved.scores)?{...fresh(),...saved,teamRosterVersion:saved.teamRosterVersion||0}:fresh();}catch{state=fresh();}
+const AUDIENCE_QUESTION_VERSION=1;
+const DEFAULT_AUDIENCE_QUESTION='كم يبلغ ارتفاع مدينة دهوك عن مستوى سطح البحر؟';
+const DEFAULT_AUDIENCE_ANSWER='بين 490 و520 مترًا';
+function fresh(){return {audienceQuestionVersion:AUDIENCE_QUESTION_VERSION,teamRosterVersion:TEAM_ROSTER_VERSION,roundIntro:null,visualIntro:null,speedIntro:null,audience:null,audienceQuestion:DEFAULT_AUDIENCE_QUESTION,audienceAnswer:DEFAULT_AUDIENCE_ANSWER,names:[...DEFAULT_TEAM_NAMES],members:structuredClone(DEFAULT_TEAM_MEMBERS),scores:[0,0],index:-1,resumeIndex:null,questions:structuredClone(defaults),awarded:{},revealed:{},sound:true,choices:{},speedCounts:{},buzzerAwards:{},unlocked:{},bankVersion:BANK_VERSION};}
+let state;try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved&&!saved.bankVersion)saved.bankVersion=1;state=saved&&Array.isArray(saved.questions)&&saved.questions.length&&Array.isArray(saved.names)&&Array.isArray(saved.scores)?{...fresh(),...saved,teamRosterVersion:saved.teamRosterVersion||0,audienceQuestionVersion:saved.audienceQuestionVersion||0}:fresh();}catch{state=fresh();}
 // Update old generic names, preserving names already customized in Settings.
 let namesUpdated=false;
 state.names=state.names.map((name,i)=>{if(!name||name===['الفريق الأول','الفريق الثاني'][i]||(i===1&&name==='لێدانا جوگرافیایێ')){namesUpdated=true;return DEFAULT_TEAM_NAMES[i];}return name;});
@@ -22,6 +23,13 @@ if(state.teamRosterVersion<TEAM_ROSTER_VERSION){
  state.names=[...DEFAULT_TEAM_NAMES];
  state.members=structuredClone(DEFAULT_TEAM_MEMBERS);
  state.teamRosterVersion=TEAM_ROSTER_VERSION;
+ save();
+}
+// Install the audience question specified by the organizer without resetting game results.
+if(state.audienceQuestionVersion<AUDIENCE_QUESTION_VERSION){
+ state.audienceQuestion=DEFAULT_AUDIENCE_QUESTION;
+ state.audienceAnswer=DEFAULT_AUDIENCE_ANSWER;
+ state.audienceQuestionVersion=AUDIENCE_QUESTION_VERSION;
  save();
 }
 // Keep accumulated scores and custom questions; remap progress by question ID once.
@@ -428,6 +436,11 @@ function renderAudience(){
  .audience-break .audience-timer.urgent{border-color:#b95340;color:#b95340;background:#fff0e9}
  .audience-break #audienceCorrect{margin:8px 0;max-width:100%;white-space:normal;line-height:1.6}
  .audience-break:has(.audience-question) .audience-scene{max-height:100px}
+ .audience-break .audience-city-photo{margin:10px auto;max-width:640px}
+ .audience-break .audience-city-photo img{display:block;width:100%;height:clamp(110px,24vh,230px);object-fit:contain;border-radius:12px;background:#e9e3d6;border:1px solid #c7b395}
+ .audience-break .audience-city-photo figcaption{font:11px/1.5 Arial,Tahoma,sans-serif;color:#786b5c;margin-top:4px}
+ .audience-break .audience-city-photo a{color:inherit}
+ .audience-break:has(.audience-question) .audience-scene{display:none}
  .audience-break .audience-question{margin:16px auto 0;padding:clamp(16px,2.5vw,28px);border:1px solid #b6a48c;border-radius:16px;background:#fffaf2;max-width:850px;animation:audience-arrive .4s ease-out both}
  .audience-break .audience-question h2{margin:0;color:#005a9c;font-size:clamp(23px,3vw,36px);line-height:1.7;overflow-wrap:anywhere}
  .audience-break .audience-answer{padding:12px 18px;border:1px solid #a0b8ab;border-radius:10px;background:#e7eee4;color:#325c4d;line-height:1.8;font-size:clamp(17px,2vw,23px);white-space:pre-wrap}
@@ -455,7 +468,7 @@ function renderAudience(){
  <g fill="#b18b48"><path class="audience-spark" d="m300 25 4 10 11 1-8 7 2 11-9-6-9 6 2-11-8-7 11-1Z"/><circle class="audience-spark" cx="215" cy="57" r="4"/><circle class="audience-spark" cx="390" cy="52" r="3"/><path class="audience-spark" d="m118 61 6 6-6 6-6-6ZM477 42l5 5-5 5-5-5Z"/></g>
  <path d="M75 195H525" stroke="#ad8a51" stroke-width="2" stroke-linecap="round"/>
  </svg>
- ${audience.questionVisible?`<div class="audience-question"><h2>${esc(state.audienceQuestion||DEFAULT_AUDIENCE_QUESTION)}</h2>
+ ${audience.questionVisible?`<div class="audience-question"><h2>${esc(state.audienceQuestion||DEFAULT_AUDIENCE_QUESTION)}</h2><figure class="audience-city-photo"><img src="assets/duhok-city-audience.jpg" width="1200" height="800" alt="إطلالة على مدينة دهوك من جبل زاوا" decoding="async" fetchpriority="high"><figcaption><a href="https://commons.wikimedia.org/wiki/File:Duhok_01.jpg" target="_blank" rel="noopener noreferrer">دهوك · Khoshhat</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></figcaption></figure>
  ${!audience.resolved?`<div id="audienceTimer" class="audience-timer" role="timer" aria-label="دەمێ مایی">${Math.max(0,Math.ceil((audience.deadline-Date.now())/1000))}</div><button id="audienceCorrect" type="button" class="primary">بەرسڤا دروست · هەلبژارتنا تیمێ</button>`:`<p class="audience-answer">${esc(state.audienceAnswer||DEFAULT_AUDIENCE_ANSWER)}</p><p class="audience-awarded" role="status">${awarded?'✓ دوو خاڵ هاتنە بەخشین بۆ '+esc(state.names[audience.awardedTeam]):audience.expired?'دەم تەمام بوو؛ پرسیار سووت و چ خاڵ نەهاتنە بەخشین.':'بەرسڤ دروستە! تیمەکێ ب هەلبژارتنا جەماوەری هەلبژێرە.'}</p>${!awarded&&!audience.expired?`<div class="audience-team-buttons">${state.names.map((name,team)=>`<button type="button" data-audience-team="${team}">＋٢ · ${esc(name)}</button>`).join('')}</div>`:''}` }</div>`:'<button id="audienceShowQuestion" class="primary" type="button">دیارکرنا پرسیارێ و دەستپێکرنا ٣٠ چرکەیان</button>'}
  <div class="audience-continue"><button id="audiencePrevious" type="button">یا بەرێ · قۆناغا دووێ</button><button id="audienceContinue" type="button" ${awarded||audience.expired?'':'disabled'}>بەردەوامبوون بۆ قۆناغا سێیێ</button><button id="audienceHome" type="button">لاپەڕا سەرەکی</button></div>
  </section>`;
