@@ -1,7 +1,7 @@
 'use strict';
-const rounds=[{name:'ماذا تعرف؟',description:'سؤال وأربعة اختيارات',seconds:30,points:2},{name:'عين الجغرافي',description:'تعرّف على الظاهرة',seconds:30,points:2},{name:'تحدّي السرعة',description:'أكبر عدد في ٣٠ ثانية',seconds:30,points:2},{name:'سؤال السرعة',description:'٦ أسئلة للفريق الأسرع',seconds:30,points:2}];
+const rounds=[{name:'ماذا تعرف؟',description:'سؤال وأربعة اختيارات',seconds:30,points:2},{name:'عين الجغرافي',description:'تعرّف على الظاهرة',seconds:30,points:2},{name:'تحدّي السرعة',description:'أكبر عدد في ٣٠ ثانية',seconds:30,points:2},{name:'سؤال السرعة',description:'١٠ أسئلة للفريق الأسرع',seconds:30,points:2}];
 const defaults=window.GEOGRAPHY_BANK;
-const BANK_VERSION=6;
+const BANK_VERSION=7;
 const KEY='geography-competition-v1';
 const DEFAULT_TEAM_NAMES=['هێزا جوگراڤی','لێدانا جوگرافیایێ'];
 function fresh(){return {names:[...DEFAULT_TEAM_NAMES],scores:[0,0],index:-1,resumeIndex:null,questions:structuredClone(defaults),awarded:{},revealed:{},sound:true,choices:{},speedCounts:{},buzzerAwards:{},bankVersion:BANK_VERSION};}
@@ -44,6 +44,18 @@ if(state.bankVersion<6){
   return source?{...q,options:structuredClone(source.options),correctIndex:source.correctIndex}:q;
  });
  state.bankVersion=6;save();
+}
+// Install the new Kurdish competition bank for installations still using the old built-in questions.
+if(state.bankVersion<7){
+ const oldBuiltIn=state.questions.some(q=>q.id==='term0'&&q.q.startsWith('احترار غير اعتيادي'));
+ if(oldBuiltIn){
+  state.questions=structuredClone(defaults);
+  state.index=-1;
+  state.resumeIndex=null;
+  state.scores=[0,0];
+  state.awarded={};state.revealed={};state.choices={};state.speedCounts={};state.buzzerAwards={};
+ }
+ state.bankVersion=7;save();
 }
 if(!state.buzzerAwards||typeof state.buzzerAwards!=='object'||Array.isArray(state.buzzerAwards))state.buzzerAwards={};
 if(!state.speedCounts||typeof state.speedCounts!=='object'||Array.isArray(state.speedCounts))state.speedCounts={};
@@ -88,7 +100,7 @@ if(!speed){$('#reveal').onclick=()=>{stop();state.revealed[q.id]=!revealed;save(
 }else{$('#award').onclick=()=>{if(state.awarded[q.id])return;state.awarded[q.id]=r.points;score(q.team,r.points);redrawQuestion();};if($('#undo'))$('#undo').onclick=()=>{const amount=state.awarded[q.id];delete state.awarded[q.id];score(q.team,-amount);redrawQuestion();};}}
 }
 function returnHome(){if($('#config').open)$('#config').close();go(-1);window.scrollTo({top:0,behavior:'smooth'});}
-$('#home').onclick=e=>{e.preventDefault();returnHome();};$('#goHome').onclick=returnHome;$('#dialogHome').onclick=returnHome;document.querySelectorAll('[data-score]').forEach(btn=>btn.onclick=()=>score(...btn.dataset.score.split(',').map(Number)));$('#full').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.().catch(()=>{});};$('#settings').onclick=()=>{stop();$('#teamA').value=state.names[0];$('#teamB').value=state.names[1];$('#editor').value=JSON.stringify(state.questions,null,2);$('#error').textContent='';$('#config').showModal();};$('#close').onclick=()=>$('#config').close();$('#form').onsubmit=e=>{e.preventDefault();try{let qs=JSON.parse($('#editor').value);if(!Array.isArray(qs)||qs.length<4||new Set(qs.map(q=>q.id)).size!==qs.length||qs.some(q=>!q.id||typeof q.q!=='string'||typeof q.answer!=='string'||![0,1,2,3].includes(q.round)||(q.round===3?q.team!==null:![0,1].includes(q.team))||(q.image&&!/^assets\/[a-z0-9_.-]+$/i.test(q.image))||(q.options&&(!Array.isArray(q.options)||q.options.length!==4||q.options.some(x=>typeof x!=='string'||!x.trim())||new Set(q.options).size!==4||!Number.isInteger(q.correctIndex)||q.correctIndex<0||q.correctIndex>3||q.options[q.correctIndex]!==q.answer)))||rounds.some((_,i)=>!qs.some(q=>q.round===i))||qs.filter(q=>q.round===3).length!==6)throw Error('تحقق من بنية الأسئلة ومعرّفاتها، ومن وجود الجولات الأربع وستة أسئلة في سؤال السرعة.');state.names=[$('#teamA').value.trim()||DEFAULT_TEAM_NAMES[0],$('#teamB').value.trim()||DEFAULT_TEAM_NAMES[1]];state.questions=qs;state.index=Math.min(state.index,qs.length);state.choices={};save();$('#config').close();render();}catch(e){$('#error').textContent=e.message;}};$('#reset').onclick=()=>{if(confirm('هل تريد بدء مسابقة جديدة؟ ستُصفّر الدرجات ويُحذف تقدّم المسابقة، مع الاحتفاظ بالأسئلة والأسماء.')){stop();state={...fresh(),names:state.names,questions:state.questions,sound:state.sound};save();$('#config').close();render();}};render();
+$('#home').onclick=e=>{e.preventDefault();returnHome();};$('#goHome').onclick=returnHome;$('#dialogHome').onclick=returnHome;document.querySelectorAll('[data-score]').forEach(btn=>btn.onclick=()=>score(...btn.dataset.score.split(',').map(Number)));$('#full').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.().catch(()=>{});};$('#settings').onclick=()=>{stop();$('#teamA').value=state.names[0];$('#teamB').value=state.names[1];$('#editor').value=JSON.stringify(state.questions,null,2);$('#error').textContent='';$('#config').showModal();};$('#close').onclick=()=>$('#config').close();$('#form').onsubmit=e=>{e.preventDefault();try{let qs=JSON.parse($('#editor').value);if(!Array.isArray(qs)||qs.length<4||new Set(qs.map(q=>q.id)).size!==qs.length||qs.some(q=>!q.id||typeof q.q!=='string'||typeof q.answer!=='string'||![0,1,2,3].includes(q.round)||(q.round===3?q.team!==null:![0,1].includes(q.team))||(q.image&&!/^assets\/[a-z0-9_.-]+$/i.test(q.image))||(q.options&&(!Array.isArray(q.options)||q.options.length!==4||q.options.some(x=>typeof x!=='string'||!x.trim())||new Set(q.options).size!==4||!Number.isInteger(q.correctIndex)||q.correctIndex<0||q.correctIndex>3||q.options[q.correctIndex]!==q.answer)))||rounds.some((_,i)=>!qs.some(q=>q.round===i))||qs.filter(q=>q.round===3).length!==10)throw Error('تحقق من بنية الأسئلة ومعرّفاتها، ومن وجود الجولات الأربع وعشرة أسئلة في سؤال السرعة.');state.names=[$('#teamA').value.trim()||DEFAULT_TEAM_NAMES[0],$('#teamB').value.trim()||DEFAULT_TEAM_NAMES[1]];state.questions=qs;state.index=Math.min(state.index,qs.length);state.choices={};save();$('#config').close();render();}catch(e){$('#error').textContent=e.message;}};$('#reset').onclick=()=>{if(confirm('هل تريد بدء مسابقة جديدة؟ ستُصفّر الدرجات ويُحذف تقدّم المسابقة، مع الاحتفاظ بالأسئلة والأسماء.')){stop();state={...fresh(),names:state.names,questions:state.questions,sound:state.sound};save();$('#config').close();render();}};render();
 
 var fitFrame;
 function fitQuestion(){
