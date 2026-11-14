@@ -5,7 +5,9 @@ const BANK_VERSION=9;
 const KEY='geography-competition-v1';
 const DEFAULT_TEAM_NAMES=['هێزا جوگراڤی','دلێ جوگرافيێ'];
 const DEFAULT_TEAM_MEMBERS=[["پیلان کمال فخرالدین","رێژين فرحان حامد","دیدار خیر الدین نجم الدین","سفیان حازم خدر","دلفين نقيب صبري","جنان الياس جمعه","لؤي صدقي محمدسعيد"],["رويدة جاسم عمران","نقار عمران محمد صديق","دلگه ش أحمد زبير","مينا محمدعلي حازم","نەوزاد شاهين طه","رنگين سكتان محمد","شرمين مصطفى شينو"]];
-function fresh(){return {names:[...DEFAULT_TEAM_NAMES],members:structuredClone(DEFAULT_TEAM_MEMBERS),scores:[0,0],index:-1,resumeIndex:null,questions:structuredClone(defaults),awarded:{},revealed:{},sound:true,choices:{},speedCounts:{},buzzerAwards:{},unlocked:{},bankVersion:BANK_VERSION};}
+const DEFAULT_AUDIENCE_QUESTION='مەزنترین ئۆقیانووسێ جیهانێ کیژە؟';
+const DEFAULT_AUDIENCE_ANSWER='ئۆقیانووسا ئارام (Pacific)';
+function fresh(){return {audience:null,audienceQuestion:DEFAULT_AUDIENCE_QUESTION,audienceAnswer:DEFAULT_AUDIENCE_ANSWER,names:[...DEFAULT_TEAM_NAMES],members:structuredClone(DEFAULT_TEAM_MEMBERS),scores:[0,0],index:-1,resumeIndex:null,questions:structuredClone(defaults),awarded:{},revealed:{},sound:true,choices:{},speedCounts:{},buzzerAwards:{},unlocked:{},bankVersion:BANK_VERSION};}
 let state;try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved&&!saved.bankVersion)saved.bankVersion=1;state=saved&&Array.isArray(saved.questions)&&saved.questions.length&&Array.isArray(saved.names)&&Array.isArray(saved.scores)?{...fresh(),...saved}:fresh();}catch{state=fresh();}
 // Update old generic names, preserving names already customized in Settings.
 let namesUpdated=false;
@@ -112,8 +114,90 @@ function tick(){remaining=Math.max(0,Math.ceil((deadline-Date.now())/1000));upda
 function updateTimer(){if(!$('#timer'))return;$('#timer').textContent=remaining;$('#timer').classList.toggle('urgent',remaining<=5);const ratio=Math.max(0,Math.min(1,remaining/rounds[state.questions[state.index].round].seconds));$('#bar').style.width=(ratio*100)+'%';$('#bar').classList.toggle('time-warning',remaining<=5);}
 function startTimer(){if(interval){remaining=Math.max(0,Math.ceil((deadline-Date.now())/1000));stop();$('#startTimer').textContent='دووبارە دەستپێکرن';$('#timerStatus').textContent='دەمژمێر راوه‌ستیایە';}else if(remaining>0){deadline=Date.now()+remaining*1000;interval=setInterval(tick,100);$('#startTimer').textContent='راوەستاندنا دەمژمێری';$('#timerStatus').textContent='دەم دچیت';}}
 function redrawQuestion(){const seconds=remaining;stop();render();remaining=seconds;updateTimer();if(remaining===0){$('#startTimer').disabled=true;$('#startTimer').textContent='دەم تەمام بوو';$('#timerStatus').textContent='دەم تەمام بوو';}else if(remaining<30){$('#startTimer').textContent='دووبارە دەستپێکرن';$('#timerStatus').textContent='دەمژمێر راوه‌ستیایە';}}
-function go(index){stop();state.revealed={};state.speedCounts={};state.index=Math.max(-1,Math.min(index,state.questions.length));if(state.index>=0)state.resumeIndex=state.index;save();render();}
-function render(){renderScores();$('#homeLogos').hidden=state.index>=0;$('.scoreboard').hidden=state.index<0;const active=state.questions[state.index];$('#headerTurn').hidden=!active;$('#headerTurn').classList.toggle('b',active?.team===1);$('#headerTeamName').textContent=active?(active.round===2?'هەردوو تیم':state.names[active.team]):'';const host=$('#stage');document.body.classList.toggle('question-view',state.index>=0&&state.index<state.questions.length);if(state.index<0||state.index>=state.questions.length)document.body.classList.remove('presentation-fit');if(state.index<0){host.innerHTML=`<div class="hero"><p class="eyebrow">پێشبڕکیا زانینا جوگرافی</p><h1>حەفتییا هۆشیارییا جۆگرافی<span class="gaw-word" lang="en" dir="ltr">GAW</span></h1><p>ب پشکدارییا زانکۆیێن دهۆک و زاخۆ، بۆ پێشخستنا زانین و هۆشیارییا جوگرافی.</p><div class="actions"><button class="primary" id="beginNew">دەست پێ بکە</button><button class="primary" id="resumeCompetition" ${state.resumeIndex===null?'disabled':''}>زڤڕین بۆ پێشبڕکیێ</button></div></div><div class="rounds">${rounds.map((r,i)=>`<button class="roundtile" data-round="${i}"><small>قۆناغا ${['ئێکێ','دووێ','سێیێ','چارێ'][i]}</small><strong>${r.name}</strong><span>${r.description} · ${state.questions.filter(q=>q.round===i).length} پرسیار</span></button>`).join('')}</div>`;$('#beginNew').onclick=()=>{if(state.resumeIndex!==null&&!confirm('دەستپێکرنا پێشبڕکییەکا نوو دێ خاڵێن پێشبڕکییا نوکە و پێشڤەچوونا وێ بکەتە سفر. دێ بەردەوام بی؟'))return;stop();state={...fresh(),names:state.names,members:structuredClone(state.members),questions:state.questions,sound:state.sound};go(0);};$('#resumeCompetition').onclick=()=>{if(state.resumeIndex!==null)go(state.resumeIndex);};host.querySelectorAll('[data-round]').forEach(x=>x.onclick=()=>go(state.questions.findIndex(q=>q.round===+x.dataset.round)));return;}
+// A single audience interlude after the visual round; never part of the question bank.
+function go(index){
+ stop();
+ const target=Math.max(-1,Math.min(index,state.questions.length));
+ const current=state.questions[state.index],next=state.questions[target];
+ const audience=state.audience;
+ const exitsSecondRound=current?.round===1&&target>state.index&&(!next||next.round>1);
+ if(!audience?.completed&&(exitsSecondRound||(audience?.pending&&target===audience.targetIndex))){
+  state.audience=audience?.pending?{...audience,active:true}:{active:true,pending:true,completed:false,targetIndex:target,questionVisible:false,answerVisible:false,awardedTeam:null};
+  state.resumeIndex=state.audience.targetIndex;
+  state.revealed={};state.speedCounts={};save();render();return;
+ }
+ if(audience)audience.active=false;
+ state.revealed={};state.speedCounts={};state.index=target;
+ if(state.index>=0)state.resumeIndex=state.index;
+ save();render();
+}
+function renderAudience(){
+ const audience=state.audience,host=$('#stage');
+ $('#homeLogos').hidden=true;$('.scoreboard').hidden=false;
+ $('#headerTurn').hidden=false;$('#headerTurn').classList.remove('b');
+ $('#headerTeamName').textContent='پرسیارا جەماوەری';
+ document.body.classList.remove('question-view','presentation-fit');
+ const awarded=Number.isInteger(audience.awardedTeam);
+ const crowd=Array.from({length:11},(_,i)=>{
+  const x=58+i*48,y=i%2?136:153,scale=i%2?.82:1;
+  return `<g transform="translate(${x} ${y}) scale(${scale})"><circle cy="-33" r="12"/><path d="M-23 24v-26q0-17 23-17T23-2v26Z"/><path d="M-17-8-30-29M17-8l30-30" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/></g>`;
+ }).join('');
+ host.innerHTML=`<style>
+ .audience-break{position:relative;isolation:isolate;width:min(100%,1000px);margin:auto;padding:clamp(18px,3vw,38px);border:1px solid #c7b395;border-radius:22px;text-align:center;background:radial-gradient(ellipse at 50% 0%,#fffdf8,#f0e3d1);color:#493c2e;box-shadow:0 16px 42px #57452f20;overflow:hidden}
+ .audience-break::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.16;pointer-events:none;background:repeating-radial-gradient(ellipse at 15% 15%,transparent 0 38px,#8e9d99 39px 40px,transparent 41px 80px)}
+ .audience-break .audience-kicker{color:#8b692e;font:700 11px Arial,sans-serif;letter-spacing:3px;direction:ltr;margin:0 0 9px}
+ .audience-break h1{font-size:clamp(26px,3.4vw,43px);margin:0;color:#64513f;line-height:1.5}
+ .audience-break .audience-intro{font-size:clamp(15px,1.5vw,21px);color:#537c87;line-height:1.8;margin:8px auto 12px}
+ .audience-break .audience-scene{display:block;width:min(100%,570px);height:auto;margin:4px auto 12px;overflow:visible}
+ .audience-break .audience-crowd{color:#536e75;fill:currentColor;animation:audience-cheer 3.5s ease-in-out infinite;transform-origin:300px 180px}
+ .audience-break .audience-spark{animation:audience-spark 3s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+ .audience-break .audience-question{margin:16px auto 0;padding:clamp(16px,2.5vw,28px);border:1px solid #b6a48c;border-radius:16px;background:#fffaf2;max-width:850px;animation:audience-arrive .4s ease-out both}
+ .audience-break .audience-question h2{margin:0;color:#005a9c;font-size:clamp(23px,3vw,36px);line-height:1.7;overflow-wrap:anywhere}
+ .audience-break .audience-answer{padding:12px 18px;border:1px solid #a0b8ab;border-radius:10px;background:#e7eee4;color:#325c4d;line-height:1.8;font-size:clamp(17px,2vw,23px);white-space:pre-wrap}
+ .audience-break .audience-award-hint{line-height:1.8;color:#64513f;margin:15px 0 10px}
+ .audience-break .audience-team-buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+ .audience-break .audience-team-buttons button{flex:1 1 210px;max-width:360px;white-space:normal;background:#64513f;color:#fffaf1;border-color:#64513f;padding:14px 18px;line-height:1.6;font-size:clamp(16px,1.8vw,22px)}
+ .audience-break .audience-team-buttons button:last-child{background:#537c87;border-color:#537c87}
+ .audience-break .audience-awarded{font-size:clamp(18px,2vw,25px);line-height:1.8;color:#325c4d;margin:16px 0 4px}
+ .audience-break .audience-continue{margin-top:20px;padding-top:17px;border-top:1px solid #c7b395;display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+ .audience-break button{white-space:normal;line-height:1.6}
+ @keyframes audience-cheer{50%{transform:translateY(-4px)}}
+ @keyframes audience-spark{50%{opacity:.3;transform:scale(.6)}}
+ @keyframes audience-arrive{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+ @media(max-width:600px){.audience-break{padding:18px 12px}.audience-break .audience-scene{max-width:340px}.audience-break .audience-team-buttons{flex-direction:column;align-items:stretch}.audience-break .audience-team-buttons button{flex:auto;max-width:none;width:100%}}
+ @media(prefers-reduced-motion:reduce){.audience-break *{animation:none!important}}
+ </style><section class="audience-break" aria-labelledby="audienceTitle">
+ <p class="audience-kicker">GEOGRAPHY AWARENESS WEEK · AUDIENCE</p>
+ <h1 id="audienceTitle">نوکە دۆرا جەماوەرییە!</h1>
+ <p class="audience-intro">بەرسڤا دروست بدە، پاشی تیمەکێ هەلبژێرە و دوو خاڵان پێ ببەخشە.</p>
+ <svg class="audience-scene" viewBox="0 0 600 220" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+ <defs><linearGradient id="audienceLight" x2="0" y2="1"><stop stop-color="#d9bb79" stop-opacity=".05"/><stop offset="1" stop-color="#d9bb79" stop-opacity=".38"/></linearGradient></defs>
+ <ellipse cx="300" cy="189" rx="267" ry="18" fill="#b99b6a" opacity=".19"/>
+ <path d="M166 20 95 182H280ZM434 20 320 182H505Z" fill="url(#audienceLight)"/>
+ <g class="audience-crowd">${crowd}</g>
+ <g fill="#b18b48"><path class="audience-spark" d="m300 25 4 10 11 1-8 7 2 11-9-6-9 6 2-11-8-7 11-1Z"/><circle class="audience-spark" cx="215" cy="57" r="4"/><circle class="audience-spark" cx="390" cy="52" r="3"/><path class="audience-spark" d="m118 61 6 6-6 6-6-6ZM477 42l5 5-5 5-5-5Z"/></g>
+ <path d="M75 195H525" stroke="#ad8a51" stroke-width="2" stroke-linecap="round"/>
+ </svg>
+ ${audience.questionVisible?`<div class="audience-question"><h2>${esc(state.audienceQuestion||DEFAULT_AUDIENCE_QUESTION)}</h2>
+ ${audience.answerVisible?`<p class="audience-answer">${esc(state.audienceAnswer||DEFAULT_AUDIENCE_ANSWER)}</p>
+ ${awarded?`<p class="audience-awarded" role="status">✓ دوو خاڵ هاتنە بەخشین بۆ ${esc(state.names[audience.awardedTeam])}</p><button id="audienceUndo" type="button">ڤەگەڕاندنا دوو خاڵان</button>`:`<p class="audience-award-hint">ئەگەر بەرسڤ دروستە، ب هەلبژارتنا وەلاتیێ بەشدار دوو خاڵان بدە تیمەکێ:</p><div class="audience-team-buttons">${state.names.map((name,team)=>`<button type="button" data-audience-team="${team}">＋٢ · ${esc(name)}</button>`).join('')}</div>`}`:'<button id="audienceRevealAnswer" type="button">دیارکرنا بەرسڤێ</button>'}</div>`:'<button id="audienceShowQuestion" class="primary" type="button">دیارکرنا پرسیارا جەماوەری</button>'}
+ <div class="audience-continue"><button id="audienceContinue" type="button">${awarded?'بەردەوامبوون بۆ قۆناغا سێیێ':'بەردەوامبوون بێ بەخشینا خاڵان'}</button><button id="audienceHome" type="button">لاپەڕا سەرەکی</button></div>
+ </section>`;
+ if(!audience.questionVisible)$('#audienceShowQuestion').onclick=()=>{audience.questionVisible=true;save();render();};
+ if(audience.questionVisible&&!audience.answerVisible)$('#audienceRevealAnswer').onclick=()=>{audience.answerVisible=true;save();render();};
+ host.querySelectorAll('[data-audience-team]').forEach(button=>button.onclick=()=>{
+  if(Number.isInteger(audience.awardedTeam)||!audience.answerVisible)return;
+  const team=Number(button.dataset.audienceTeam);if(team!==0&&team!==1)return;
+  audience.awardedTeam=team;score(team,2);render();
+ });
+ if(awarded)$('#audienceUndo').onclick=()=>{
+  if(!Number.isInteger(audience.awardedTeam))return;
+  const team=audience.awardedTeam;audience.awardedTeam=null;score(team,-2);render();
+ };
+ $('#audienceContinue').onclick=()=>{if(!audience.active)return;audience.completed=true;audience.pending=false;audience.active=false;save();go(audience.targetIndex);};
+ $('#audienceHome').onclick=()=>go(-1);
+}
+function render(){renderScores();if(state.audience?.active){renderAudience();return;}$('#homeLogos').hidden=state.index>=0;$('.scoreboard').hidden=state.index<0;const active=state.questions[state.index];$('#headerTurn').hidden=!active;$('#headerTurn').classList.toggle('b',active?.team===1);$('#headerTeamName').textContent=active?(active.round===2?'هەردوو تیم':state.names[active.team]):'';const host=$('#stage');document.body.classList.toggle('question-view',state.index>=0&&state.index<state.questions.length);if(state.index<0||state.index>=state.questions.length)document.body.classList.remove('presentation-fit');if(state.index<0){host.innerHTML=`<div class="hero"><p class="eyebrow">پێشبڕکیا زانینا جوگرافی</p><h1>حەفتییا هۆشیارییا جۆگرافی<span class="gaw-word" lang="en" dir="ltr">GAW</span></h1><p>ب پشکدارییا زانکۆیێن دهۆک و زاخۆ، بۆ پێشخستنا زانین و هۆشیارییا جوگرافی.</p><div class="actions"><button class="primary" id="beginNew">دەست پێ بکە</button><button class="primary" id="resumeCompetition" ${state.resumeIndex===null?'disabled':''}>زڤڕین بۆ پێشبڕکیێ</button></div></div><div class="rounds">${rounds.map((r,i)=>`<button class="roundtile" data-round="${i}"><small>قۆناغا ${['ئێکێ','دووێ','سێیێ','چارێ'][i]}</small><strong>${r.name}</strong><span>${r.description} · ${state.questions.filter(q=>q.round===i).length} پرسیار</span></button>`).join('')}</div>`;$('#beginNew').onclick=()=>{if(state.resumeIndex!==null&&!confirm('دەستپێکرنا پێشبڕکییەکا نوو دێ خاڵێن پێشبڕکییا نوکە و پێشڤەچوونا وێ بکەتە سفر. دێ بەردەوام بی؟'))return;stop();state={...fresh(),names:state.names,members:structuredClone(state.members),questions:state.questions,sound:state.sound,audienceQuestion:state.audienceQuestion,audienceAnswer:state.audienceAnswer};go(0);};$('#resumeCompetition').onclick=()=>{if(state.resumeIndex!==null)go(state.resumeIndex);};host.querySelectorAll('[data-round]').forEach(x=>x.onclick=()=>go(state.questions.findIndex(q=>q.round===+x.dataset.round)));return;}
 if(state.index>=state.questions.length){
  const tie=state.scores[0]===state.scores[1];
  const winnerIndex=state.scores[0]>state.scores[1]?0:1;
@@ -309,7 +393,7 @@ if(!speed){$('#reveal').onclick=()=>{stop();state.revealed[q.id]=!revealed;if(st
 }else{$('#award').onclick=()=>{if(state.awarded[q.id])return;state.awarded[q.id]=r.points;state.unlocked[q.id]=true;score(q.team,r.points);redrawQuestion();};if($('#undo'))$('#undo').onclick=()=>{const amount=state.awarded[q.id];delete state.awarded[q.id];score(q.team,-amount);redrawQuestion();};}}
 }
 function returnHome(){if($('#config').open)$('#config').close();go(-1);window.scrollTo({top:0,behavior:'smooth'});}
-$('#home').onclick=e=>{e.preventDefault();returnHome();};$('#goHome').onclick=returnHome;$('#dialogHome').onclick=returnHome;document.querySelectorAll('[data-score]').forEach(btn=>btn.onclick=()=>score(...btn.dataset.score.split(',').map(Number)));$('#full').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.().catch(()=>{});};$('#settings').onclick=()=>{stop();$('#teamA').value=state.names[0];$('#teamB').value=state.names[1];$('#membersA').value=(state.members[0]||[]).join('\n');$('#membersB').value=(state.members[1]||[]).join('\n');$('#editor').value=JSON.stringify(state.questions,null,2);$('#error').textContent='';$('#config').showModal();};$('#close').onclick=()=>$('#config').close();$('#form').onsubmit=e=>{e.preventDefault();try{let qs=JSON.parse($('#editor').value);if(!Array.isArray(qs)||qs.length<4||new Set(qs.map(q=>q.id)).size!==qs.length||qs.some(q=>!q.id||typeof q.q!=='string'||typeof q.answer!=='string'||![0,1,2,3].includes(q.round)||(q.round===2?q.team!==null:![0,1].includes(q.team))||(q.image&&!/^assets\/[a-z0-9_.-]+$/i.test(q.image))||(q.options&&(!Array.isArray(q.options)||q.options.length!==4||q.options.some(x=>typeof x!=='string'||!x.trim())||new Set(q.options).size!==4||!Number.isInteger(q.correctIndex)||q.correctIndex<0||q.correctIndex>3||q.options[q.correctIndex]!==q.answer)))||rounds.some((_,i)=>!qs.some(q=>q.round===i))||qs.filter(q=>q.round===2).length!==10)throw Error('پێکهاتە و ناسنامەیێن پرسیاران بپشکنە؛ پێدڤیە چار قۆناغ و دەه پرسیار د قۆناغا هەڤرکییا لەزاتیێ دا هەبن.');state.names=[$('#teamA').value.trim()||DEFAULT_TEAM_NAMES[0],$('#teamB').value.trim()||DEFAULT_TEAM_NAMES[1]];state.members=[$('#membersA').value,$('#membersB').value].map(value=>value.split(/\r?\n/).map(name=>name.trim()).filter(Boolean).slice(0,30));state.questions=qs;state.index=Math.min(state.index,qs.length);state.choices={};save();$('#config').close();render();}catch(e){$('#error').textContent=e.message;}};$('#reset').onclick=()=>{if(confirm('دێ پێشبڕکییەکا نوو دەست پێ بکەی؟ خاڵ و پێشڤەچوون دێ بنە سفر، لێ پرسیار و ناڤ دێ پاراستی مینن.')){stop();state={...fresh(),names:state.names,members:structuredClone(state.members),questions:state.questions,sound:state.sound};save();$('#config').close();render();}};render();
+$('#home').onclick=e=>{e.preventDefault();returnHome();};$('#goHome').onclick=returnHome;$('#dialogHome').onclick=returnHome;document.querySelectorAll('[data-score]').forEach(btn=>btn.onclick=()=>score(...btn.dataset.score.split(',').map(Number)));$('#full').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.().catch(()=>{});};$('#settings').onclick=()=>{stop();$('#teamA').value=state.names[0];$('#teamB').value=state.names[1];$('#membersA').value=(state.members[0]||[]).join('\n');$('#membersB').value=(state.members[1]||[]).join('\n');$('#audienceQuestion').value=state.audienceQuestion||DEFAULT_AUDIENCE_QUESTION;$('#audienceAnswer').value=state.audienceAnswer||DEFAULT_AUDIENCE_ANSWER;$('#editor').value=JSON.stringify(state.questions,null,2);$('#error').textContent='';$('#config').showModal();};$('#close').onclick=()=>$('#config').close();$('#form').onsubmit=e=>{e.preventDefault();try{let qs=JSON.parse($('#editor').value);if(!Array.isArray(qs)||qs.length<4||new Set(qs.map(q=>q.id)).size!==qs.length||qs.some(q=>!q.id||typeof q.q!=='string'||typeof q.answer!=='string'||![0,1,2,3].includes(q.round)||(q.round===2?q.team!==null:![0,1].includes(q.team))||(q.image&&!/^assets\/[a-z0-9_.-]+$/i.test(q.image))||(q.options&&(!Array.isArray(q.options)||q.options.length!==4||q.options.some(x=>typeof x!=='string'||!x.trim())||new Set(q.options).size!==4||!Number.isInteger(q.correctIndex)||q.correctIndex<0||q.correctIndex>3||q.options[q.correctIndex]!==q.answer)))||rounds.some((_,i)=>!qs.some(q=>q.round===i))||qs.filter(q=>q.round===2).length!==10)throw Error('پێکهاتە و ناسنامەیێن پرسیاران بپشکنە؛ پێدڤیە چار قۆناغ و دەه پرسیار د قۆناغا هەڤرکییا لەزاتیێ دا هەبن.');state.names=[$('#teamA').value.trim()||DEFAULT_TEAM_NAMES[0],$('#teamB').value.trim()||DEFAULT_TEAM_NAMES[1]];state.members=[$('#membersA').value,$('#membersB').value].map(value=>value.split(/\r?\n/).map(name=>name.trim()).filter(Boolean).slice(0,30));state.audienceQuestion=$('#audienceQuestion').value.trim()||DEFAULT_AUDIENCE_QUESTION;state.audienceAnswer=$('#audienceAnswer').value.trim()||DEFAULT_AUDIENCE_ANSWER;state.questions=qs;state.index=Math.min(state.index,qs.length);state.choices={};save();$('#config').close();render();}catch(e){$('#error').textContent=e.message;}};$('#reset').onclick=()=>{if(confirm('دێ پێشبڕکییەکا نوو دەست پێ بکەی؟ خاڵ و پێشڤەچوون دێ بنە سفر، لێ پرسیار و ناڤ دێ پاراستی مینن.')){stop();state={...fresh(),names:state.names,members:structuredClone(state.members),questions:state.questions,sound:state.sound,audienceQuestion:state.audienceQuestion,audienceAnswer:state.audienceAnswer};save();$('#config').close();render();}};render();
 
 var fitFrame;
 function fitQuestion(){
