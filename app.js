@@ -7,7 +7,7 @@ const DEFAULT_TEAM_NAMES=['هێزا جوگراڤی','دلێ جوگرافيێ'];
 const DEFAULT_TEAM_MEMBERS=[["پیلان کمال فخرالدین","رێژين فرحان حامد","دیدار خیر الدین نجم الدین","سفیان حازم خدر","دلفين نقيب صبري","جنان الياس جمعه","لؤي صدقي محمدسعيد"],["رويدة جاسم عمران","نقار عمران محمد صديق","دلگه ش أحمد زبير","مينا محمدعلي حازم","نەوزاد شاهين طه","رنگين سكتان محمد","شرمين مصطفى شينو"]];
 const DEFAULT_AUDIENCE_QUESTION='مەزنترین ئۆقیانووسێ جیهانێ کیژە؟';
 const DEFAULT_AUDIENCE_ANSWER='ئۆقیانووسا ئارام (Pacific)';
-function fresh(){return {audience:null,audienceQuestion:DEFAULT_AUDIENCE_QUESTION,audienceAnswer:DEFAULT_AUDIENCE_ANSWER,names:[...DEFAULT_TEAM_NAMES],members:structuredClone(DEFAULT_TEAM_MEMBERS),scores:[0,0],index:-1,resumeIndex:null,questions:structuredClone(defaults),awarded:{},revealed:{},sound:true,choices:{},speedCounts:{},buzzerAwards:{},unlocked:{},bankVersion:BANK_VERSION};}
+function fresh(){return {speedIntro:null,audience:null,audienceQuestion:DEFAULT_AUDIENCE_QUESTION,audienceAnswer:DEFAULT_AUDIENCE_ANSWER,names:[...DEFAULT_TEAM_NAMES],members:structuredClone(DEFAULT_TEAM_MEMBERS),scores:[0,0],index:-1,resumeIndex:null,questions:structuredClone(defaults),awarded:{},revealed:{},sound:true,choices:{},speedCounts:{},buzzerAwards:{},unlocked:{},bankVersion:BANK_VERSION};}
 let state;try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved&&!saved.bankVersion)saved.bankVersion=1;state=saved&&Array.isArray(saved.questions)&&saved.questions.length&&Array.isArray(saved.names)&&Array.isArray(saved.scores)?{...fresh(),...saved}:fresh();}catch{state=fresh();}
 // Update old generic names, preserving names already customized in Settings.
 let namesUpdated=false;
@@ -115,7 +115,7 @@ function updateTimer(){if(!$('#timer'))return;$('#timer').textContent=remaining;
 function startTimer(){if(interval){remaining=Math.max(0,Math.ceil((deadline-Date.now())/1000));stop();$('#startTimer').textContent='دووبارە دەستپێکرن';$('#timerStatus').textContent='دەمژمێر راوه‌ستیایە';}else if(remaining>0){deadline=Date.now()+remaining*1000;interval=setInterval(tick,100);$('#startTimer').textContent='راوەستاندنا دەمژمێری';$('#timerStatus').textContent='دەم دچیت';}}
 function redrawQuestion(){const seconds=remaining;stop();render();remaining=seconds;updateTimer();if(remaining===0){$('#startTimer').disabled=true;$('#startTimer').textContent='دەم تەمام بوو';$('#timerStatus').textContent='دەم تەمام بوو';}else if(remaining<30){$('#startTimer').textContent='دووبارە دەستپێکرن';$('#timerStatus').textContent='دەمژمێر راوه‌ستیایە';}}
 // A persistent audience stop between rounds two and three, in both navigation directions.
-function go(index,skipAudience=false){
+function go(index,skipAudience=false,skipSpeedIntro=false){
  stop();
  const target=Math.max(-1,Math.min(index,state.questions.length));
  const current=state.questions[state.index],next=state.questions[target];
@@ -123,6 +123,11 @@ function go(index,skipAudience=false){
  const exitsSecondRound=current?.round===1&&target>state.index&&(!next||next.round>1);
  const returnsToSecondRound=current?.round>=2&&target<state.index&&next?.round===1;
  const resumesAudience=audience?.pending&&target===audience.targetIndex;
+ // Backward navigation follows: first speed question -> speed intro -> audience.
+ if(!skipSpeedIntro&&returnsToSecondRound){
+  const firstThird=state.questions.findIndex(q=>q.round===2);
+  if(firstThird>=0){openSpeedIntro(firstThird);return;}
+ }
  if(!skipAudience&&(exitsSecondRound||returnsToSecondRound||resumesAudience)){
   const thirdRoundStart=state.questions.findIndex(q=>q.round>1);
   const destination=returnsToSecondRound?(thirdRoundStart<0?state.questions.length:thirdRoundStart):resumesAudience?audience.targetIndex:target;
@@ -130,10 +135,93 @@ function go(index,skipAudience=false){
   state.resumeIndex=destination;
   state.revealed={};state.speedCounts={};save();render();return;
  }
+ if(!skipSpeedIntro&&next?.round===2&&((state.speedIntro?.pending&&target===state.speedIntro.targetIndex)||current?.round!==2)){
+  openSpeedIntro(target);return;
+ }
+ if(state.speedIntro)state.speedIntro.active=false;
  if(audience)audience.active=false;
  state.revealed={};state.speedCounts={};state.index=target;
  if(state.index>=0)state.resumeIndex=state.index;
  save();render();
+}
+function openSpeedIntro(targetIndex){
+ stop();
+ if(state.audience){state.audience.active=false;state.audience.pending=false;}
+ state.speedIntro={active:true,pending:true,targetIndex};
+ state.resumeIndex=targetIndex;save();render();
+}
+function renderSpeedIntro(){
+ const intro=state.speedIntro;
+ $('#homeLogos').hidden=true;$('.scoreboard').hidden=false;
+ $('#headerTurn').hidden=false;$('#headerTurn').classList.remove('b');
+ $('#headerTeamName').textContent='قۆناغا سێیێ';
+ document.body.classList.remove('question-view','presentation-fit');
+ const clock=(x,y,r,fast)=>`<g transform="translate(${x} ${y})" class="speed-clock ${fast?'speed-clock-fast':''}"><circle r="${r}"/><circle r="${r-7}" class="speed-clock-inner"/><path d="M0-${r-10}v5M${r-10} 0h-5M0 ${r-10}v-5M-${r-10} 0h5"/><g class="speed-clock-hand"><path d="M0 9V-${r-15}"/></g><path d="M0 0 ${r*.35} ${-r*.2}"/><circle r="3" class="speed-clock-pin"/></g>`;
+ $('#stage').innerHTML=`<style>
+ .speed-intro{width:min(100%,1050px);position:relative;isolation:isolate;overflow:hidden;margin:auto;border-radius:24px;border:1px solid #c7b395;background:radial-gradient(ellipse at 50% 45%,#fffdf7 0%,#f7eddd 58%,#e8dbc7 100%);color:#64513f;text-align:center;padding:clamp(20px,3vw,38px);box-shadow:0 16px 42px #57452f20}
+ .speed-intro::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;opacity:.18;background:repeating-radial-gradient(ellipse at 85% 20%,transparent 0 38px,#87958f 39px 40px,transparent 41px 80px)}
+ .speed-intro .speed-kicker{margin:0;color:#8b692e;font-size:clamp(18px,2.3vw,30px);font-weight:800;letter-spacing:1px}
+ .speed-intro h1{font-size:clamp(32px,4.5vw,63px);line-height:1.45;margin:3px 0 5px;color:#986a28;text-shadow:0 2px #fff9ee}
+ .speed-intro .speed-caption{margin:4px 0 12px;color:#537c87;font-size:clamp(15px,1.6vw,22px);line-height:1.7}
+ .speed-intro .speed-art{display:block;width:min(100%,700px);height:auto;margin:auto;overflow:visible}
+ .speed-intro .speed-clock{fill:#fff9ee;fill-opacity:.65;stroke:#8a9e9c;stroke-width:2}
+ .speed-intro .speed-clock-inner{fill:none;stroke:#b9a685;stroke-width:1;stroke-dasharray:1 7}
+ .speed-intro .speed-clock-hand{animation:speed-hand 18s linear infinite;transform-origin:0 0;stroke:#a1814b;stroke-width:2.5;stroke-linecap:round}
+ .speed-intro .speed-clock-fast .speed-clock-hand{animation-duration:1.15s;stroke:#9e6f2a}
+ .speed-intro .speed-clock-pin{fill:#a1814b;stroke:none}
+ .speed-intro .speed-runner{animation:speed-runner .6s ease-in-out infinite;transform-origin:350px 180px}
+ .speed-intro .speed-limb{animation:speed-stride .32s ease-in-out infinite alternate;transform-origin:350px 197px}
+ .speed-intro .speed-limb.reverse{animation-delay:-.32s}
+ .speed-intro .speed-arm{animation:speed-arm .32s ease-in-out infinite alternate;transform-origin:366px 144px}
+ .speed-intro .speed-arm.reverse{animation-delay:-.32s}
+ .speed-intro .speed-streak{animation:speed-streak .7s linear infinite;animation-delay:var(--delay,0s);transform-origin:center;stroke-linecap:round}
+ .speed-intro .speed-ground{animation:speed-streak .4s linear infinite}
+ .speed-intro .speed-bolt{animation:speed-bolt .45s ease-in-out infinite alternate;transform-origin:350px 160px}
+ .speed-intro .speed-controls{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:16px;padding-top:18px;border-top:1px solid #c7b395}
+ .speed-intro .speed-controls button{white-space:normal;line-height:1.6;padding:12px 20px}
+ .speed-intro #speedIntroStart{background:#64513f;border-color:#64513f;color:#fffaf1;font-size:clamp(17px,1.8vw,23px);min-width:200px;box-shadow:0 4px 13px #64513f30}
+ @keyframes speed-hand{to{transform:rotate(360deg)}}
+ @keyframes speed-stride{from{transform:rotate(-17deg)}to{transform:rotate(18deg)}}
+ @keyframes speed-arm{from{transform:rotate(-14deg)}to{transform:rotate(17deg)}}
+ @keyframes speed-runner{50%{transform:translate(5px,-4px)}}
+ @keyframes speed-streak{from{transform:translateX(65px);opacity:0}20%{opacity:.8}to{transform:translateX(-100px);opacity:0}}
+ @keyframes speed-bolt{to{opacity:.5;transform:translateX(-5px)}}
+ @media(max-width:600px){.speed-intro{padding:20px 12px}.speed-intro .speed-controls{gap:8px}.speed-intro #speedIntroStart{width:100%;order:-1}}
+ @media(prefers-reduced-motion:reduce){.speed-intro *{animation:none!important}}
+ </style><section class="speed-intro" aria-labelledby="speedIntroTitle">
+ <p class="speed-kicker">قۆناغا سێیێ</p>
+ <h1 id="speedIntroTitle">${esc(rounds[2].name)}</h1>
+ <p class="speed-caption">ئامادە بن… ل ڤێرێ لەزاتی جیاوازیێ دروست دکەت!</p>
+ <svg class="speed-art" viewBox="0 0 700 320" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+ <defs><linearGradient id="speedSuit" x1="0" y1="0" x2="1" y2=".6"><stop stop-color="#f36b4a"/><stop offset=".38" stop-color="#c9342b"/><stop offset="1" stop-color="#7f2729"/></linearGradient><radialGradient id="speedAura"><stop stop-color="#f2cd7b" stop-opacity=".48"/><stop offset="1" stop-color="#f2cd7b" stop-opacity="0"/></radialGradient></defs>
+ <ellipse cx="355" cy="177" rx="225" ry="135" fill="url(#speedAura)"/>
+ ${clock(130,91,51,false)}${clock(566,97,57,true)}${clock(530,245,34,false)}${clock(210,250,29,true)}
+ <g fill="none" stroke="#b18b48" stroke-width="3" opacity=".7"><path class="speed-streak" d="M128 132H302"/><path class="speed-streak" style="--delay:-.24s" d="M78 161H280"/><path class="speed-streak" style="--delay:-.5s" d="M152 205H288"/><path class="speed-streak" style="--delay:-.1s" d="M228 101H335"/></g>
+ <g class="speed-bolt" fill="none" stroke="#e8b74e" stroke-width="3" stroke-linejoin="round"><path d="m330 113-45 29 21 4-49 40 45-11-20 34 49-26"/><path d="m374 181-28 34 17-1-30 34"/></g>
+ <ellipse cx="361" cy="283" rx="109" ry="10" fill="#75624b" opacity=".13"/>
+ <g class="speed-runner" stroke-linejoin="round" stroke-linecap="round">
+ <!-- Receding limbs and red motion suit. -->
+ <path class="speed-limb reverse" d="m350 197-28 43-65-4" fill="none" stroke="#872b2a" stroke-width="19"/>
+ <path class="speed-arm reverse" d="m366 144-43-18-28 22" fill="none" stroke="#912c2a" stroke-width="14"/>
+ <path d="M372 132q-18 5-27 28l-12 36 29 13 20-45 9-19Z" fill="url(#speedSuit)" stroke="#8c2d2a" stroke-width="1.5"/>
+ <path d="m337 188 32 13-6 10-31-12Z" fill="#e5bc63"/>
+ <path class="speed-limb" d="m351 201 36 29-9 42 17 3" fill="none" stroke="url(#speedSuit)" stroke-width="20"/>
+ <path class="speed-arm" d="m366 145 30 23 30-28" fill="none" stroke="url(#speedSuit)" stroke-width="15"/>
+ <g transform="rotate(16 389 111)"><path d="M373 93q17-17 32 1l3 19-8 17-23-5-9-17Z" fill="url(#speedSuit)" stroke="#8c2d2a" stroke-width="1.2"/><path d="m393 103 15 4-2 10-12-1-8-7Z" fill="#f1cf9e"/><path d="m389 102 15 3" stroke="#ffe8a5" stroke-width="3"/><path d="m373 103-12 4 6 7" fill="#edc25e"/></g>
+ <circle cx="365" cy="162" r="10" fill="#fff5d3"/><path d="m369 151-11 13 7-1-4 11 12-15-8 2Z" fill="#d7a12d"/>
+ <path d="m374 135 6 4" stroke="#f7c985" stroke-width="3"/>
+ </g>
+ <g class="speed-ground" stroke="#a38d6e" stroke-width="2" opacity=".5"><path d="M260 291h52M350 291h68M440 291h28"/></g>
+ </svg>
+ <div class="speed-controls"><button id="speedIntroPrevious" type="button">یا بەرێ · پرسیارا جەماوەری</button><button id="speedIntroStart" type="button">دەستپێکرنا قۆناغا سێیێ ⚡</button><button id="speedIntroHome" type="button">لاپەڕا سەرەکی</button></div>
+ </section>`;
+ $('#speedIntroStart').onclick=()=>{if(!intro.active)return;intro.pending=false;intro.active=false;save();go(intro.targetIndex,true,true);};
+ $('#speedIntroPrevious').onclick=()=>{
+  if(!intro.active)return;intro.active=false;intro.pending=false;
+  state.audience={questionVisible:false,answerVisible:false,awardedTeam:null,completed:false,...state.audience,active:true,pending:true,targetIndex:intro.targetIndex};
+  state.resumeIndex=intro.targetIndex;save();render();
+ };
+ $('#speedIntroHome').onclick=()=>go(-1);
 }
 function renderAudience(){
  const audience=state.audience,host=$('#stage');
@@ -198,14 +286,14 @@ function renderAudience(){
   if(!Number.isInteger(audience.awardedTeam))return;
   const team=audience.awardedTeam;audience.awardedTeam=null;score(team,-2);render();
  };
- $('#audienceContinue').onclick=()=>{if(!audience.active)return;audience.completed=true;audience.pending=false;audience.active=false;save();go(audience.targetIndex,true);};
+ $('#audienceContinue').onclick=()=>{if(!audience.active)return;audience.completed=true;audience.pending=false;audience.active=false;save();if(state.questions[audience.targetIndex]?.round===2)openSpeedIntro(audience.targetIndex);else go(audience.targetIndex,true,true);};
  $('#audiencePrevious').onclick=()=>{
   const lastSecond=state.questions.reduce((last,q,index)=>q.round===1?index:last,-1);
-  audience.pending=false;audience.active=false;save();go(lastSecond,true);
+  audience.pending=false;audience.active=false;save();go(lastSecond,true,true);
  };
  $('#audienceHome').onclick=()=>go(-1);
 }
-function render(){renderScores();if(state.audience?.active){renderAudience();return;}$('#homeLogos').hidden=state.index>=0;$('.scoreboard').hidden=state.index<0;const active=state.questions[state.index];$('#headerTurn').hidden=!active;$('#headerTurn').classList.toggle('b',active?.team===1);$('#headerTeamName').textContent=active?(active.round===2?'هەردوو تیم':state.names[active.team]):'';const host=$('#stage');document.body.classList.toggle('question-view',state.index>=0&&state.index<state.questions.length);if(state.index<0||state.index>=state.questions.length)document.body.classList.remove('presentation-fit');if(state.index<0){host.innerHTML=`<div class="hero"><p class="eyebrow">پێشبڕکیا زانینا جوگرافی</p><h1>حەفتییا هۆشیارییا جۆگرافی<span class="gaw-word" lang="en" dir="ltr">GAW</span></h1><p>ب پشکدارییا زانکۆیێن دهۆک و زاخۆ، بۆ پێشخستنا زانین و هۆشیارییا جوگرافی.</p><div class="actions"><button class="primary" id="beginNew">دەست پێ بکە</button><button class="primary" id="resumeCompetition" ${state.resumeIndex===null?'disabled':''}>زڤڕین بۆ پێشبڕکیێ</button></div></div><div class="rounds">${rounds.map((r,i)=>`<button class="roundtile" data-round="${i}"><small>قۆناغا ${['ئێکێ','دووێ','سێیێ','چارێ'][i]}</small><strong>${r.name}</strong><span>${r.description} · ${state.questions.filter(q=>q.round===i).length} پرسیار</span></button>`).join('')}</div>`;$('#beginNew').onclick=()=>{if(state.resumeIndex!==null&&!confirm('دەستپێکرنا پێشبڕکییەکا نوو دێ خاڵێن پێشبڕکییا نوکە و پێشڤەچوونا وێ بکەتە سفر. دێ بەردەوام بی؟'))return;stop();state={...fresh(),names:state.names,members:structuredClone(state.members),questions:state.questions,sound:state.sound,audienceQuestion:state.audienceQuestion,audienceAnswer:state.audienceAnswer};go(0);};$('#resumeCompetition').onclick=()=>{if(state.resumeIndex!==null)go(state.resumeIndex);};host.querySelectorAll('[data-round]').forEach(x=>x.onclick=()=>go(state.questions.findIndex(q=>q.round===+x.dataset.round)));return;}
+function render(){renderScores();if(state.speedIntro?.active){renderSpeedIntro();return;}if(state.audience?.active){renderAudience();return;}$('#homeLogos').hidden=state.index>=0;$('.scoreboard').hidden=state.index<0;const active=state.questions[state.index];$('#headerTurn').hidden=!active;$('#headerTurn').classList.toggle('b',active?.team===1);$('#headerTeamName').textContent=active?(active.round===2?'هەردوو تیم':state.names[active.team]):'';const host=$('#stage');document.body.classList.toggle('question-view',state.index>=0&&state.index<state.questions.length);if(state.index<0||state.index>=state.questions.length)document.body.classList.remove('presentation-fit');if(state.index<0){host.innerHTML=`<div class="hero"><p class="eyebrow">پێشبڕکیا زانینا جوگرافی</p><h1>حەفتییا هۆشیارییا جۆگرافی<span class="gaw-word" lang="en" dir="ltr">GAW</span></h1><p>ب پشکدارییا زانکۆیێن دهۆک و زاخۆ، بۆ پێشخستنا زانین و هۆشیارییا جوگرافی.</p><div class="actions"><button class="primary" id="beginNew">دەست پێ بکە</button><button class="primary" id="resumeCompetition" ${state.resumeIndex===null?'disabled':''}>زڤڕین بۆ پێشبڕکیێ</button></div></div><div class="rounds">${rounds.map((r,i)=>`<button class="roundtile" data-round="${i}"><small>قۆناغا ${['ئێکێ','دووێ','سێیێ','چارێ'][i]}</small><strong>${r.name}</strong><span>${r.description} · ${state.questions.filter(q=>q.round===i).length} پرسیار</span></button>`).join('')}</div>`;$('#beginNew').onclick=()=>{if(state.resumeIndex!==null&&!confirm('دەستپێکرنا پێشبڕکییەکا نوو دێ خاڵێن پێشبڕکییا نوکە و پێشڤەچوونا وێ بکەتە سفر. دێ بەردەوام بی؟'))return;stop();state={...fresh(),names:state.names,members:structuredClone(state.members),questions:state.questions,sound:state.sound,audienceQuestion:state.audienceQuestion,audienceAnswer:state.audienceAnswer};go(0);};$('#resumeCompetition').onclick=()=>{if(state.resumeIndex!==null)go(state.resumeIndex);};host.querySelectorAll('[data-round]').forEach(x=>x.onclick=()=>go(state.questions.findIndex(q=>q.round===+x.dataset.round)));return;}
 if(state.index>=state.questions.length){
  const tie=state.scores[0]===state.scores[1];
  const winnerIndex=state.scores[0]>state.scores[1]?0:1;
