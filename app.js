@@ -1,5 +1,5 @@
 'use strict';
-const rounds=[{name:'هەلبژارتن',description:'پرسیار و چار هەلبژارتن',seconds:30,points:2},{name:'ئة ف وينه جيه ؟',description:'دیاردەیێ بناسە',seconds:30,points:2},{name:'هەڤرکییا لەزاتیێ',description:'١٠ پرسیار بۆ تیما ب لەزتر',seconds:30,points:2},{name:'مۆزایەدە',description:'پترین ژمارە د ٣٠ چرکەیان دا',seconds:30,points:2}];
+const rounds=[{name:'هەلبژارتن',description:'پرسیار و چار هەلبژارتن',seconds:30,points:2},{name:'ئەڤ وێنە چییە؟',description:'دیاردەیێ بناسە',seconds:30,points:2},{name:'هەڤرکییا لەزاتیێ',description:'١٠ پرسیار بۆ تیما ب لەزتر',seconds:30,points:2},{name:'مۆزایەدە',description:'پترین ژمارە د ٣٠ چرکەیان دا',seconds:30,points:2}];
 const defaults=window.GEOGRAPHY_BANK.map(q=>({...q,round:q.round===2?3:q.round===3?2:q.round})).sort((a,b)=>a.round-b.round);
 const BANK_VERSION=8;
 const KEY='geography-competition-v1';
