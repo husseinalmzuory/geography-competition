@@ -136,19 +136,30 @@ if(state.index>=state.questions.length){
  </svg></div></div>`;
  const celebration=tie?'':`<div class="academic-fireworks" aria-hidden="true">${[0,1,2,3,4].map((burst)=>`<div class="academic-firework academic-firework-${burst+1}">${Array.from({length:12},(_,i)=>`<i style="--ray:${i};--delay:${burst*.85}s"></i>`).join('')}</div>`).join('')}</div>`;
  const winnerList=!tie&&winnerMembers.length?`<section class="award-roster"><h2>ئەندامێن تیما سەرکەفتی</h2><ol>${winnerMembers.map((name,i)=>`<li><span class="award-member-number">${String(i+1).padStart(2,'0')}</span><span>${esc(name)}</span></li>`).join('')}</ol></section>`:'';
- host.innerHTML=`<section class="academic-result" aria-live="polite">
+ host.innerHTML=`<section class="academic-result cyber-result" aria-live="polite">
  ${celebration}
  <div class="award-topline"></div>
- <div class="award-masthead"><div class="award-institution"><img src="assets/duhok-logo.png" alt="زانکۆیا دهۆک"><span>زانکۆیا دهۆک</span></div><div class="award-event"><strong>حەفتییا هۆشیارییا جۆگرافی</strong><small>GEOGRAPHY AWARENESS WEEK · GAW</small></div><div class="award-institution"><img src="assets/zakho-logo.png" alt="زانکۆیا زاخۆ"><span>زانکۆیا زاخۆ</span></div></div>
+ <div class="award-masthead">
+  <div class="award-institution"><img src="assets/duhok-logo.png" alt="زانکۆیا دهۆک"><span>زانکۆیا دهۆک</span></div>
+  <div class="award-event"><strong>حەفتییا هۆشیارییا جۆگرافی</strong><small>GEOGRAPHY AWARENESS WEEK · GAW</small></div>
+  <div class="award-institution"><img src="assets/zakho-logo.png" alt="زانکۆیا زاخۆ"><span>زانکۆیا زاخۆ</span></div>
+ </div>
  <div class="award-divider"></div>
  <div class="award-body ${tie?'award-is-tie':''}">
- <div class="award-hero">
- <div class="award-section-code">FINAL RESULT <span> / </span> 2026</div>
- ${tie?'<h1 class="award-result-title">هەردوو تیم یەکسان بوون</h1><p class="award-result-subtitle">ئەنجاما دوماهیێ</p>':`${trophy}<p class="award-result-subtitle">تیما سەرکەفتی</p><h1 class="award-result-title">${esc(winner)}</h1><p class="award-achievement">پیرۆز بیت · سەرکەفتنا زانستی</p>`}
- <div class="award-score"><div class="award-score-team ${!tie&&winnerIndex===0?'award-score-winner':''}"><span>${esc(state.names[0])}</span><strong>${state.scores[0]}</strong></div><div class="award-score-middle"><small>FINAL SCORE</small><span aria-hidden="true">—</span></div><div class="award-score-team ${!tie&&winnerIndex===1?'award-score-winner':''}"><span>${esc(state.names[1])}</span><strong>${state.scores[1]}</strong></div></div>
- ${tie?'<div class="award-tiebreak"><button id="tie">پرسیارا چارەسەرکرنا یەکسانیێ</button><div id="tieBox"></div></div>':''}
- </div>
- ${winnerList}
+  <div class="cyber-info">
+   <div class="cyber-versus">
+    <div class="cyber-team ${!tie&&winnerIndex===0?'cyber-leading':''}"><span>${esc(state.names[0])}</span><strong>${state.scores[0]}</strong></div>
+    <div class="cyber-vs">VS</div>
+    <div class="cyber-team ${!tie&&winnerIndex===1?'cyber-leading':''}"><span>${esc(state.names[1])}</span><strong>${state.scores[1]}</strong></div>
+   </div>
+   <p class="award-section-code">FINAL RESULT <span> / </span> 2026</p>
+   <p class="cyber-winner-label">${tie?'ئەنجاما دوماهیێ':'تیما سەرکەفتی'}</p>
+   <h1 class="cyber-winner-title">${tie?'هەردوو تیم یەکسان بوون':esc(winner)}</h1>
+   <p class="cyber-congrats">${tie?'ئەنجامێ هەردوو تیمان یەکسانە':'پیرۆز بیت · سەرکەفتنا زانستی'}</p>
+   ${tie?'<div class="award-tiebreak"><button id="tie">پرسیارا چارەسەرکرنا یەکسانیێ</button><div id="tieBox"></div></div>':''}
+  </div>
+  ${tie?'':`<div class="cyber-cup-stage"><div class="cyber-light-rays" aria-hidden="true"></div>${trophy}<div class="cyber-podium" aria-hidden="true"><div class="cyber-podium-top"></div><div class="cyber-podium-face"></div><div class="cyber-podium-floor"></div></div></div>`}
+  ${winnerList}
  </div>
  <div class="award-footer"><span>زانست · جوگرافیا · پێشبڕکی</span><span>DUHOK × ZAKHO</span></div>
  <div class="controls award-controls"><button id="back">زڤڕین بۆ قۆناغا دوماهیێ</button><button id="lobby">لاپەڕا سەرەکی</button></div>
