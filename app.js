@@ -125,30 +125,7 @@ save();
 window.addEventListener('pagehide',save);
 
 let remaining=0,interval=null,deadline=0,audio,audienceInterval=null;
-let homeContourAnimations=new Set(),homeContourToken=0,homeContourActive=false;
-const homeReducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
 const $=s=>document.querySelector(s), esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function stopHomeMotion(){
- homeContourActive=false;homeContourToken++;
- for(const animation of homeContourAnimations)animation.cancel();
- homeContourAnimations.clear();
-}
-function syncHomeMotion(){
- const enabled=document.body.classList.contains('home-view')&&!document.hidden&&!homeReducedMotion.matches;
- if(!enabled){if(homeContourActive)stopHomeMotion();return;}
- if(homeContourActive)return;
- homeContourActive=true;const token=++homeContourToken;
- for(const node of document.querySelectorAll('#homeContours .contour-island')){
-  const drift=()=>{
-   if(token!==homeContourToken||!homeContourActive)return;
-   const next='translate('+((Math.random()-.5)*40).toFixed(2)+'px,'+((Math.random()-.5)*28).toFixed(2)+'px) rotate('+((Math.random()-.5)*5).toFixed(3)+'deg) scale('+(1+Math.random()*.05).toFixed(4)+')';
-   const animation=node.animate([{transform:node.style.transform||'none'},{transform:next}],{duration:18000+Math.random()*16000,easing:'ease-in-out',fill:'forwards'});
-   homeContourAnimations.add(animation);
-   animation.finished.then(()=>{if(token!==homeContourToken)return;node.style.transform=next;animation.cancel();homeContourAnimations.delete(animation);drift();}).catch(()=>{});
-  };
-  drift();
- }
-}
 function enterCompetitionFullscreen(){
  if(document.fullscreenElement)return;
  const root=document.documentElement;
@@ -543,7 +520,7 @@ function renderAudience(){
  $('#audienceHome').onclick=()=>go(-1);
  if(audience.questionVisible&&!audience.resolved){updateAudienceClock();if(audience.active)audienceInterval=setInterval(updateAudienceClock,200);}
 }
-function render(){stopAudienceClock();document.body.classList.toggle('home-view',state.index<0&&!state.roundIntro?.active&&!state.visualIntro?.active&&!state.speedIntro?.active&&!state.audience?.active);syncHomeMotion();document.body.classList.remove('interlude-view');fitQuestion();renderScores();if(state.roundIntro?.active){renderRoundIntro();return;}if(state.visualIntro?.active){renderVisualIntro();return;}if(state.speedIntro?.active){renderSpeedIntro();return;}if(state.audience?.active){renderAudience();return;}$('#homeLogos').hidden=state.index>=0;$('.scoreboard').hidden=state.index<0;const active=state.questions[state.index];$('#headerTurn').hidden=!active;$('#headerTurn').classList.toggle('b',active?.team===1);$('#headerTeamName').textContent=active?(active.round===2?'هەردوو تیم':state.names[active.team]):'';const host=$('#stage');document.body.classList.toggle('question-view',state.index>=0&&state.index<state.questions.length);if(state.index<0||state.index>=state.questions.length)document.body.classList.remove('presentation-fit');if(state.index<0){host.innerHTML=`<div class="hero"><p class="eyebrow">پێشبڕکیا زانینا جوگرافی</p><h1>حەفتییا هۆشیارییا جۆگرافی<span class="gaw-word" lang="en" dir="ltr">GAW</span></h1><p>ب پشکدارییا زانکۆیێن دهۆک و زاخۆ، بۆ پێشخستنا زانین و هۆشیارییا جوگرافی.</p><div class="actions"><button class="primary" id="beginNew">دەست پێ بکە</button><button class="primary" id="resumeCompetition" ${state.resumeIndex===null?'disabled':''}>زڤڕین بۆ پێشبڕکیێ</button></div></div><div class="rounds">${rounds.map((r,i)=>`<button class="roundtile" data-round="${i}"><small>قۆناغا ${['ئێکێ','دووێ','سێیێ','چارێ'][i]}</small><strong>${r.name}</strong><span>${r.description} · ${state.questions.filter(q=>q.round===i).length} پرسیار</span></button>`).join('')}</div>`;$('#beginNew').onclick=()=>{if(state.resumeIndex!==null&&!confirm('دەستپێکرنا پێشبڕکییەکا نوو دێ خاڵێن پێشبڕکییا نوکە و پێشڤەچوونا وێ بکەتە سفر. دێ بەردەوام بی؟'))return;enterCompetitionFullscreen();stop();state={...fresh(),names:state.names,members:structuredClone(state.members),questions:state.questions,sound:state.sound,audienceQuestion:state.audienceQuestion,audienceAnswer:state.audienceAnswer};go(0);};$('#resumeCompetition').onclick=()=>{if(state.resumeIndex!==null){enterCompetitionFullscreen();go(state.resumeIndex);}};host.querySelectorAll('[data-round]').forEach(x=>x.onclick=()=>go(state.questions.findIndex(q=>q.round===+x.dataset.round)));return;}
+function render(){stopAudienceClock();document.body.classList.toggle('home-view',state.index<0&&!state.roundIntro?.active&&!state.visualIntro?.active&&!state.speedIntro?.active&&!state.audience?.active);document.body.classList.remove('interlude-view');fitQuestion();renderScores();if(state.roundIntro?.active){renderRoundIntro();return;}if(state.visualIntro?.active){renderVisualIntro();return;}if(state.speedIntro?.active){renderSpeedIntro();return;}if(state.audience?.active){renderAudience();return;}$('#homeLogos').hidden=state.index>=0;$('.scoreboard').hidden=state.index<0;const active=state.questions[state.index];$('#headerTurn').hidden=!active;$('#headerTurn').classList.toggle('b',active?.team===1);$('#headerTeamName').textContent=active?(active.round===2?'هەردوو تیم':state.names[active.team]):'';const host=$('#stage');document.body.classList.toggle('question-view',state.index>=0&&state.index<state.questions.length);if(state.index<0||state.index>=state.questions.length)document.body.classList.remove('presentation-fit');if(state.index<0){host.innerHTML=`<div class="hero"><p class="eyebrow">پێشبڕکیا زانینا جوگرافی</p><h1>حەفتییا هۆشیارییا جۆگرافی<span class="gaw-word" lang="en" dir="ltr">GAW</span></h1><p>ب پشکدارییا زانکۆیێن دهۆک و زاخۆ، بۆ پێشخستنا زانین و هۆشیارییا جوگرافی.</p><div class="actions"><button class="primary" id="beginNew">دەست پێ بکە</button><button class="primary" id="resumeCompetition" ${state.resumeIndex===null?'disabled':''}>زڤڕین بۆ پێشبڕکیێ</button></div></div><div class="rounds">${rounds.map((r,i)=>`<button class="roundtile" data-round="${i}"><small>قۆناغا ${['ئێکێ','دووێ','سێیێ','چارێ'][i]}</small><strong>${r.name}</strong><span>${r.description} · ${state.questions.filter(q=>q.round===i).length} پرسیار</span></button>`).join('')}</div>`;$('#beginNew').onclick=()=>{if(state.resumeIndex!==null&&!confirm('دەستپێکرنا پێشبڕکییەکا نوو دێ خاڵێن پێشبڕکییا نوکە و پێشڤەچوونا وێ بکەتە سفر. دێ بەردەوام بی؟'))return;enterCompetitionFullscreen();stop();state={...fresh(),names:state.names,members:structuredClone(state.members),questions:state.questions,sound:state.sound,audienceQuestion:state.audienceQuestion,audienceAnswer:state.audienceAnswer};go(0);};$('#resumeCompetition').onclick=()=>{if(state.resumeIndex!==null){enterCompetitionFullscreen();go(state.resumeIndex);}};host.querySelectorAll('[data-round]').forEach(x=>x.onclick=()=>go(state.questions.findIndex(q=>q.round===+x.dataset.round)));return;}
 if(state.index>=state.questions.length){
  const tie=state.scores[0]===state.scores[1];
  const winnerIndex=state.scores[0]>state.scores[1]?0:1;
@@ -796,7 +773,3 @@ settingsFitObserver.observe(document.querySelector('#form'),{childList:true,subt
 
 
 
-homeReducedMotion.addEventListener('change',syncHomeMotion);
-document.addEventListener('visibilitychange',syncHomeMotion);
-window.addEventListener('pagehide',stopHomeMotion);
-window.addEventListener('pageshow',syncHomeMotion);
