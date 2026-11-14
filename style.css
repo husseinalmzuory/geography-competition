@@ -705,3 +705,47 @@ header>.header-turn.b strong{border-color:#b99750;background:#fff6df;color:#805d
 @media(prefers-reduced-motion:reduce){
  .academic-result .academic-trophy-rotator,.academic-result .academic-firework i{animation:none}
 }
+
+
+/* Winner view refinement: real irregular topographic contours, richer but subtle fireworks,
+   and restored dark-navy roster at content-fitting height. */
+#stage>.academic-result::before{
+ background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201200%20700%22%20preserveAspectRatio%3D%22xMidYMid%20slice%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%238ba4ad%22%20stroke-width%3D%221.4%22%20opacity%3D%22.56%22%3E%0A%3Cpath%20d%3D%22M-110%20120%20C25%20-45%20216%2060%20261%20173%20S290%20393%20440%20419%20670%20334%20749%20415%20826%20619%201024%20629%201186%20580%201290%20700%22%2F%3E%0A%3Cpath%20d%3D%22M-88%20151%20C34%206%20180%2078%20226%20184%20S256%20372%20421%20449%20663%20377%20723%20454%20824%20651%201023%20660%201190%20614%201276%20731%22%2F%3E%0A%3Cpath%20d%3D%22M-70%20184%20C40%2058%20154%20101%20192%20195%20S222%20351%20401%20477%20658%20420%20700%20493%20831%20679%201000%20690%22%2F%3E%0A%3Cpath%20d%3D%22M-54%20218%20C56%20111%20128%20136%20166%20214%20S205%20331%20372%20505%20644%20469%20684%20530%22%2F%3E%0A%3Cpath%20d%3D%22M826%20-150%20C725%20-38%20834%2027%20941%2038%20S1158%2023%201197%20151%201133%20349%201233%20435%22%2F%3E%0A%3Cpath%20d%3D%22M858%20-114%20C780%20-29%20849%206%20953%208%20S1128%2031%201162%20151%201102%20347%201192%20447%22%2F%3E%0A%3Cpath%20d%3D%22M892%20-83%20C825%20-8%20877%20-20%20964%20-16%20S1103%2036%201129%20151%201080%20334%201162%20456%22%2F%3E%0A%3Cpath%20d%3D%22M931%20-52%20C889%20-8%20919%20-49%20978%20-41%20S1075%2049%201094%20155%201055%20314%201135%20459%22%2F%3E%0A%3Cpath%20d%3D%22M398%20624%20C439%20583%20524%20592%20558%20624%20S613%20679%20685%20665%20766%20606%20842%20637%22%2F%3E%0A%3Cpath%20d%3D%22M425%20646%20C455%20621%20519%20620%20547%20642%20S617%20703%20691%20686%20766%20641%20817%20661%22%2F%3E%0A%3C%2Fg%3E%3C%2Fsvg%3E");
+ background-size:cover;
+ background-position:center;
+ background-repeat:no-repeat;
+ mask-image:none;
+ opacity:.46;
+}
+.academic-result .academic-firework-4{left:28%;top:70%}
+.academic-result .academic-firework-5{left:89%;top:48%}
+.academic-result .academic-firework i{width:3.5px;height:14px}
+@keyframes academic-spark-burst{
+ 0%,14%{opacity:0;transform:rotate(calc(var(--ray)*30deg)) translateY(0) scale(.25)}
+ 20%{opacity:.95}
+ 47%{opacity:.8;transform:rotate(calc(var(--ray)*30deg)) translateY(-95px) scale(1)}
+ 73%,100%{opacity:0;transform:rotate(calc(var(--ray)*30deg)) translateY(-131px) scale(.3)}
+}
+.academic-result .award-roster{
+ background:linear-gradient(155deg,#103b59,#0c2943);
+ border-color:#214e68;
+ color:#fff;
+ box-shadow:0 9px 24px #092d4330;
+ height:max-content;
+ min-height:0;
+ align-self:center;
+}
+.academic-result .award-roster h2{
+ color:#e7c78f;
+ border-bottom-color:#ffffff38;
+}
+.academic-result .award-roster li{color:#fff}
+.academic-result .award-member-number{
+ color:#cda970;
+ border-color:#cda97065;
+ background:transparent;
+}
+@media(max-width:600px){
+ .academic-result .academic-firework-4{left:17%}
+ .academic-result .academic-firework-5{left:89%}
+}
