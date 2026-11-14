@@ -282,3 +282,33 @@ header>.header-turn.b strong{border-color:#b99750;background:#fff6df;color:#805d
 .mcq-layout .choice span,.visual-question .choice span{
   unicode-bidi:plaintext;text-align:right;
 }
+
+
+/* Use actual available card width for Kurdish answers; do not reserve an empty third grid track. */
+.mcq-layout .choices .choice,
+.presentation-fit .mcq-layout .choices .choice,
+.visual-question .mcq-layout .choice,
+.presentation-fit .visual-question .mcq-layout .choice{
+  grid-template-columns:1.8em minmax(0,1fr);
+  column-gap:12px;
+  padding-inline:22px;
+}
+.mcq-layout .choices .choice span,
+.presentation-fit .mcq-layout .choices .choice span{
+  min-width:0;
+  overflow-wrap:break-word;
+  word-break:normal;
+}
+.mcq-layout .choices .choice em,
+.presentation-fit .mcq-layout .choices .choice em{grid-column:2}
+@media(max-width:720px){
+  .mcq-layout .choices .choice,
+  .presentation-fit .mcq-layout .choices .choice,
+  .visual-question .mcq-layout .choice{
+    grid-template-columns:minmax(0,1fr);
+    padding-inline:14px;
+  }
+  .mcq-layout .choices .choice b{grid-column:1}
+  .mcq-layout .choices .choice span{grid-column:1}
+  .mcq-layout .choices .choice em{grid-column:1}
+}
