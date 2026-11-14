@@ -7,7 +7,7 @@ const DEFAULT_TEAM_NAMES=['هێزا جوگراڤی','دلێ جوگرافيێ'];
 const DEFAULT_TEAM_MEMBERS=[["پیلان کمال فخرالدین","رێژين فرحان حامد","دیدار خیر الدین نجم الدین","سفیان حازم خدر","دلفين نقيب صبري","جنان الياس جمعه","لؤي صدقي محمدسعيد"],["رويدة جاسم عمران","نقار عمران محمد صديق","دلگه ش أحمد زبير","مينا محمدعلي حازم","نەوزاد شاهين طه","رنگين سكتان محمد","شرمين مصطفى شينو"]];
 const DEFAULT_AUDIENCE_QUESTION='مەزنترین ئۆقیانووسێ جیهانێ کیژە؟';
 const DEFAULT_AUDIENCE_ANSWER='ئۆقیانووسا ئارام (Pacific)';
-function fresh(){return {speedIntro:null,audience:null,audienceQuestion:DEFAULT_AUDIENCE_QUESTION,audienceAnswer:DEFAULT_AUDIENCE_ANSWER,names:[...DEFAULT_TEAM_NAMES],members:structuredClone(DEFAULT_TEAM_MEMBERS),scores:[0,0],index:-1,resumeIndex:null,questions:structuredClone(defaults),awarded:{},revealed:{},sound:true,choices:{},speedCounts:{},buzzerAwards:{},unlocked:{},bankVersion:BANK_VERSION};}
+function fresh(){return {visualIntro:null,speedIntro:null,audience:null,audienceQuestion:DEFAULT_AUDIENCE_QUESTION,audienceAnswer:DEFAULT_AUDIENCE_ANSWER,names:[...DEFAULT_TEAM_NAMES],members:structuredClone(DEFAULT_TEAM_MEMBERS),scores:[0,0],index:-1,resumeIndex:null,questions:structuredClone(defaults),awarded:{},revealed:{},sound:true,choices:{},speedCounts:{},buzzerAwards:{},unlocked:{},bankVersion:BANK_VERSION};}
 let state;try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved&&!saved.bankVersion)saved.bankVersion=1;state=saved&&Array.isArray(saved.questions)&&saved.questions.length&&Array.isArray(saved.names)&&Array.isArray(saved.scores)?{...fresh(),...saved}:fresh();}catch{state=fresh();}
 // Update old generic names, preserving names already customized in Settings.
 let namesUpdated=false;
@@ -115,11 +115,18 @@ function updateTimer(){if(!$('#timer'))return;$('#timer').textContent=remaining;
 function startTimer(){if(interval){remaining=Math.max(0,Math.ceil((deadline-Date.now())/1000));stop();$('#startTimer').textContent='دووبارە دەستپێکرن';$('#timerStatus').textContent='دەمژمێر راوه‌ستیایە';}else if(remaining>0){deadline=Date.now()+remaining*1000;interval=setInterval(tick,100);$('#startTimer').textContent='راوەستاندنا دەمژمێری';$('#timerStatus').textContent='دەم دچیت';}}
 function redrawQuestion(){const seconds=remaining;stop();render();remaining=seconds;updateTimer();if(remaining===0){$('#startTimer').disabled=true;$('#startTimer').textContent='دەم تەمام بوو';$('#timerStatus').textContent='دەم تەمام بوو';}else if(remaining<30){$('#startTimer').textContent='دووبارە دەستپێکرن';$('#timerStatus').textContent='دەمژمێر راوه‌ستیایە';}}
 // A persistent audience stop between rounds two and three, in both navigation directions.
-function go(index,skipAudience=false,skipSpeedIntro=false){
+function go(index,skipAudience=false,skipSpeedIntro=false,skipVisualIntro=false){
  stop();
  const target=Math.max(-1,Math.min(index,state.questions.length));
  const current=state.questions[state.index],next=state.questions[target];
  const audience=state.audience;
+ // Keep the visual-round introduction in the previous/next sequence.
+ const crossesVisualBoundary=(current?.round===0&&next?.round===1&&target>state.index)||(current?.round===1&&next?.round===0&&target<state.index);
+ const resumesVisualIntro=state.visualIntro?.pending&&target===state.visualIntro.targetIndex;
+ if(!skipVisualIntro&&(crossesVisualBoundary||resumesVisualIntro||(state.index<0&&next?.round===1))){
+  const firstSecond=state.questions.findIndex(q=>q.round===1);
+  openVisualIntro(next?.round===1?target:firstSecond);return;
+ }
  const exitsSecondRound=current?.round===1&&target>state.index&&(!next||next.round>1);
  const returnsToSecondRound=current?.round>=2&&target<state.index&&next?.round===1;
  const resumesAudience=audience?.pending&&target===audience.targetIndex;
@@ -138,11 +145,69 @@ function go(index,skipAudience=false,skipSpeedIntro=false){
  if(!skipSpeedIntro&&next?.round===2&&((state.speedIntro?.pending&&target===state.speedIntro.targetIndex)||current?.round!==2)){
   openSpeedIntro(target);return;
  }
+ if(state.visualIntro)state.visualIntro.active=false;
  if(state.speedIntro)state.speedIntro.active=false;
  if(audience)audience.active=false;
  state.revealed={};state.speedCounts={};state.index=target;
  if(state.index>=0)state.resumeIndex=state.index;
  save();render();
+}
+function openVisualIntro(targetIndex){
+ stop();
+ if(state.audience)state.audience.active=false;
+ if(state.speedIntro)state.speedIntro.active=false;
+ state.visualIntro={active:true,pending:true,targetIndex};
+ state.resumeIndex=targetIndex;save();render();
+}
+function renderVisualIntro(){
+ const intro=state.visualIntro;
+ $('#homeLogos').hidden=true;$('.scoreboard').hidden=false;
+ $('#headerTurn').hidden=false;$('#headerTurn').classList.remove('b');
+ $('#headerTeamName').textContent='قۆناغا دووێ';
+ document.body.classList.remove('question-view','presentation-fit');
+ $('#stage').innerHTML=`<style>
+ .visual-intro{width:min(100%,1050px);position:relative;isolation:isolate;overflow:hidden;margin:auto;border-radius:24px;border:1px solid #c7b395;background:radial-gradient(ellipse at 50% 45%,#fffdf7,#f7eddd 58%,#e8dbc7);color:#64513f;text-align:center;padding:clamp(20px,3vw,38px);box-shadow:0 16px 42px #57452f20}
+ .visual-intro::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;opacity:.18;background:repeating-radial-gradient(ellipse at 15% 20%,transparent 0 38px,#87958f 39px 40px,transparent 41px 80px)}
+ .visual-intro .visual-kicker{margin:0;color:#8b692e;font-size:clamp(18px,2.3vw,30px);font-weight:800;letter-spacing:1px}
+ .visual-intro h1{font-size:clamp(32px,4.5vw,63px);line-height:1.45;margin:3px 0 5px;color:#986a28;text-shadow:0 2px #fff9ee}
+ .visual-intro .visual-caption{margin:4px 0 12px;color:#537c87;font-size:clamp(15px,1.6vw,22px);line-height:1.7}
+ .visual-intro .visual-art{display:block;width:min(100%,700px);height:auto;margin:auto;overflow:visible}
+ .visual-intro .visual-photo-left{animation:visual-photo-float 5s ease-in-out infinite;transform-origin:180px 165px}
+ .visual-intro .visual-photo-right{animation:visual-photo-float 5s ease-in-out infinite;animation-delay:-2.5s;transform-origin:520px 165px}
+ .visual-intro .visual-lens{animation:visual-lens-search 6s ease-in-out infinite}
+ .visual-intro .visual-scan{animation:visual-scan 4s ease-in-out infinite}
+ .visual-intro .visual-twinkle{animation:visual-twinkle 3s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+ .visual-intro .visual-controls{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:16px;padding-top:18px;border-top:1px solid #c7b395}
+ .visual-intro .visual-controls button{white-space:normal;line-height:1.6;padding:12px 20px}
+ .visual-intro #visualIntroStart{background:#64513f;border-color:#64513f;color:#fffaf1;font-size:clamp(17px,1.8vw,23px);min-width:200px;box-shadow:0 4px 13px #64513f30}
+ @keyframes visual-photo-float{50%{transform:translateY(-7px) rotate(2deg)}}
+ @keyframes visual-lens-search{0%,100%{transform:translate(-22px,3px)}50%{transform:translate(20px,-7px)}}
+ @keyframes visual-scan{0%,100%{transform:translateY(0);opacity:.2}50%{transform:translateY(115px);opacity:.7}}
+ @keyframes visual-twinkle{50%{opacity:.35;transform:scale(.7)}}
+ @media(max-width:600px){.visual-intro{padding:20px 12px}.visual-intro .visual-controls{gap:8px}.visual-intro #visualIntroStart{width:100%;order:-1}}
+ @media(prefers-reduced-motion:reduce){.visual-intro *{animation:none!important}}
+ </style><section class="visual-intro" aria-labelledby="visualIntroTitle">
+ <p class="visual-kicker">قۆناغا دووێ</p>
+ <h1 id="visualIntroTitle">${esc(rounds[1].name)}</h1>
+ <p class="visual-caption">ب باشی سەح بکەن… دیاردەیێ ژ وێنەیێ بناسن!</p>
+ <svg class="visual-art" viewBox="0 0 700 320" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+ <defs><linearGradient id="visualSky" x2="0" y2="1"><stop stop-color="#bed8d5"/><stop offset="1" stop-color="#edf1dc"/></linearGradient><linearGradient id="visualGold" x2="1" y2="1"><stop stop-color="#fae8b5"/><stop offset=".5" stop-color="#b18b48"/><stop offset="1" stop-color="#e5ca8b"/></linearGradient><clipPath id="visualFrameClip"><rect x="211" y="72" width="278" height="177" rx="9"/></clipPath><radialGradient id="visualAura"><stop stop-color="#c9b27a" stop-opacity=".28"/><stop offset="1" stop-color="#c9b27a" stop-opacity="0"/></radialGradient></defs>
+ <ellipse cx="350" cy="166" rx="290" ry="145" fill="url(#visualAura)"/>
+ <ellipse cx="350" cy="285" rx="240" ry="10" fill="#75624b" opacity=".1"/>
+ <g class="visual-photo-left"><g transform="rotate(-12 180 165)"><rect x="73" y="91" width="191" height="151" rx="12" fill="#fffaf1" stroke="#c7b395" stroke-width="2"/><rect x="84" y="102" width="169" height="112" rx="5" fill="#dfcdb1"/><path d="m84 213 63-89 37 54 30-37 39 72Z" fill="#8e7a60"/><path d="m129 150 18-26 17 25-17-6Z" fill="#fff5dd"/><path d="M97 224h62" stroke="#bda98a" stroke-width="4" stroke-linecap="round"/></g></g>
+ <g class="visual-photo-right"><g transform="rotate(12 520 165)"><rect x="439" y="91" width="191" height="151" rx="12" fill="#fffaf1" stroke="#c7b395" stroke-width="2"/><rect x="450" y="102" width="169" height="112" rx="5" fill="#c3d9d1"/><path d="M450 167q43-57 82-13t87-13v73H450Z" fill="#658f8a"/><path d="M450 195q43-37 82-5t87-6v30H450Z" fill="#88b3aa"/><path d="M463 224h62" stroke="#bda98a" stroke-width="4" stroke-linecap="round"/></g></g>
+ <rect x="199" y="60" width="302" height="208" rx="15" fill="#fffaf1" stroke="#b59a70" stroke-width="2"/>
+ <g clip-path="url(#visualFrameClip)"><rect x="211" y="72" width="278" height="177" fill="url(#visualSky)"/><circle cx="434" cy="103" r="17" fill="#f2d496"/><path d="m211 231 88-132 70 105 45-68 75 95v18H211Z" fill="#80948b"/><path d="m270 142 29-43 28 42-28-12Z" fill="#f9f5e4"/><path d="m389 173 25-37 21 31-22-6Z" fill="#e6edde"/><path d="M211 234q70-52 123-10t155-4v29H211Z" fill="#4f7b77"/><path d="M344 211q-20 11-4 19t-11 19h29q22-15 0-22t12-15Z" fill="#a0d1ca"/><path class="visual-scan" d="M211 93H489" stroke="#f3db9b" stroke-width="3"/></g>
+ <path d="M215 260h70" stroke="#c3af8c" stroke-width="3" stroke-linecap="round"/>
+ <g fill="none" stroke="#b18b48" stroke-width="2"><path d="M201 88V66h22M477 66h22v22M499 240v22h-22M223 262h-22v-22"/></g>
+ <g class="visual-lens"><path d="m405 207 67 66" stroke="#5c5140" stroke-width="20" stroke-linecap="round"/><path d="m411 213 58 57" stroke="url(#visualGold)" stroke-width="12" stroke-linecap="round"/><circle cx="365" cy="166" r="66" fill="#fff9df" fill-opacity=".18" stroke="#5c5140" stroke-width="13"/><circle cx="365" cy="166" r="66" fill="none" stroke="url(#visualGold)" stroke-width="7"/><path d="M319 154a48 48 0 0 1 39-35" fill="none" stroke="#fffaf0" stroke-width="4" opacity=".8" stroke-linecap="round"/><path d="M349 166h32M365 150v32" stroke="#fff9df" stroke-width="1.5" opacity=".8"/></g>
+ <g class="visual-twinkle" stroke="#b18b48" stroke-width="2" fill="none"><path d="M135 59h16M143 51v16M551 64h14M558 57v14"/><circle cx="589" cy="265" r="4"/><circle cx="101" cy="267" r="3"/></g>
+ </svg>
+ <div class="visual-controls"><button id="visualIntroPrevious" type="button">یا بەرێ · قۆناغا ئێکێ</button><button id="visualIntroStart" type="button">دەستپێکرنا قۆناغا دووێ</button><button id="visualIntroHome" type="button">لاپەڕا سەرەکی</button></div>
+ </section>`;
+ $('#visualIntroStart').onclick=()=>{if(!intro.active)return;intro.active=false;intro.pending=false;save();go(intro.targetIndex,true,true,true);};
+ $('#visualIntroPrevious').onclick=()=>{if(!intro.active)return;const lastFirst=state.questions.reduce((last,q,index)=>q.round===0?index:last,-1);intro.active=false;intro.pending=false;save();go(lastFirst,true,true,true);};
+ $('#visualIntroHome').onclick=()=>go(-1);
 }
 function openSpeedIntro(targetIndex){
  stop();
@@ -303,7 +368,7 @@ function renderAudience(){
  };
  $('#audienceHome').onclick=()=>go(-1);
 }
-function render(){renderScores();if(state.speedIntro?.active){renderSpeedIntro();return;}if(state.audience?.active){renderAudience();return;}$('#homeLogos').hidden=state.index>=0;$('.scoreboard').hidden=state.index<0;const active=state.questions[state.index];$('#headerTurn').hidden=!active;$('#headerTurn').classList.toggle('b',active?.team===1);$('#headerTeamName').textContent=active?(active.round===2?'هەردوو تیم':state.names[active.team]):'';const host=$('#stage');document.body.classList.toggle('question-view',state.index>=0&&state.index<state.questions.length);if(state.index<0||state.index>=state.questions.length)document.body.classList.remove('presentation-fit');if(state.index<0){host.innerHTML=`<div class="hero"><p class="eyebrow">پێشبڕکیا زانینا جوگرافی</p><h1>حەفتییا هۆشیارییا جۆگرافی<span class="gaw-word" lang="en" dir="ltr">GAW</span></h1><p>ب پشکدارییا زانکۆیێن دهۆک و زاخۆ، بۆ پێشخستنا زانین و هۆشیارییا جوگرافی.</p><div class="actions"><button class="primary" id="beginNew">دەست پێ بکە</button><button class="primary" id="resumeCompetition" ${state.resumeIndex===null?'disabled':''}>زڤڕین بۆ پێشبڕکیێ</button></div></div><div class="rounds">${rounds.map((r,i)=>`<button class="roundtile" data-round="${i}"><small>قۆناغا ${['ئێکێ','دووێ','سێیێ','چارێ'][i]}</small><strong>${r.name}</strong><span>${r.description} · ${state.questions.filter(q=>q.round===i).length} پرسیار</span></button>`).join('')}</div>`;$('#beginNew').onclick=()=>{if(state.resumeIndex!==null&&!confirm('دەستپێکرنا پێشبڕکییەکا نوو دێ خاڵێن پێشبڕکییا نوکە و پێشڤەچوونا وێ بکەتە سفر. دێ بەردەوام بی؟'))return;stop();state={...fresh(),names:state.names,members:structuredClone(state.members),questions:state.questions,sound:state.sound,audienceQuestion:state.audienceQuestion,audienceAnswer:state.audienceAnswer};go(0);};$('#resumeCompetition').onclick=()=>{if(state.resumeIndex!==null)go(state.resumeIndex);};host.querySelectorAll('[data-round]').forEach(x=>x.onclick=()=>go(state.questions.findIndex(q=>q.round===+x.dataset.round)));return;}
+function render(){renderScores();if(state.visualIntro?.active){renderVisualIntro();return;}if(state.speedIntro?.active){renderSpeedIntro();return;}if(state.audience?.active){renderAudience();return;}$('#homeLogos').hidden=state.index>=0;$('.scoreboard').hidden=state.index<0;const active=state.questions[state.index];$('#headerTurn').hidden=!active;$('#headerTurn').classList.toggle('b',active?.team===1);$('#headerTeamName').textContent=active?(active.round===2?'هەردوو تیم':state.names[active.team]):'';const host=$('#stage');document.body.classList.toggle('question-view',state.index>=0&&state.index<state.questions.length);if(state.index<0||state.index>=state.questions.length)document.body.classList.remove('presentation-fit');if(state.index<0){host.innerHTML=`<div class="hero"><p class="eyebrow">پێشبڕکیا زانینا جوگرافی</p><h1>حەفتییا هۆشیارییا جۆگرافی<span class="gaw-word" lang="en" dir="ltr">GAW</span></h1><p>ب پشکدارییا زانکۆیێن دهۆک و زاخۆ، بۆ پێشخستنا زانین و هۆشیارییا جوگرافی.</p><div class="actions"><button class="primary" id="beginNew">دەست پێ بکە</button><button class="primary" id="resumeCompetition" ${state.resumeIndex===null?'disabled':''}>زڤڕین بۆ پێشبڕکیێ</button></div></div><div class="rounds">${rounds.map((r,i)=>`<button class="roundtile" data-round="${i}"><small>قۆناغا ${['ئێکێ','دووێ','سێیێ','چارێ'][i]}</small><strong>${r.name}</strong><span>${r.description} · ${state.questions.filter(q=>q.round===i).length} پرسیار</span></button>`).join('')}</div>`;$('#beginNew').onclick=()=>{if(state.resumeIndex!==null&&!confirm('دەستپێکرنا پێشبڕکییەکا نوو دێ خاڵێن پێشبڕکییا نوکە و پێشڤەچوونا وێ بکەتە سفر. دێ بەردەوام بی؟'))return;stop();state={...fresh(),names:state.names,members:structuredClone(state.members),questions:state.questions,sound:state.sound,audienceQuestion:state.audienceQuestion,audienceAnswer:state.audienceAnswer};go(0);};$('#resumeCompetition').onclick=()=>{if(state.resumeIndex!==null)go(state.resumeIndex);};host.querySelectorAll('[data-round]').forEach(x=>x.onclick=()=>go(state.questions.findIndex(q=>q.round===+x.dataset.round)));return;}
 if(state.index>=state.questions.length){
  const tie=state.scores[0]===state.scores[1];
  const winnerIndex=state.scores[0]>state.scores[1]?0:1;
