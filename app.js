@@ -1,5 +1,5 @@
 'use strict';
-const rounds=[{name:'تو چی دزانی؟',description:'پرسیار و چار هەلبژارتن',seconds:30,points:2},{name:'چاڤێ جوگرافیناسی',description:'دیاردەیێ بناسە',seconds:30,points:2},{name:'ئاریشا لەزاتیێ',description:'پترین ژمارە د ٣٠ چرکەیان دا',seconds:30,points:2},{name:'پرسیارا لەزاتیێ',description:'١٠ پرسیار بۆ تیما ب لەزتر',seconds:30,points:2}];
+const rounds=[{name:'هلبزارتن',description:'پرسیار و چار هەلبژارتن',seconds:30,points:2},{name:'ئة ف وينه جيه ؟',description:'دیاردەیێ بناسە',seconds:30,points:2},{name:'ئاریشا لەزاتیێ',description:'پترین ژمارە د ٣٠ چرکەیان دا',seconds:30,points:2},{name:'پرسیارا لەزاتیێ',description:'١٠ پرسیار بۆ تیما ب لەزتر',seconds:30,points:2}];
 const defaults=window.GEOGRAPHY_BANK;
 const BANK_VERSION=7;
 const KEY='geography-competition-v1';
