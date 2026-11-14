@@ -324,3 +324,55 @@ header>.header-turn.b strong{border-color:#b99750;background:#fff6df;color:#805d
     padding-inline-start:clamp(56px,5vw,76px);
   }
 }
+
+
+/* Centered animated reveal card for short-answer / buzzer questions only. */
+.arena:not(.mcq-arena) > .answer,
+.presentation-fit .arena:not(.mcq-arena) > .answer{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  align-self:center;
+  flex:0 1 auto;
+  width:min(780px,84%);
+  max-width:100%;
+  min-height:clamp(126px,22vh,205px);
+  margin:auto;
+  padding:clamp(20px,3vh,40px) clamp(22px,4vw,52px);
+  border:2px solid #a7cdb4;
+  border-radius:26px;
+  background:linear-gradient(155deg,#f7fcf8 0%,#e7f5eb 58%,#dcefe3 100%);
+  box-shadow:0 16px 38px rgba(26,79,51,.15),inset 0 2px 0 rgba(255,255,255,.85);
+  color:#185b39;
+  font-family:var(--kurdish-font,"Noto Sans Arabic",Tahoma,Arial,sans-serif);
+  font-size:clamp(31px,3.45vw,56px);
+  font-weight:800;
+  line-height:1.55;
+  letter-spacing:0;
+  text-align:center;
+  overflow-wrap:anywhere;
+  animation:short-answer-reveal .42s cubic-bezier(.2,.75,.3,1) both;
+}
+.arena:not(.mcq-arena):has(>.answer) > .clockline,
+.presentation-fit .arena:not(.mcq-arena):has(>.answer) > .clockline{
+  flex:none;
+  margin-top:0;
+}
+@keyframes short-answer-reveal{
+  from{opacity:0;transform:translateY(15px) scale(.97)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@media(max-width:720px){
+  .arena:not(.mcq-arena) > .answer,
+  .presentation-fit .arena:not(.mcq-arena) > .answer{
+    width:94%;
+    min-height:108px;
+    padding:18px;
+    border-radius:18px;
+    font-size:clamp(25px,6vw,38px);
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .arena:not(.mcq-arena) > .answer,
+  .presentation-fit .arena:not(.mcq-arena) > .answer{animation:none}
+}
