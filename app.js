@@ -124,6 +124,12 @@ window.addEventListener('pagehide',save);
 
 let remaining=0,interval=null,deadline=0,audio,audienceInterval=null;
 const $=s=>document.querySelector(s), esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function enterCompetitionFullscreen(){
+ if(document.fullscreenElement)return;
+ const root=document.documentElement;
+ const request=root.requestFullscreen||root.webkitRequestFullscreen;
+ if(request){try{const result=request.call(root);if(result?.catch)result.catch(()=>{});}catch{}}
+}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch{}}
 function beep(){if(!state.sound)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();for(let i=0;i<3;i++){let o=audio.createOscillator(),g=audio.createGain();o.connect(g);g.connect(audio.destination);o.frequency.value=660;g.gain.value=.15;o.start(audio.currentTime+i*.22);o.stop(audio.currentTime+i*.22+.12);}}catch{}}
 function score(team,n){state.scores[team]=Math.max(0,state.scores[team]+n);save();renderScores();}
@@ -508,7 +514,7 @@ function renderAudience(){
  $('#audienceHome').onclick=()=>go(-1);
  if(audience.questionVisible&&!audience.resolved){updateAudienceClock();if(audience.active)audienceInterval=setInterval(updateAudienceClock,200);}
 }
-function render(){stopAudienceClock();document.body.classList.toggle('interlude-view',!!(state.roundIntro?.active||state.visualIntro?.active||state.speedIntro?.active));renderScores();if(state.roundIntro?.active){renderRoundIntro();return;}if(state.visualIntro?.active){renderVisualIntro();return;}if(state.speedIntro?.active){renderSpeedIntro();return;}if(state.audience?.active){renderAudience();return;}$('#homeLogos').hidden=state.index>=0;$('.scoreboard').hidden=state.index<0;const active=state.questions[state.index];$('#headerTurn').hidden=!active;$('#headerTurn').classList.toggle('b',active?.team===1);$('#headerTeamName').textContent=active?(active.round===2?'هەردوو تیم':state.names[active.team]):'';const host=$('#stage');document.body.classList.toggle('question-view',state.index>=0&&state.index<state.questions.length);if(state.index<0||state.index>=state.questions.length)document.body.classList.remove('presentation-fit');if(state.index<0){host.innerHTML=`<div class="hero"><p class="eyebrow">پێشبڕکیا زانینا جوگرافی</p><h1>حەفتییا هۆشیارییا جۆگرافی<span class="gaw-word" lang="en" dir="ltr">GAW</span></h1><p>ب پشکدارییا زانکۆیێن دهۆک و زاخۆ، بۆ پێشخستنا زانین و هۆشیارییا جوگرافی.</p><div class="actions"><button class="primary" id="beginNew">دەست پێ بکە</button><button class="primary" id="resumeCompetition" ${state.resumeIndex===null?'disabled':''}>زڤڕین بۆ پێشبڕکیێ</button></div></div><div class="rounds">${rounds.map((r,i)=>`<button class="roundtile" data-round="${i}"><small>قۆناغا ${['ئێکێ','دووێ','سێیێ','چارێ'][i]}</small><strong>${r.name}</strong><span>${r.description} · ${state.questions.filter(q=>q.round===i).length} پرسیار</span></button>`).join('')}</div>`;$('#beginNew').onclick=()=>{if(state.resumeIndex!==null&&!confirm('دەستپێکرنا پێشبڕکییەکا نوو دێ خاڵێن پێشبڕکییا نوکە و پێشڤەچوونا وێ بکەتە سفر. دێ بەردەوام بی؟'))return;stop();state={...fresh(),names:state.names,members:structuredClone(state.members),questions:state.questions,sound:state.sound,audienceQuestion:state.audienceQuestion,audienceAnswer:state.audienceAnswer};go(0);};$('#resumeCompetition').onclick=()=>{if(state.resumeIndex!==null)go(state.resumeIndex);};host.querySelectorAll('[data-round]').forEach(x=>x.onclick=()=>go(state.questions.findIndex(q=>q.round===+x.dataset.round)));return;}
+function render(){stopAudienceClock();document.body.classList.remove('interlude-view');fitQuestion();renderScores();if(state.roundIntro?.active){renderRoundIntro();return;}if(state.visualIntro?.active){renderVisualIntro();return;}if(state.speedIntro?.active){renderSpeedIntro();return;}if(state.audience?.active){renderAudience();return;}$('#homeLogos').hidden=state.index>=0;$('.scoreboard').hidden=state.index<0;const active=state.questions[state.index];$('#headerTurn').hidden=!active;$('#headerTurn').classList.toggle('b',active?.team===1);$('#headerTeamName').textContent=active?(active.round===2?'هەردوو تیم':state.names[active.team]):'';const host=$('#stage');document.body.classList.toggle('question-view',state.index>=0&&state.index<state.questions.length);if(state.index<0||state.index>=state.questions.length)document.body.classList.remove('presentation-fit');if(state.index<0){host.innerHTML=`<div class="hero"><p class="eyebrow">پێشبڕکیا زانینا جوگرافی</p><h1>حەفتییا هۆشیارییا جۆگرافی<span class="gaw-word" lang="en" dir="ltr">GAW</span></h1><p>ب پشکدارییا زانکۆیێن دهۆک و زاخۆ، بۆ پێشخستنا زانین و هۆشیارییا جوگرافی.</p><div class="actions"><button class="primary" id="beginNew">دەست پێ بکە</button><button class="primary" id="resumeCompetition" ${state.resumeIndex===null?'disabled':''}>زڤڕین بۆ پێشبڕکیێ</button></div></div><div class="rounds">${rounds.map((r,i)=>`<button class="roundtile" data-round="${i}"><small>قۆناغا ${['ئێکێ','دووێ','سێیێ','چارێ'][i]}</small><strong>${r.name}</strong><span>${r.description} · ${state.questions.filter(q=>q.round===i).length} پرسیار</span></button>`).join('')}</div>`;$('#beginNew').onclick=()=>{if(state.resumeIndex!==null&&!confirm('دەستپێکرنا پێشبڕکییەکا نوو دێ خاڵێن پێشبڕکییا نوکە و پێشڤەچوونا وێ بکەتە سفر. دێ بەردەوام بی؟'))return;enterCompetitionFullscreen();stop();state={...fresh(),names:state.names,members:structuredClone(state.members),questions:state.questions,sound:state.sound,audienceQuestion:state.audienceQuestion,audienceAnswer:state.audienceAnswer};go(0);};$('#resumeCompetition').onclick=()=>{if(state.resumeIndex!==null){enterCompetitionFullscreen();go(state.resumeIndex);}};host.querySelectorAll('[data-round]').forEach(x=>x.onclick=()=>go(state.questions.findIndex(q=>q.round===+x.dataset.round)));return;}
 if(state.index>=state.questions.length){
  const tie=state.scores[0]===state.scores[1];
  const winnerIndex=state.scores[0]>state.scores[1]?0:1;
@@ -704,26 +710,55 @@ if(!speed){$('#reveal').onclick=()=>{stop();state.revealed[q.id]=!revealed;if(st
 }else{$('#award').onclick=()=>{if(state.awarded[q.id])return;state.awarded[q.id]=r.points;state.unlocked[q.id]=true;score(q.team,r.points);redrawQuestion();};if($('#undo'))$('#undo').onclick=()=>{const amount=state.awarded[q.id];delete state.awarded[q.id];score(q.team,-amount);redrawQuestion();};}}
 }
 function returnHome(){if($('#config').open)$('#config').close();go(-1);window.scrollTo({top:0,behavior:'smooth'});}
-$('#home').onclick=e=>{e.preventDefault();returnHome();};$('#goHome').onclick=returnHome;$('#dialogHome').onclick=returnHome;document.querySelectorAll('[data-score]').forEach(btn=>btn.onclick=()=>score(...btn.dataset.score.split(',').map(Number)));$('#full').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.().catch(()=>{});};$('#settings').onclick=()=>{stop();$('#teamA').value=state.names[0];$('#teamB').value=state.names[1];$('#membersA').value=(state.members[0]||[]).join('\n');$('#membersB').value=(state.members[1]||[]).join('\n');$('#audienceQuestion').value=state.audienceQuestion||DEFAULT_AUDIENCE_QUESTION;$('#audienceAnswer').value=state.audienceAnswer||DEFAULT_AUDIENCE_ANSWER;$('#editor').value=JSON.stringify(state.questions,null,2);$('#error').textContent='';$('#config').showModal();};$('#close').onclick=()=>$('#config').close();$('#form').onsubmit=e=>{e.preventDefault();try{let qs=JSON.parse($('#editor').value);if(!Array.isArray(qs)||qs.length<4||new Set(qs.map(q=>q.id)).size!==qs.length||qs.some(q=>!q.id||typeof q.q!=='string'||typeof q.answer!=='string'||![0,1,2,3].includes(q.round)||(q.round===2?q.team!==null:![0,1].includes(q.team))||(q.image&&!/^assets\/[a-z0-9_.-]+$/i.test(q.image))||(q.options&&(!Array.isArray(q.options)||q.options.length!==4||q.options.some(x=>typeof x!=='string'||!x.trim())||new Set(q.options).size!==4||!Number.isInteger(q.correctIndex)||q.correctIndex<0||q.correctIndex>3||q.options[q.correctIndex]!==q.answer)))||rounds.some((_,i)=>!qs.some(q=>q.round===i))||qs.filter(q=>q.round===2).length!==10)throw Error('پێکهاتە و ناسنامەیێن پرسیاران بپشکنە؛ پێدڤیە چار قۆناغ و دەه پرسیار د قۆناغا هەڤرکییا لەزاتیێ دا هەبن.');state.names=[$('#teamA').value.trim()||DEFAULT_TEAM_NAMES[0],$('#teamB').value.trim()||DEFAULT_TEAM_NAMES[1]];state.members=[$('#membersA').value,$('#membersB').value].map(value=>value.split(/\r?\n/).map(name=>name.trim()).filter(Boolean).slice(0,30));state.audienceQuestion=$('#audienceQuestion').value.trim()||DEFAULT_AUDIENCE_QUESTION;state.audienceAnswer=$('#audienceAnswer').value.trim()||DEFAULT_AUDIENCE_ANSWER;state.questions=qs;state.index=Math.min(state.index,qs.length);state.choices={};save();$('#config').close();render();}catch(e){$('#error').textContent=e.message;}};$('#reset').onclick=()=>{if(confirm('دێ پێشبڕکییەکا نوو دەست پێ بکەی؟ خاڵ و پێشڤەچوون دێ بنە سفر، لێ پرسیار و ناڤ دێ پاراستی مینن.')){stop();state={...fresh(),names:state.names,members:structuredClone(state.members),questions:state.questions,sound:state.sound,audienceQuestion:state.audienceQuestion,audienceAnswer:state.audienceAnswer};save();$('#config').close();render();}};render();
+$('#home').onclick=e=>{e.preventDefault();returnHome();};$('#goHome').onclick=returnHome;$('#dialogHome').onclick=returnHome;document.querySelectorAll('[data-score]').forEach(btn=>btn.onclick=()=>score(...btn.dataset.score.split(',').map(Number)));$('#full').onclick=()=>{if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.().catch(()=>{});};$('#settings').onclick=()=>{stop();$('#teamA').value=state.names[0];$('#teamB').value=state.names[1];$('#membersA').value=(state.members[0]||[]).join('\n');$('#membersB').value=(state.members[1]||[]).join('\n');$('#audienceQuestion').value=state.audienceQuestion||DEFAULT_AUDIENCE_QUESTION;$('#audienceAnswer').value=state.audienceAnswer||DEFAULT_AUDIENCE_ANSWER;$('#editor').value=JSON.stringify(state.questions,null,2);$('#error').textContent='';$('#config').showModal();fitQuestion();};$('#close').onclick=()=>$('#config').close();$('#form').onsubmit=e=>{e.preventDefault();try{let qs=JSON.parse($('#editor').value);if(!Array.isArray(qs)||qs.length<4||new Set(qs.map(q=>q.id)).size!==qs.length||qs.some(q=>!q.id||typeof q.q!=='string'||typeof q.answer!=='string'||![0,1,2,3].includes(q.round)||(q.round===2?q.team!==null:![0,1].includes(q.team))||(q.image&&!/^assets\/[a-z0-9_.-]+$/i.test(q.image))||(q.options&&(!Array.isArray(q.options)||q.options.length!==4||q.options.some(x=>typeof x!=='string'||!x.trim())||new Set(q.options).size!==4||!Number.isInteger(q.correctIndex)||q.correctIndex<0||q.correctIndex>3||q.options[q.correctIndex]!==q.answer)))||rounds.some((_,i)=>!qs.some(q=>q.round===i))||qs.filter(q=>q.round===2).length!==10)throw Error('پێکهاتە و ناسنامەیێن پرسیاران بپشکنە؛ پێدڤیە چار قۆناغ و دەه پرسیار د قۆناغا هەڤرکییا لەزاتیێ دا هەبن.');state.names=[$('#teamA').value.trim()||DEFAULT_TEAM_NAMES[0],$('#teamB').value.trim()||DEFAULT_TEAM_NAMES[1]];state.members=[$('#membersA').value,$('#membersB').value].map(value=>value.split(/\r?\n/).map(name=>name.trim()).filter(Boolean).slice(0,30));state.audienceQuestion=$('#audienceQuestion').value.trim()||DEFAULT_AUDIENCE_QUESTION;state.audienceAnswer=$('#audienceAnswer').value.trim()||DEFAULT_AUDIENCE_ANSWER;state.questions=qs;state.index=Math.min(state.index,qs.length);state.choices={};save();$('#config').close();render();}catch(e){$('#error').textContent=e.message;}};$('#reset').onclick=()=>{if(confirm('دێ پێشبڕکییەکا نوو دەست پێ بکەی؟ خاڵ و پێشڤەچوون دێ بنە سفر، لێ پرسیار و ناڤ دێ پاراستی مینن.')){stop();state={...fresh(),names:state.names,members:structuredClone(state.members),questions:state.questions,sound:state.sound,audienceQuestion:state.audienceQuestion,audienceAnswer:state.audienceAnswer};save();$('#config').close();render();}};document.body.classList.add('viewport-fit');render();
 
 var fitFrame;
 function fitQuestion(){
  cancelAnimationFrame(fitFrame);
- fitFrame=requestAnimationFrame(()=>{
-  const enabled=document.body.classList.contains('question-view')&&innerWidth>=1000&&innerHeight>=600;
-  document.body.classList.toggle('presentation-fit',enabled);
-  document.documentElement.style.setProperty('--fit','1');
-  if(!enabled)return;
-  const controls=document.querySelector('#stage > .controls');
-  const arena=document.querySelector('.arena');
-  const fits=()=>document.documentElement.scrollWidth<=innerWidth+1&&document.documentElement.scrollHeight<=innerHeight+1&&controls.scrollWidth<=controls.clientWidth+1&&arena.scrollHeight<=arena.clientHeight+1;
-  for(let size=1;size>=.64;size-=.04){document.documentElement.style.setProperty('--fit',size.toFixed(2));if(fits())return;}
-  // Prefer legible content and accessible controls over clipping at exceptional sizes/zoom.
-  document.body.classList.remove('presentation-fit');
- });
+ fitFrame=requestAnimationFrame(fitViewportContent);
+}
+function fitViewportContent(){
+ fitSettingsDialog();
+ const frame=document.querySelector('.stage-viewport'),stage=$('#stage');
+ if(!frame||!stage)return;
+ document.body.classList.add('viewport-fit');
+ document.body.classList.remove('presentation-fit','interlude-view');
+ const width=frame.clientWidth,height=frame.clientHeight;
+ if(width<1||height<1)return;
+ // Measure the complete page at its responsive width before choosing a scale.
+ stage.style.width=width+'px';stage.style.transform='none';stage.style.left='0px';stage.style.top='0px';
+ const naturalWidth=Math.max(width,stage.scrollWidth),naturalHeight=Math.max(stage.offsetHeight,stage.scrollHeight);
+ const scale=Math.min(1,width/naturalWidth,height/Math.max(1,naturalHeight));
+ stage.style.transform='scale('+scale+')';
+ stage.style.left=Math.max(0,(width-naturalWidth*scale)/2)+'px';
+ stage.style.top=Math.max(0,(height-naturalHeight*scale)/2)+'px';
+ frame.dataset.scale=scale.toFixed(4);
 }
 window.addEventListener('resize',fitQuestion);
 document.addEventListener('fullscreenchange',fitQuestion);
 document.addEventListener('load',event=>{if(event.target instanceof HTMLImageElement)fitQuestion();},true);
 document.fonts?.ready.then(fitQuestion);
 
+
+
+// Refit after dynamic answers, score labels, images and fonts settle.
+const stageFitObserver=new ResizeObserver(fitQuestion);
+stageFitObserver.observe(document.querySelector('.stage-viewport'));
+const contentFitObserver=new MutationObserver(fitQuestion);
+contentFitObserver.observe(document.querySelector('#stage'),{childList:true,subtree:true,characterData:true});
+document.fonts?.addEventListener('loadingdone',fitQuestion);
+window.visualViewport?.addEventListener('resize',fitQuestion);
+
+function fitSettingsDialog(){
+ const dialog=$('#config'),form=$('#form');if(!dialog?.open||!form)return;
+ const width=Math.min(1000,innerWidth*.96),padding=24;
+ dialog.style.width=width+'px';dialog.style.height='auto';form.style.width=Math.max(1,width-padding)+'px';form.style.transform='none';
+ const natural=Math.max(form.scrollHeight,form.offsetHeight);
+ const scale=Math.min(1,(innerHeight*.94-padding)/Math.max(1,natural));
+ form.style.transform='scale('+scale+')';form.style.transformOrigin='top left';
+ dialog.style.width=((width-padding)*scale+padding)+'px';
+ dialog.style.height=(natural*scale+padding)+'px';
+}
+document.querySelector('#config details').addEventListener('toggle',fitQuestion);
+const settingsFitObserver=new MutationObserver(fitQuestion);
+settingsFitObserver.observe(document.querySelector('#form'),{childList:true,subtree:true,characterData:true});
