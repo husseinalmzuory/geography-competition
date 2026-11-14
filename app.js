@@ -134,7 +134,11 @@ if(state.index>=state.questions.length){
  <rect x="51" y="210" width="108" height="19" rx="3" fill="url(#academicGoldStem)" stroke="#936326" stroke-width="2.5"/>
  <path d="m105 55 7 14 15 2-11 11 3 15-14-7-14 7 3-15-11-11 15-2Z" fill="#fff3b2" stroke="#b68a37" stroke-width="2"/>
  </svg></div></div>`;
- const celebration=tie?'':`<div class="academic-fireworks" aria-hidden="true">${[0,1,2,3,4].map((burst)=>`<div class="academic-firework academic-firework-${burst+1}">${Array.from({length:12},(_,i)=>`<i style="--ray:${i};--delay:${burst*.85}s"></i>`).join('')}</div>`).join('')}</div>`;
+ const randomFireworkPosition=()=>({left:(9+Math.random()*82).toFixed(1)+'%',top:(17+Math.random()*65).toFixed(1)+'%'});
+ const celebration=tie?'':`<div class="academic-fireworks" aria-hidden="true">${Array.from({length:10},(_,burst)=>{
+  const position=randomFireworkPosition(),delay=(burst*.31+Math.random()*.95).toFixed(2);
+  return `<div class="academic-firework" style="left:${position.left};top:${position.top}">${Array.from({length:12},(_,i)=>`<i style="--ray:${i};--delay:${delay}s"></i>`).join('')}</div>`;
+ }).join('')}</div>`;
  const winnerList=!tie&&winnerMembers.length?`<section class="award-roster"><h2>ئەندامێن تیما سەرکەفتی</h2><ol>${winnerMembers.map((name,i)=>`<li><span class="award-member-number">${String(i+1).padStart(2,'0')}</span><span>${esc(name)}</span></li>`).join('')}</ol></section>`:'';
  host.innerHTML=`<section class="academic-result cyber-result" aria-live="polite">
  ${celebration}
@@ -161,9 +165,18 @@ if(state.index>=state.questions.length){
   ${tie?'':`<div class="cyber-cup-stage"><div class="cyber-light-rays" aria-hidden="true"></div>${trophy}<div class="cyber-podium" aria-hidden="true"><div class="cyber-podium-top"></div><div class="cyber-podium-face"></div><div class="cyber-podium-floor"></div></div></div>`}
   ${winnerList}
  </div>
- <div class="award-footer"><span>زانست · جوگرافیا · پێشبڕکی</span><span>DUHOK × ZAKHO</span></div>
  <div class="controls award-controls"><button id="back">زڤڕین بۆ قۆناغا دوماهیێ</button><button id="lobby">لاپەڕا سەرەکی</button></div>
- </section>`;$('#back').onclick=()=>go(state.questions.length-1);$('#lobby').onclick=()=>go(-1);if(tie)$('#tie').onclick=()=>{$('#tieBox').innerHTML='<p>هەردوو تیم د ماوەیێ ٣٠ چرکەیان دا بەرسڤ بدەن: کیژ مەودا مەزنترە، ١ سم ل سەر نەخشەیەکێ ب پێوەری ١ : ٢٠٠٬٠٠٠ یان ٣ سم ب پێوەری ١ : ٥٠٬٠٠٠؟</p><button id="tieAnswer">دیارکرنا بەرسڤێ</button>';$('#tieAnswer').onclick=()=>{$('#tieBox').innerHTML='<p>یێ ئێکێ ٢ کیلۆمەترە و یێ دووێ ١٫٥ کیلۆمەترە؛ یێ ئێکێ مەزنترە.</p><p class="hint">دوو خاڵ ژ تەختەیا خاڵان بدە تیما سەرکەفتی، پاشی ئەنجامێ نوو بکە.</p><button id="refreshWinner">نووکرنا ئەنجامێ</button>';$('#refreshWinner').onclick=render;};};return;}
+ </section>`;
+ if(!tie){
+  const fireworks=host.querySelector('.academic-fireworks');
+  fireworks?.addEventListener('animationiteration',event=>{
+   if(event.animationName!=='academic-spark-burst'||!event.target.matches('.academic-firework i:first-child'))return;
+   const burst=event.target.parentElement,position=randomFireworkPosition();
+   burst.style.left=position.left;
+   burst.style.top=position.top;
+  });
+ }
+ $('#back').onclick=()=>go(state.questions.length-1);$('#lobby').onclick=()=>go(-1);if(tie)$('#tie').onclick=()=>{$('#tieBox').innerHTML='<p>هەردوو تیم د ماوەیێ ٣٠ چرکەیان دا بەرسڤ بدەن: کیژ مەودا مەزنترە، ١ سم ل سەر نەخشەیەکێ ب پێوەری ١ : ٢٠٠٬٠٠٠ یان ٣ سم ب پێوەری ١ : ٥٠٬٠٠٠؟</p><button id="tieAnswer">دیارکرنا بەرسڤێ</button>';$('#tieAnswer').onclick=()=>{$('#tieBox').innerHTML='<p>یێ ئێکێ ٢ کیلۆمەترە و یێ دووێ ١٫٥ کیلۆمەترە؛ یێ ئێکێ مەزنترە.</p><p class="hint">دوو خاڵ ژ تەختەیا خاڵان بدە تیما سەرکەفتی، پاشی ئەنجامێ نوو بکە.</p><button id="refreshWinner">نووکرنا ئەنجامێ</button>';$('#refreshWinner').onclick=render;};};return;}
 const q=state.questions[state.index],r=rounds[q.round],current=state.questions.filter(x=>x.round===q.round),n=current.indexOf(q)+1,revealed=!!state.revealed[q.id],awarded=!!state.awarded[q.id],speed=q.round===3,buzzer=q.round===2,buzzerAward=state.buzzerAwards[q.id],canAdvance=!!state.unlocked[q.id]||revealed||awarded||!!buzzerAward;
 remaining=r.seconds;
 const visual=q.round===1&&!!q.image;
