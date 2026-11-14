@@ -133,8 +133,14 @@ if(state.index>=state.questions.length){
 @media(max-height:760px) and (min-width:1101px){.cyber-result .cyber-cup-stage .gaw-award{max-width:260px}}
 </style><div class="gaw-award" role="button" tabindex="0" aria-label="کاسا سەرکەفتنێ؛ بۆ راوەستاندنا جوڵەیێ کلیک بکە." aria-pressed="false">
 <svg viewBox="0 0 600 700" role="img" aria-labelledby="gaw-title gaw-desc" xmlns="http://www.w3.org/2000/svg">
-<title id="gaw-title">Geography Awareness Week winner</title><desc id="gaw-desc">A revolving blue and green Earth floats over a metallic gold star trophy and a glowing turquoise academic pedestal.</desc>
+<title id="gaw-title">Geography Awareness Week winner</title><desc id="gaw-desc">A crystal Earth crowns a tall, twisting polished-gold sculpture on a black plinth above the glowing turquoise pedestal.</desc>
 <defs>
+<linearGradient id="gaw-sculpture" x1="0" y1="0" x2="1" y2=".08"><stop stop-color="#5b3309"/><stop offset=".12" stop-color="#b17b1b"/><stop offset=".27" stop-color="#fff5a0"/><stop offset=".34" stop-color="#fffdd6"/><stop offset=".40" stop-color="#a47317"/><stop offset=".48" stop-color="#f9d55a"/><stop offset=".57" stop-color="#6e4508"/><stop offset=".69" stop-color="#e5b131"/><stop offset=".79" stop-color="#fff5b1"/><stop offset=".86" stop-color="#c28a22"/><stop offset="1" stop-color="#66400c"/></linearGradient>
+<linearGradient id="gaw-ribbon" x1="0" y1="0" x2="1" y2=".25"><stop stop-color="#a26911"/><stop offset=".24" stop-color="#ffe780"/><stop offset=".4" stop-color="#fffdd9"/><stop offset=".5" stop-color="#b88018"/><stop offset=".7" stop-color="#60400a"/><stop offset=".83" stop-color="#e6b93a"/><stop offset="1" stop-color="#fff3a3"/></linearGradient>
+<linearGradient id="gaw-obsidian" x1="0" y1="0" x2="1" y2=".6"><stop stop-color="#040609"/><stop offset=".4" stop-color="#17202a"/><stop offset=".49" stop-color="#39424a"/><stop offset=".53" stop-color="#10151c"/><stop offset="1" stop-color="#03060b"/></linearGradient>
+<radialGradient id="gaw-crystal" cx=".3" cy=".2" r=".85"><stop stop-color="#f6f3d5" stop-opacity=".8"/><stop offset=".25" stop-color="#8dabb0" stop-opacity=".42"/><stop offset=".65" stop-color="#203d49" stop-opacity=".72"/><stop offset=".88" stop-color="#788d8e" stop-opacity=".8"/><stop offset="1" stop-color="#e9ddaa" stop-opacity=".85"/></radialGradient>
+<pattern id="gaw-goldgrain" width="7" height="9" patternUnits="userSpaceOnUse"><path d="M1 1h.6M5 4h.5M2 7h.6" stroke="#493006" stroke-width=".8" opacity=".35"/><path d="M3 3h.7M6 8h.5" stroke="#fff4af" stroke-width=".65" opacity=".6"/></pattern>
+
 <linearGradient id="gaw-gold"><stop stop-color="#8b4b0b"/><stop offset=".18" stop-color="#e3a62e"/><stop offset=".36" stop-color="#fff2a4"/><stop offset=".49" stop-color="#d89921"/><stop offset=".68" stop-color="#ffe78b"/><stop offset=".87" stop-color="#c17b15"/><stop offset="1" stop-color="#734009"/></linearGradient>
 <linearGradient id="gaw-edge" x2="0" y2="1"><stop stop-color="#fff6c1"/><stop offset=".4" stop-color="#eab943"/><stop offset="1" stop-color="#926014"/></linearGradient>
 <linearGradient id="gaw-navy" x2="0" y2="1"><stop stop-color="#34455d"/><stop offset=".4" stop-color="#14243c"/><stop offset="1" stop-color="#060e20"/></linearGradient>
@@ -144,7 +150,7 @@ if(state.index>=state.questions.length){
 <radialGradient id="gaw-glow"><stop stop-color="#4dffeb" stop-opacity=".35"/><stop offset="1" stop-color="#4dffeb" stop-opacity="0"/></radialGradient>
 <filter id="gaw-neon" x="-70%" y="-150%" width="240%" height="400%"><feGaussianBlur stdDeviation="5"/></filter>
 <clipPath id="gaw-globe"><circle cx="300" cy="164" r="101"/></clipPath>
-<g id="gaw-map" fill="#59c978" stroke="#b0e89b" stroke-width="1.3" stroke-linejoin="round">
+<g id="gaw-map" fill="#e0dfc5" stroke="#f3eed3" stroke-width="1.3" stroke-linejoin="round">
 <path d="M8 91 30 68 61 64 80 77 104 71 126 88 115 106 94 112 84 133 65 136 64 153 48 146 38 124 20 117Z M72 143 93 150 111 176 103 191 115 211 103 239 89 260 79 238 76 206 63 178Z M134 64 155 51 172 64 161 89 143 96Z"/>
 <path d="M215 105 226 87 246 89 255 75 276 82 287 70 326 79 348 68 381 87 410 83 435 102 453 110 441 131 410 128 397 144 371 140 359 160 343 147 330 163 318 145 297 141 279 125 260 132 246 118 229 123Z M235 130 267 131 285 151 280 178 263 193 253 223 237 215 227 187 211 171 214 145Z M325 157 340 164 350 187 339 194 332 178Z M371 169 390 176 398 195 382 193Z M384 211 409 201 434 214 443 239 418 248 390 239Z M287 209 295 218 289 239 282 231Z M445 144 450 157 441 165Z"/>
 </g>
@@ -186,35 +192,46 @@ if(state.index>=state.questions.length){
 <circle class="dust" cx="449" cy="551" r="2.1" style="--d:-8.97s"/>
 </g>
 <g class="float">
-<!-- Trophy: curved solid handles, cup, stem and engraved blank plaque -->
-<ellipse cx="300" cy="512" rx="80" ry="15" fill="#00101e" opacity=".3"/>
-<path d="M232 295c-82-35-96 28-63 72 18 24 43 32 77 30l-7-20c-33 1-59-18-65-43-7-31 15-38 55-16Z" fill="url(#gaw-gold)" stroke="#e6b24e" stroke-width="2"/>
-<path d="M368 295c82-35 96 28 63 72-18 24-43 32-77 30l7-20c33 1 59-18 65-43 7-31-15-38-55-16Z" fill="url(#gaw-gold)" stroke="#e6b24e" stroke-width="2"/>
-<path d="M218 292h164c-4 72-18 117-65 129l3 31h-40l3-31c-47-12-61-57-65-129Z" fill="url(#gaw-gold)" stroke="#dcad46" stroke-width="1.5"/>
-<path d="M234 309c4 47 14 78 34 92" fill="none" stroke="#fff3bd" stroke-width="6" opacity=".5"/>
-<ellipse cx="300" cy="292" rx="83" ry="15" fill="url(#gaw-edge)"/>
-<ellipse cx="300" cy="290" rx="72" ry="9" fill="#8a5c1c"/><ellipse cx="300" cy="293" rx="66" ry="6" fill="#d0a345"/>
-<path d="m302 326 12 24 27 4-19 20 5 27-25-13-25 13 5-27-19-20 27-4Z" fill="#956015" opacity=".6" transform="translate(2 4)"/>
-<path d="m300 325 12 24 27 4-19 20 5 27-25-13-25 13 5-27-19-20 27-4Z" fill="url(#gaw-edge)" stroke="#fff2ac" stroke-width="1.5"/>
-<path d="m300 325 0 41-25 34 5-27-19-20 27-4Z" fill="#fff5b6" opacity=".35"/>
-<ellipse cx="300" cy="451" rx="29" ry="7" fill="url(#gaw-edge)"/>
-<path d="M279 451q-4 13-27 17v11h96v-11q-23-4-27-17" fill="url(#gaw-gold)"/>
-<path d="M235 479v24c0 21 130 21 130 0v-24" fill="url(#gaw-navy)" stroke="#4e5b66"/>
-<ellipse cx="300" cy="479" rx="65" ry="15" fill="#28384b" stroke="#bb9142" stroke-width="2"/>
-<rect x="275" y="491" width="50" height="15" rx="3" fill="url(#gaw-edge)" stroke="#ffeeb2"/>
-<circle cx="279" cy="498" r="1" fill="#8b611f"/><circle cx="321" cy="498" r="1" fill="#8b611f"/>
-<!-- Fixed sphere silhouette with a continuous wrapped, moving SVG surface -->
+<!-- Reference-inspired polished gold helix and faceted black stone plinth. -->
+<ellipse cx="300" cy="524" rx="83" ry="11" fill="#00101e" opacity=".28"/>
+<!-- The two sculpted ribbons embrace the crystal globe and twist into a narrow waist. -->
+<path d="M246 196C249 226 277 258 288 288C303 331 281 372 270 418L255 484H341L337 421C334 374 315 339 312 307C308 269 333 230 355 201C331 208 322 211 301 212C280 212 260 207 246 196Z" fill="url(#gaw-sculpture)" stroke="#b18a37" stroke-width="1.3"/>
+<!-- Deep cutout between the curling arms. -->
+<path d="M258 212C270 232 281 241 292 251L307 220C291 225 274 221 258 212Z" fill="#2a250f"/>
+<path d="M265 217C276 230 282 234 287 235L299 222C284 225 274 221 265 217Z" fill="#111c1f"/>
+<path d="M334 214C311 247 300 275 304 308C308 346 329 381 329 422L331 483H315C324 434 311 385 299 354C279 300 296 251 316 219Z" fill="url(#gaw-ribbon)"/>
+<!-- Broad textured outer sweep and mirrored specular ridges. -->
+<path d="M252 206C260 238 286 265 292 295C302 344 274 398 260 484H284C280 427 311 374 303 330C299 289 274 242 252 206Z" fill="url(#gaw-ribbon)"/>
+<path d="M292 350C277 393 264 438 259 483H281C280 435 296 395 301 369Z" fill="url(#gaw-goldgrain)"/>
+<path d="M249 201C258 230 283 253 295 285C310 329 290 370 280 407" fill="none" stroke="#fffbc8" stroke-width="3.4" opacity=".9"/>
+<path d="M350 204C325 233 306 268 310 305C313 338 331 379 332 421L336 482" fill="none" stroke="#ffe581" stroke-width="2.2"/>
+<path d="M302 359C316 404 312 452 309 483" fill="none" stroke="#fffbd2" stroke-width="5"/>
+<path d="M300 376C302 419 292 454 291 483" fill="none" stroke="#74500d" stroke-width="2"/>
+<path d="M318 362C328 394 329 425 327 447" fill="none" stroke="#48330e" stroke-width="3" opacity=".7"/>
+<path d="M247 197Q293 219 353 201Q321 229 291 218Q262 211 247 197Z" fill="url(#gaw-edge)" stroke="#f4db88" stroke-width="1"/>
+<path d="M253 203Q296 222 342 206" fill="none" stroke="#fff7bc" stroke-width="2.5"/>
+<!-- Blank polished black base, with sharply bevelled planes like the reference. -->
+<path d="M252 483H344L353 519H241Z" fill="url(#gaw-obsidian)" stroke="#30373c" stroke-width="1"/>
+<path d="M241 519H353L349 539H245Z" fill="#05090e" stroke="#30363b" stroke-width=".8"/>
+<path d="M252 483H344L337 491H259Z" fill="#354047" opacity=".7"/>
+<path d="M244 516L338 499L350 516Z" fill="#aab9bc" opacity=".12"/>
+<path d="M244 519H350" stroke="#78868d" stroke-width="1" opacity=".5"/>
+<!-- Crystal globe finial; the existing revolving surface and orbital accents stay animated. -->
+<g transform="translate(300 144) scale(.55) translate(-300 -164)">
 <circle cx="300" cy="164" r="112" fill="url(#gaw-glow)"/>
 <g class="orbit" fill="none" stroke="#70ffed" stroke-opacity=".4"><ellipse cx="300" cy="164" rx="137" ry="41" transform="rotate(-25 300 164)"/><circle cx="428" cy="126" r="4" fill="#b0fff2" stroke="none"/></g>
-<circle cx="300" cy="164" r="102" fill="url(#gaw-ocean)" stroke="#63dceb" stroke-width="1.5"/>
+<circle cx="300" cy="164" r="102" fill="url(#gaw-crystal)" stroke="#dfd6ad" stroke-width="1.5"/>
 <g clip-path="url(#gaw-globe)">
 <g class="world"><use href="#gaw-map" x="60"/><use href="#gaw-map" x="540"/>
-<g fill="none" stroke="#b9faff" stroke-opacity=".14" stroke-width="1"><path d="M60 113h960M60 164h960M60 215h960"/>
+<g fill="none" stroke="#e4e7d7" stroke-opacity=".3" stroke-width="1"><path d="M60 113h960M60 164h960M60 215h960"/>
 <path d="M100 60v210M160 60v210M220 60v210M280 60v210M340 60v210M400 60v210M460 60v210M520 60v210M580 60v210M640 60v210M700 60v210M760 60v210M820 60v210M880 60v210M940 60v210"/></g></g>
 <circle cx="300" cy="164" r="101" fill="url(#gaw-shade)"/>
 <ellipse cx="267" cy="105" rx="38" ry="12" transform="rotate(-30 267 105)" fill="#e1ffff" opacity=".16"/>
 </g>
 <g class="orbit reverse" fill="none"><ellipse cx="300" cy="164" rx="127" ry="51" transform="rotate(27 300 164)" stroke="#ffdb7a" stroke-opacity=".6"/><circle cx="179" cy="139" r="3.5" fill="#ffdc7c"/><circle cx="399" cy="208" r="2" fill="#fff3c5"/><circle cx="284" cy="113" r="2" fill="#73ffee"/></g>
+<path d="M221 160C214 116 248 80 288 75" fill="none" stroke="#fffce9" stroke-width="5" opacity=".66" stroke-linecap="round"/>
+<path d="M374 183C364 221 339 247 310 252" fill="none" stroke="#fff3cc" stroke-width="2.5" opacity=".5"/>
+</g>
 </g>
 </svg></div>`;
  const randomFireworkPosition=()=>({left:(9+Math.random()*82).toFixed(1)+'%',top:(17+Math.random()*65).toFixed(1)+'%'});
