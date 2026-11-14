@@ -119,18 +119,32 @@ if(state.index>=state.questions.length){
  const winnerIndex=state.scores[0]>state.scores[1]?0:1;
  const winner=state.names[winnerIndex];
  const winnerMembers=(state.members[winnerIndex]||[]).filter(name=>typeof name==='string'&&name.trim());
- const medal=`<div class="award-emblem" role="img" aria-label="نیشانا سەرکەفتنێ">
- <div class="award-emblem-ring"><svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="60" cy="60" r="55" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="60" cy="60" r="47" fill="none" stroke="currentColor" opacity=".45" stroke-width=".7"/><path d="M35 77V43l25-14 25 14v34L60 91Z" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M44 71l16-24 16 24M48 64h24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M60 15v8M60 97v8M15 60h8M97 60h8" stroke="currentColor" stroke-width="2"/></svg></div>
- <span class="award-emblem-caption">GAW</span></div>`;
+ const trophy=`<div class="academic-trophy-scene" role="img" aria-label="کاسا سەرکەفتنێ">
+ <div class="academic-trophy-halo"></div>
+ <div class="academic-trophy-rotator"><svg class="academic-trophy" viewBox="0 0 210 245" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+ <defs><linearGradient id="academicGold" x1="0" y1="0" x2="1" y2=".25"><stop offset="0" stop-color="#a76a19"/><stop offset=".13" stop-color="#dfaf46"/><stop offset=".35" stop-color="#fff0a1"/><stop offset=".57" stop-color="#f0bd4d"/><stop offset=".8" stop-color="#b47720"/><stop offset="1" stop-color="#f4d67e"/></linearGradient><linearGradient id="academicGoldStem" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#95611f"/><stop offset=".5" stop-color="#f9df85"/><stop offset="1" stop-color="#95611f"/></linearGradient></defs>
+ <ellipse cx="105" cy="231" rx="65" ry="8" fill="#967142" opacity=".18"/>
+ <path d="M62 39H31C18 39 16 49 19 63C25 95 41 110 70 112L74 97C54 97 38 85 34 57H64Z" fill="url(#academicGold)" stroke="#99661e" stroke-width="3"/>
+ <path d="M148 39H179C192 39 194 49 191 63C185 95 169 110 140 112L136 97C156 97 172 85 176 57H146Z" fill="url(#academicGold)" stroke="#99661e" stroke-width="3"/>
+ <path d="M57 24H153L147 102C143 132 126 147 105 147C84 147 67 132 63 102Z" fill="url(#academicGold)" stroke="#99651d" stroke-width="3.5"/>
+ <path d="M72 32C77 102 82 119 92 130" fill="none" stroke="#fff5c6" stroke-width="8" opacity=".65" stroke-linecap="round"/>
+ <path d="M100 147H110V186H100Z" fill="url(#academicGoldStem)" stroke="#9e7026" stroke-width="2"/>
+ <path d="M88 183H122L134 197H76Z" fill="url(#academicGold)" stroke="#9e7026" stroke-width="2.5"/>
+ <rect x="66" y="196" width="78" height="15" rx="3" fill="url(#academicGoldStem)" stroke="#96651f" stroke-width="2.5"/>
+ <rect x="51" y="210" width="108" height="19" rx="3" fill="url(#academicGoldStem)" stroke="#936326" stroke-width="2.5"/>
+ <path d="m105 55 7 14 15 2-11 11 3 15-14-7-14 7 3-15-11-11 15-2Z" fill="#fff3b2" stroke="#b68a37" stroke-width="2"/>
+ </svg></div></div>`;
+ const celebration=tie?'':`<div class="academic-fireworks" aria-hidden="true">${[0,1,2].map((burst)=>`<div class="academic-firework academic-firework-${burst+1}">${Array.from({length:12},(_,i)=>`<i style="--ray:${i};--delay:${burst*.85}s"></i>`).join('')}</div>`).join('')}</div>`;
  const winnerList=!tie&&winnerMembers.length?`<section class="award-roster"><h2>ئەندامێن تیما سەرکەفتی</h2><ol>${winnerMembers.map((name,i)=>`<li><span class="award-member-number">${String(i+1).padStart(2,'0')}</span><span>${esc(name)}</span></li>`).join('')}</ol></section>`:'';
  host.innerHTML=`<section class="academic-result" aria-live="polite">
+ ${celebration}
  <div class="award-topline"></div>
  <div class="award-masthead"><div class="award-institution"><img src="assets/duhok-logo.png" alt="زانکۆیا دهۆک"><span>زانکۆیا دهۆک</span></div><div class="award-event"><strong>حەفتییا هۆشیارییا جۆگرافی</strong><small>GEOGRAPHY AWARENESS WEEK · GAW</small></div><div class="award-institution"><img src="assets/zakho-logo.png" alt="زانکۆیا زاخۆ"><span>زانکۆیا زاخۆ</span></div></div>
  <div class="award-divider"></div>
  <div class="award-body ${tie?'award-is-tie':''}">
  <div class="award-hero">
  <div class="award-section-code">FINAL RESULT <span> / </span> 2026</div>
- ${tie?'<h1 class="award-result-title">هەردوو تیم یەکسان بوون</h1><p class="award-result-subtitle">ئەنجاما دوماهیێ</p>':`${medal}<p class="award-result-subtitle">تیما سەرکەفتی</p><h1 class="award-result-title">${esc(winner)}</h1><p class="award-achievement">پیرۆز بیت · سەرکەفتنا زانستی</p>`}
+ ${tie?'<h1 class="award-result-title">هەردوو تیم یەکسان بوون</h1><p class="award-result-subtitle">ئەنجاما دوماهیێ</p>':`${trophy}<p class="award-result-subtitle">تیما سەرکەفتی</p><h1 class="award-result-title">${esc(winner)}</h1><p class="award-achievement">پیرۆز بیت · سەرکەفتنا زانستی</p>`}
  <div class="award-score"><div class="award-score-team ${!tie&&winnerIndex===0?'award-score-winner':''}"><span>${esc(state.names[0])}</span><strong>${state.scores[0]}</strong></div><div class="award-score-middle"><small>FINAL SCORE</small><span aria-hidden="true">—</span></div><div class="award-score-team ${!tie&&winnerIndex===1?'award-score-winner':''}"><span>${esc(state.names[1])}</span><strong>${state.scores[1]}</strong></div></div>
  ${tie?'<div class="award-tiebreak"><button id="tie">پرسیارا چارەسەرکرنا یەکسانیێ</button><div id="tieBox"></div></div>':''}
  </div>
