@@ -3,12 +3,12 @@ const rounds=[{name:'هەلبژارتن',description:'پرسیار و چار ه�
 const defaults=window.GEOGRAPHY_BANK.map(q=>({...q,round:q.round===2?3:q.round===3?2:q.round})).sort((a,b)=>a.round-b.round);
 const BANK_VERSION=9;
 const KEY='geography-competition-v1';
-const DEFAULT_TEAM_NAMES=['هێزا جوگراڤی','لێدانا جوگرافیایێ'];
+const DEFAULT_TEAM_NAMES=['هێزا جوگراڤی','دلێ جوگرافيێ'];
 function fresh(){return {names:[...DEFAULT_TEAM_NAMES],scores:[0,0],index:-1,resumeIndex:null,questions:structuredClone(defaults),awarded:{},revealed:{},sound:true,choices:{},speedCounts:{},buzzerAwards:{},unlocked:{},bankVersion:BANK_VERSION};}
 let state;try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved&&!saved.bankVersion)saved.bankVersion=1;state=saved&&Array.isArray(saved.questions)&&saved.questions.length&&Array.isArray(saved.names)&&Array.isArray(saved.scores)?{...fresh(),...saved}:fresh();}catch{state=fresh();}
 // Update old generic names, preserving names already customized in Settings.
 let namesUpdated=false;
-state.names=state.names.map((name,i)=>{if(!name||name===['الفريق الأول','الفريق الثاني'][i]){namesUpdated=true;return DEFAULT_TEAM_NAMES[i];}return name;});
+state.names=state.names.map((name,i)=>{if(!name||name===['الفريق الأول','الفريق الثاني'][i]||(i===1&&name==='لێدانا جوگرافیایێ')){namesUpdated=true;return DEFAULT_TEAM_NAMES[i];}return name;});
 if(namesUpdated)save();
 // Keep accumulated scores and custom questions; remap progress by question ID once.
 if(state.bankVersion<4){
