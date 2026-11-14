@@ -193,6 +193,7 @@ if(state.index>=state.questions.length){
 <circle class="dust" cx="449" cy="551" r="2.1" style="--d:-8.97s"/>
 </g>
 </g>
+<g class="gaw-trophy-scale" transform="translate(300 495) scale(1.2) translate(-300 -495)">
 <g class="float">
 <!-- Reference-inspired polished gold helix and faceted black stone plinth. -->
 <ellipse cx="300" cy="524" rx="83" ry="11" fill="#00101e" opacity=".28"/>
@@ -233,6 +234,7 @@ if(state.index>=state.questions.length){
 <g class="orbit reverse" fill="none"><ellipse cx="300" cy="164" rx="127" ry="51" transform="rotate(27 300 164)" stroke="#ffdb7a" stroke-opacity=".6"/><circle cx="179" cy="139" r="3.5" fill="#ffdc7c"/><circle cx="399" cy="208" r="2" fill="#fff3c5"/><circle cx="284" cy="113" r="2" fill="#73ffee"/></g>
 <path d="M221 160C214 116 248 80 288 75" fill="none" stroke="#fffce9" stroke-width="5" opacity=".66" stroke-linecap="round"/>
 <path d="M374 183C364 221 339 247 310 252" fill="none" stroke="#fff3cc" stroke-width="2.5" opacity=".5"/>
+</g>
 </g>
 </g>
 </svg></div>`;
