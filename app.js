@@ -1,7 +1,7 @@
 'use strict';
 const rounds=[{name:'هەلبژارتن',description:'پرسیار و چار هەلبژارتن',seconds:30,points:2},{name:'ئەڤ وێنە چییە؟',description:'دیاردەیێ بناسە',seconds:30,points:2},{name:'هەڤرکییا لەزاتیێ',description:'١٠ پرسیار بۆ تیما ب لەزتر',seconds:30,points:2},{name:'مۆزایەدە',description:'پترین ژمارە د ٣٠ چرکەیان دا',seconds:30,points:2}];
 const defaults=window.GEOGRAPHY_BANK.map(q=>({...q,round:q.round===2?3:q.round===3?2:q.round})).sort((a,b)=>a.round-b.round);
-const BANK_VERSION=8;
+const BANK_VERSION=9;
 const KEY='geography-competition-v1';
 const DEFAULT_TEAM_NAMES=['هێزا جوگراڤی','لێدانا جوگرافیایێ'];
 function fresh(){return {names:[...DEFAULT_TEAM_NAMES],scores:[0,0],index:-1,resumeIndex:null,questions:structuredClone(defaults),awarded:{},revealed:{},sound:true,choices:{},speedCounts:{},buzzerAwards:{},bankVersion:BANK_VERSION};}
@@ -71,6 +71,21 @@ if(state.bankVersion<8){
  if(state.index<0&&activeId)state.index=0;
  if(state.resumeIndex<0&&resumeId)state.resumeIndex=0;
  state.bankVersion=8;
+ save();
+}
+// Install the revised source document for every browser with an older saved bank.
+// Start a clean session so answers/points from the previous wording are never mixed in.
+if(state.bankVersion<9){
+ state.questions=structuredClone(defaults);
+ state.index=-1;
+ state.resumeIndex=null;
+ state.scores=[0,0];
+ state.awarded={};
+ state.revealed={};
+ state.choices={};
+ state.speedCounts={};
+ state.buzzerAwards={};
+ state.bankVersion=9;
  save();
 }
 if(!state.buzzerAwards||typeof state.buzzerAwards!=='object'||Array.isArray(state.buzzerAwards))state.buzzerAwards={};
