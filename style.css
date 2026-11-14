@@ -259,3 +259,26 @@ header>.header-turn.b strong{border-color:#b99750;background:#fff6df;color:#805d
 .presentation-fit .visual-question .mcq-layout .choice{min-height:calc(98px * var(--fit));padding:calc(12px * var(--fit)) 32px}
 @media(max-width:900px){.visual-split{grid-template-columns:minmax(0,1fr);gap:22px}.visual-question{grid-column:1;grid-row:1}.visual-image{grid-column:1;grid-row:2;border-inline-start:0;border-top:1px solid #d2deeb;padding:16px 0 0}.visual-image>img{height:auto;max-height:340px}.visual-question .mcq-layout{min-height:260px}}
 @media(max-width:480px){.arena.visual-arena{padding:16px}.visual-question .mcq-layout .choice{padding:12px 22px;grid-template-columns:1fr;row-gap:6px;min-height:120px}.visual-question .choice b{grid-column:1;grid-row:1}.visual-question .choice span{grid-column:1;grid-row:2;font-size:22px}.visual-question .choice em{grid-column:1;grid-row:3}}
+
+
+/* Kurdish Badini readability: override the legacy Taybah display face only in competition content. */
+:root{--kurdish-font:"Noto Sans Arabic",Tahoma,Arial,sans-serif}
+.arena h1,.arena:has(.choices) h1,
+.presentation-fit .arena h1,.presentation-fit .arena:has(.choices) h1,
+.visual-question>h1,.presentation-fit .visual-question>h1{
+  font-family:var(--kurdish-font);font-weight:700;letter-spacing:0;
+  line-height:1.65;word-break:normal;overflow-wrap:break-word;
+}
+.choices .choice span,.presentation-fit .choice span,
+.choices .choice b,.presentation-fit .choices .choice b,
+.answer,.speed-count-panel,.roundtile strong,.header-turn strong{
+  font-family:var(--kurdish-font);
+  letter-spacing:0;font-synthesis:none;
+}
+.choices .choice span,.presentation-fit .choice span{
+  font-weight:500;line-height:1.65;word-break:normal;overflow-wrap:break-word;
+}
+.choices .choice b,.presentation-fit .choices .choice b{font-weight:700}
+.mcq-layout .choice span,.visual-question .choice span{
+  unicode-bidi:plaintext;text-align:right;
+}
