@@ -1118,3 +1118,116 @@ body.interlude-view #stage :is(#roundIntroStart,#visualIntroStart,#speedIntroSta
  body.interlude-view .scoreboard .team span{font-size:11px;line-height:1.2}
  body.interlude-view .scoreboard .team strong{font-size:20px}
 }
+
+/* Bounded application shell. All page content is measured; nothing is cropped to fake a fit. */
+html:has(body.viewport-fit){height:100%;overflow:hidden}
+body.viewport-fit{height:100vh;height:100dvh;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+body.viewport-fit>header{flex:none}
+body.viewport-fit>main{width:100%;max-width:1500px;min-width:0;min-height:0;flex:1;display:flex;flex-direction:column;padding:8px clamp(8px,2vw,30px);margin:0 auto;gap:6px}
+body.viewport-fit .scoreboard{flex:none;margin:0;gap:clamp(10px,4vw,70px)}
+body.viewport-fit .team{min-width:0;padding:2px 4px;gap:8px;flex-wrap:nowrap}
+body.viewport-fit .team span{min-width:0;font-size:clamp(12px,1.5vw,20px);line-height:1.4;overflow-wrap:anywhere}
+body.viewport-fit .team strong{font-size:clamp(22px,3vh,34px);line-height:1.2}
+body.viewport-fit .team div{flex:none}
+body.viewport-fit .team button{padding:1px 7px;line-height:1.3}
+body.viewport-fit .stage-viewport{position:relative;flex:1;min-width:0;min-height:0;overflow:hidden}
+body.viewport-fit #stage{position:absolute;top:0;left:0;min-height:0;height:auto;display:flex;flex-direction:column;gap:8px;transform-origin:0 0;will-change:transform}
+body.viewport-fit #stage>:is(.round-intro,.visual-intro,.speed-intro){flex:none;margin:0 auto;padding:clamp(12px,2vh,24px) clamp(12px,2vw,30px)}
+body.viewport-fit #stage>:is(.round-intro,.visual-intro,.speed-intro)>h1{font-size:clamp(28px,4.6vh,53px);line-height:1.3}
+body.viewport-fit #stage>:is(.round-intro,.visual-intro,.speed-intro)>svg{max-height:38vh}
+body.viewport-fit #stage>:is(.round-intro,.visual-intro,.speed-intro)>:is(.round-intro-controls,.visual-controls,.speed-controls){margin-top:10px;padding-top:10px}
+body.viewport-fit #stage>.hero{padding:10px 0}
+body.viewport-fit .hero h1{font-size:clamp(28px,4vw,54px);line-height:1.4}
+body.viewport-fit .hero .gaw-word{font-size:clamp(40px,6vh,70px);margin:3px auto 8px;line-height:1.1}
+body.viewport-fit .hero p{margin:8px auto;font-size:clamp(13px,1.3vw,18px);line-height:1.7}
+body.viewport-fit .hero .eyebrow{margin:0 0 6px}
+body.viewport-fit .hero .actions{margin-top:10px}
+body.viewport-fit .rounds{margin-top:8px}
+body.viewport-fit .roundtile{padding:clamp(8px,1.6vh,18px) 12px}
+body.viewport-fit .roundtile small{margin-bottom:4px}
+body.viewport-fit .roundtile strong{font-size:clamp(16px,1.6vw,22px)}
+body.viewport-fit .arena{min-height:0;padding:16px 22px;flex:none}
+body.viewport-fit .arena h1{font-size:clamp(24px,2.8vw,38px);line-height:1.55;margin:4px auto 14px}
+body.viewport-fit .visual-split{gap:18px}
+body.viewport-fit .visual-image>img{height:100%;max-height:42vh;object-fit:contain}
+body.viewport-fit #stage>.controls{margin:0;flex-wrap:wrap;gap:5px}
+body.viewport-fit #stage>.controls button{font-size:clamp(12px,1vw,15px);padding:7px 10px}
+body.viewport-fit .arena:not(.mcq-arena)>.answer{min-height:70px;margin:10px auto;padding:12px 20px;font-size:clamp(25px,3vw,44px)}
+body.viewport-fit .audience-break{padding:clamp(12px,2vh,24px);flex:none;margin:0 auto}
+body.viewport-fit .audience-break .audience-scene{max-height:28vh}
+body.viewport-fit .audience-break:has(.audience-question) .audience-question{margin:0;padding:10px 14px}
+body.viewport-fit .audience-break .audience-question h2{font-size:clamp(22px,2.7vw,34px);line-height:1.5}
+body.viewport-fit .audience-break .audience-city-photo{margin:7px auto}
+body.viewport-fit .audience-break .audience-city-photo img{max-height:45vh}
+body.viewport-fit .audience-break .audience-answer{padding:8px 12px;margin:7px 0;font-size:clamp(17px,2vw,23px)}
+body.viewport-fit .audience-break .audience-continue{margin-top:8px;padding-top:8px}
+body.viewport-fit #stage>.cyber-result{flex:none;min-height:0;margin:0 auto}
+body.viewport-fit .cyber-result .award-body{flex:none;padding-block:10px}
+body.viewport-fit .cyber-result .cyber-info{gap:7px}
+body.viewport-fit .cyber-result .cyber-team{min-height:110px}
+body.viewport-fit .cyber-result .cyber-team>strong{font-size:clamp(40px,5vw,78px)}
+body.viewport-fit .cyber-result .cyber-winner-title{font-size:clamp(26px,3.5vw,53px)}
+body.viewport-fit .cyber-result .award-section-code{margin-top:8px}
+body.viewport-fit .cyber-result .award-roster{padding:12px}
+body.viewport-fit .cyber-result .award-roster ol{gap:5px}
+body.viewport-fit .cyber-result .award-roster li{font-size:clamp(12px,1.2vw,18px);padding:5px 8px}
+@media(max-width:640px){
+ body.viewport-fit .rounds{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.viewport-fit .roundtile{border:1px solid #c7b39566;padding:9px}
+ body.viewport-fit .hero h1{font-size:30px}
+ body.viewport-fit .hero .actions{gap:6px}
+ body.viewport-fit .hero .primary{font-size:14px;padding:9px 12px}
+ body.viewport-fit .cyber-result .award-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);gap:10px}
+ body.viewport-fit .cyber-result .cyber-info{grid-area:1/1}
+ body.viewport-fit .cyber-result .cyber-cup-stage{grid-area:1/2;min-height:0;width:100%}
+ body.viewport-fit .cyber-result .award-roster{grid-area:2/1/span 1/span 2;width:100%}
+ body.viewport-fit .cyber-result .award-roster ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.viewport-fit .cyber-result .award-is-tie{display:block}
+ body.viewport-fit .cyber-result .cyber-team{min-height:80px;padding:5px}
+ body.viewport-fit .cyber-result .cyber-team>span{font-size:12px}
+ body.viewport-fit .cyber-result .cyber-team>strong{font-size:32px}
+ body.viewport-fit .cyber-result .cyber-winner-title{font-size:26px}
+ body.viewport-fit .visual-split{gap:12px}
+ body.viewport-fit .visual-image>img{max-height:30vh}
+}
+/* Settings fit the viewport too; editable text areas retain their own text scrolling. */
+body.viewport-fit #config{max-width:96vw;max-height:94dvh;overflow:hidden;padding:12px}
+body.viewport-fit #config form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 12px;min-width:0}
+body.viewport-fit #config .dialoghead{grid-column:1/-1;gap:6px}
+body.viewport-fit #config .dialoghead h2{font-size:20px;line-height:1.4;margin:0 auto 0 0}
+body.viewport-fit #config label{margin:0;font-size:12px;line-height:1.5;min-width:0}
+body.viewport-fit #config input,body.viewport-fit #config textarea{padding:6px;margin-top:3px;font-size:13px;line-height:1.5;min-width:0}
+body.viewport-fit #config .roster-settings{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+body.viewport-fit #config .roster-settings textarea{min-height:0;height:clamp(55px,12vh,100px)}
+body.viewport-fit #config .audience-settings{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 12px;padding:8px;min-width:0}
+body.viewport-fit #config .audience-settings legend{font-size:12px}
+body.viewport-fit #config .audience-settings textarea{height:48px;min-height:0}
+body.viewport-fit #config details,body.viewport-fit #config #error,body.viewport-fit #config .actions{grid-column:1/-1;min-width:0}
+body.viewport-fit #config details p{font-size:11px;line-height:1.5;margin:4px 0}
+body.viewport-fit #config #editor{height:clamp(65px,15vh,120px);min-height:0;resize:vertical}
+body.viewport-fit #config #error{font-size:12px;line-height:1.4;margin:0}
+body.viewport-fit #config .actions{margin:2px 0 0;gap:6px}
+body.viewport-fit #config button{font-size:12px;line-height:1.4;padding:6px 10px}
+@media(max-height:500px) and (min-width:801px){
+ body.viewport-fit{--toolbar-height:72px}
+ body.viewport-fit header{padding:6px 2%;gap:8px}
+ body.viewport-fit header .brand{font-size:23px;gap:6px}
+ body.viewport-fit header .brand span{font-size:15px}
+ body.viewport-fit header .brand small{font-size:8px}
+ body.viewport-fit header nav button{padding:6px;font-size:10px}
+ body.viewport-fit header>.header-turn{height:56px;gap:6px}
+ body.viewport-fit .header-turn .team-toolbar-logo{height:37px;max-width:41px}
+ body.viewport-fit header>.header-turn strong{font-size:15px;min-width:90px;max-width:150px;padding:4px 7px}
+ body.viewport-fit header>.home-logos{height:56px;min-width:100px;gap:10px}
+ body.viewport-fit .home-logos img{height:48px;max-width:53px}
+ body.viewport-fit .cyber-result .award-body{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.7fr) minmax(0,1.1fr);gap:10px}
+ body.viewport-fit .cyber-result .cyber-info{grid-area:1/1}
+ body.viewport-fit .cyber-result .cyber-cup-stage{grid-area:1/2}
+ body.viewport-fit .cyber-result .award-roster{grid-area:1/3;padding:8px}
+ body.viewport-fit .cyber-result .award-roster ol{display:flex;flex-direction:column;gap:3px}
+ body.viewport-fit .cyber-result .award-roster h2{font-size:16px;margin-bottom:6px;padding-bottom:6px}
+ body.viewport-fit .cyber-result .award-roster li{font-size:12px;padding:3px 6px}
+ body.viewport-fit .cyber-result .cyber-team{min-height:80px;padding:5px}
+ body.viewport-fit .cyber-result .award-is-tie{display:block}
+}
+body.viewport-fit #config form{position:absolute;left:12px;top:12px}
