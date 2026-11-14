@@ -444,10 +444,14 @@ function renderAudience(){
  .audience-break .audience-timer.urgent{border-color:#b95340;color:#b95340;background:#fff0e9}
  .audience-break #audienceCorrect{margin:8px 0;max-width:100%;white-space:normal;line-height:1.6}
  .audience-break:has(.audience-question) .audience-scene{max-height:100px}
+ .audience-break .audience-answer-actions{display:flex;flex-wrap:nowrap;align-items:center;justify-content:center;gap:clamp(6px,1vw,14px);margin:8px auto 0;max-width:950px}
+ .audience-break .audience-answer-actions>button{flex:1 1 0;min-width:0;margin:0!important;padding:10px 12px;white-space:normal;font-size:clamp(12px,1.5vw,19px);line-height:1.5}
+ .audience-break .audience-answer-actions>.audience-timer{flex:0 0 56px;width:56px;height:56px;margin:0;font-size:28px}
+ .audience-break:has(.audience-question) .audience-question{margin-top:0}
  .audience-break .audience-city-photo{margin:12px auto;width:100%;max-width:none}
  .audience-break:has(.audience-question){width:min(100%,1250px);padding:clamp(12px,2vw,26px)}
  .audience-break .audience-question{max-width:none!important;padding:clamp(10px,1.5vw,20px)}
- .audience-break .audience-city-photo img{display:block;width:100%;height:auto;max-height:52dvh;object-fit:contain;border-radius:12px;background:#e9e3d6;border:1px solid #c7b395}
+ .audience-break .audience-city-photo img{display:block;width:100%;height:auto;max-height:60dvh;object-fit:contain;border-radius:12px;background:#e9e3d6;border:1px solid #c7b395}
  .audience-break:has(.audience-question) .audience-scene{display:none}
  .audience-break .audience-question{margin:16px auto 0;padding:clamp(16px,2.5vw,28px);border:1px solid #b6a48c;border-radius:16px;background:#fffaf2;max-width:850px;animation:audience-arrive .4s ease-out both}
  .audience-break .audience-question h2{margin:0;color:#005a9c;font-size:clamp(23px,3vw,36px);line-height:1.7;overflow-wrap:anywhere}
@@ -464,10 +468,10 @@ function renderAudience(){
  @keyframes audience-arrive{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
  @media(max-width:600px){.audience-break{padding:18px 12px}.audience-break .audience-scene{max-width:340px}.audience-break .audience-team-buttons{flex-direction:column;align-items:stretch}.audience-break .audience-team-buttons button{flex:auto;max-width:none;width:100%}}
  @media(prefers-reduced-motion:reduce){.audience-break *{animation:none!important}}
- </style><section class="audience-break" aria-labelledby="audienceTitle">
- <p class="audience-kicker">GEOGRAPHY AWARENESS WEEK · AUDIENCE</p>
+ </style><section class="audience-break" aria-labelledby="${audience.questionVisible?'audienceQuestionTitle':'audienceTitle'}">
+ ${audience.questionVisible?'':` <p class="audience-kicker">GEOGRAPHY AWARENESS WEEK · AUDIENCE</p>
  <h1 id="audienceTitle">نوکە دۆرا جەماوەرییە!</h1>
- <p class="audience-intro">د ماوەیێ ٣٠ چرکەیان دا بەرسڤ بدەن، پاشی تیمەکێ هەلبژێرن و دوو خاڵان پێ ببەخشن.</p>
+ <p class="audience-intro">د ماوەیێ ٣٠ چرکەیان دا بەرسڤ بدەن، پاشی تیمەکێ هەلبژێرن و دوو خاڵان پێ ببەخشن.</p>`}
  <svg class="audience-scene" viewBox="0 0 600 220" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
  <defs><linearGradient id="audienceLight" x2="0" y2="1"><stop stop-color="#d9bb79" stop-opacity=".05"/><stop offset="1" stop-color="#d9bb79" stop-opacity=".38"/></linearGradient></defs>
  <ellipse cx="300" cy="189" rx="267" ry="18" fill="#b99b6a" opacity=".19"/>
@@ -476,12 +480,14 @@ function renderAudience(){
  <g fill="#b18b48"><path class="audience-spark" d="m300 25 4 10 11 1-8 7 2 11-9-6-9 6 2-11-8-7 11-1Z"/><circle class="audience-spark" cx="215" cy="57" r="4"/><circle class="audience-spark" cx="390" cy="52" r="3"/><path class="audience-spark" d="m118 61 6 6-6 6-6-6ZM477 42l5 5-5 5-5-5Z"/></g>
  <path d="M75 195H525" stroke="#ad8a51" stroke-width="2" stroke-linecap="round"/>
  </svg>
- ${audience.questionVisible?`<div class="audience-question"><h2>${esc(state.audienceQuestion||DEFAULT_AUDIENCE_QUESTION)}</h2><figure class="audience-city-photo"><img src="assets/duhok-city-audience.jpg" width="1200" height="800" alt="إطلالة على مدينة دهوك من جبل زاوا" decoding="async" fetchpriority="high"></figure>
- ${audience.answerVisible?`<p class="audience-answer">${esc(state.audienceAnswer||DEFAULT_AUDIENCE_ANSWER)}</p>`:'<button id="audienceRevealAnswer" type="button">دیارکرنا بەرسڤێ</button>'}
- ${!audience.resolved?`<div id="audienceTimer" class="audience-timer" role="timer" aria-label="دەمێ مایی">${Math.max(0,Math.ceil((audience.deadline-Date.now())/1000))}</div><button id="audienceCorrect" type="button" class="primary">بەرسڤا دروست · هەلبژارتنا تیمێ</button>`:`<p class="audience-awarded" role="status">${awarded?(audience.replay?'✓ هەلبژارتنا تیمێ هاتە تۆمارکرن':'✓ دوو خاڵ هاتنە بەخشین بۆ '+esc(state.names[audience.awardedTeam])):audience.expired?'دەم تەمام بوو؛ پرسیار سووت و چ خاڵ نەهاتنە بەخشین.':'بەرسڤ دروستە! تیمەکێ ب هەلبژارتنا جەماوەری هەلبژێرە.'}</p>${!awarded&&!audience.expired?`<div class="audience-team-buttons">${state.names.map((name,team)=>`<button type="button" data-audience-team="${team}">＋٢ · ${esc(name)}</button>`).join('')}</div>`:''}` }</div>`:'<button id="audienceShowQuestion" class="primary" type="button">دیارکرنا پرسیارێ و دەستپێکرنا ٣٠ چرکەیان</button>'}
+ ${audience.questionVisible?`<div class="audience-question"><h2 id="audienceQuestionTitle">${esc(state.audienceQuestion||DEFAULT_AUDIENCE_QUESTION)}</h2><figure class="audience-city-photo"><img src="assets/duhok-city-audience.jpg" width="1200" height="800" alt="إطلالة على مدينة دهوك من جبل زاوا" decoding="async" fetchpriority="high"></figure>
+ ${audience.answerVisible?`<p class="audience-answer">${esc(state.audienceAnswer||DEFAULT_AUDIENCE_ANSWER)}</p>`:''}
+ <div class="audience-answer-actions"><button id="audienceRevealAnswer" type="button">${audience.answerVisible?'ڤەشارتنا بەرسڤێ':'دیارکرنا بەرسڤێ'}</button>
+ ${!audience.resolved?`<div id="audienceTimer" class="audience-timer" role="timer" aria-label="دەمێ مایی">${Math.max(0,Math.ceil((audience.deadline-Date.now())/1000))}</div><button id="audienceCorrect" type="button" class="primary">بەرسڤا دروست · هەلبژارتنا تیمێ</button>`:''}</div>
+ ${audience.resolved?`<p class="audience-awarded" role="status">${awarded?(audience.replay?'✓ هەلبژارتنا تیمێ هاتە تۆمارکرن':'✓ دوو خاڵ هاتنە بەخشین بۆ '+esc(state.names[audience.awardedTeam])):audience.expired?'دەم تەمام بوو؛ پرسیار سووت و چ خاڵ نەهاتنە بەخشین.':'بەرسڤ دروستە! تیمەکێ ب هەلبژارتنا جەماوەری هەلبژێرە.'}</p>${!awarded&&!audience.expired?`<div class="audience-team-buttons">${state.names.map((name,team)=>`<button type="button" data-audience-team="${team}">＋٢ · ${esc(name)}</button>`).join('')}</div>`:''}`:''}</div>`:'<button id="audienceShowQuestion" class="primary" type="button">دیارکرنا پرسیارێ و دەستپێکرنا ٣٠ چرکەیان</button>'}
  <div class="audience-continue"><button id="audiencePrevious" type="button">یا بەرێ · قۆناغا دووێ</button><button id="audienceContinue" type="button" ${awarded||audience.expired?'':'disabled'}>بەردەوامبوون بۆ قۆناغا سێیێ</button><button id="audienceHome" type="button">لاپەڕا سەرەکی</button></div>
  </section>`;
- if(audience.questionVisible&&!audience.answerVisible)$('#audienceRevealAnswer').onclick=()=>{audience.answerVisible=true;save();render();};
+ if(audience.questionVisible)$('#audienceRevealAnswer').onclick=()=>{audience.answerVisible=!audience.answerVisible;save();render();};
  if(!audience.questionVisible)$('#audienceShowQuestion').onclick=()=>{if(audience.questionVisible)return;audience.questionVisible=true;if(!audience.resolved)audience.deadline=Date.now()+30000;save();render();};
  if(audience.questionVisible&&!audience.resolved)$('#audienceCorrect').onclick=()=>{
   if(audience.resolved||!audience.active)return;
