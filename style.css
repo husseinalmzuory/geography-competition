@@ -749,3 +749,224 @@ header>.header-turn.b strong{border-color:#b99750;background:#fff6df;color:#805d
  .academic-result .academic-firework-4{left:17%}
  .academic-result .academic-firework-5{left:89%}
 }
+
+
+/* 2026 cinematic results concept: live data in reference-inspired three-column broadcast layout. */
+#stage>.academic-result.cyber-result{
+ --cyber-blue:#56d6ff;--cyber-navy:#06172a;--cyber-gold:#f0c46a;
+ background:radial-gradient(ellipse at 49% 44%,#0b476a 0%,#082a47 31%,#07192e 70%,#041022 100%);
+ border:1px solid #286b91;border-radius:0;color:#ecf8ff;
+ box-shadow:inset 0 0 65px #0a73ae1e,0 16px 40px #0005;
+ min-height:0;overflow:hidden;
+}
+#stage>.cyber-result::before{
+ content:"";inset:0;position:absolute;z-index:0;pointer-events:none;
+ opacity:.5;mask-image:none;
+ background-image:
+ radial-gradient(circle,#358ebf70 1px,transparent 1.5px),
+ repeating-linear-gradient(157deg,transparent 0 50px,#2e98c82b 51px,#2e98c82b 52px,transparent 53px 96px),
+ repeating-linear-gradient(22deg,transparent 0 78px,#288fc021 79px,#288fc021 80px,transparent 81px 135px);
+ background-size:9px 9px,100% 100%,100% 100%;
+ background-position:center;
+}
+#stage>.cyber-result::after{
+ content:"";position:absolute;z-index:0;inset:12% 18% 12%;
+ opacity:.29;pointer-events:none;
+ background:radial-gradient(ellipse at center,#0a6a9a4d 0%,transparent 70%);
+}
+.cyber-result .award-topline{position:relative;z-index:1;height:3px;background:linear-gradient(90deg,#e9b659 0%,#54d5ff 42%,#e9b659 100%)}
+.cyber-result .award-masthead{
+ z-index:2;padding:clamp(6px,.9vh,11px) clamp(12px,2vw,26px);
+ background:#06182bcc;grid-template-columns:1fr minmax(260px,2fr) 1fr;
+ border-bottom:1px solid #2e7eb178;
+}
+.cyber-result .award-event strong{color:#f1f8ff;text-shadow:0 2px 8px #051427;font-size:clamp(15px,1.55vw,24px)}
+.cyber-result .award-event small{color:#6bcdf4;letter-spacing:1.4px}
+.cyber-result .award-institution{color:#c2e9fa}
+.cyber-result .award-institution img{max-height:42px;width:clamp(29px,4vh,46px);height:clamp(29px,4vh,46px)}
+.cyber-result .award-divider{display:none}
+.cyber-result .award-body{
+ position:relative;z-index:1;display:grid;direction:ltr;
+ grid-template-columns:minmax(0,1.03fr) minmax(0,.78fr) minmax(0,1.08fr);
+ gap:clamp(9px,1.4vw,24px);align-items:center;
+ padding:clamp(8px,1.8vh,24px) clamp(14px,2.4vw,35px);
+ min-height:0;flex:1;
+}
+.cyber-result .cyber-info{
+ min-width:0;direction:rtl;display:flex;align-items:center;justify-content:center;
+ flex-direction:column;gap:clamp(8px,1.6vh,22px);text-align:center;
+}
+.cyber-result .cyber-versus{
+ display:grid;direction:rtl;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+ width:100%;align-items:center;gap:0;
+}
+.cyber-result .cyber-team{
+ min-width:0;min-height:clamp(110px,22vh,205px);
+ border:2px solid #4c839f;border-radius:14px;
+ background:linear-gradient(150deg,#152941,#0c1b31);
+ display:flex;align-items:center;justify-content:center;flex-direction:column;
+ padding:clamp(8px,1.2vw,20px);
+ box-shadow:inset 0 1px 16px #6acefc1a,0 9px 25px #0005;
+ transform:skewX(-5deg);
+}
+.cyber-result .cyber-team>span,.cyber-result .cyber-team>strong{transform:skewX(5deg)}
+.cyber-result .cyber-team>span{font-weight:800;font-size:clamp(13px,1.55vw,22px);color:#d7e8f0;line-height:1.4;overflow-wrap:anywhere}
+.cyber-result .cyber-team>strong{
+ font-family:Arial,sans-serif;color:#80defe;font-size:clamp(46px,6vw,95px);
+ font-weight:900;line-height:1.1;text-shadow:0 0 17px #47d8ff84;
+ font-variant-numeric:tabular-nums;
+}
+.cyber-result .cyber-team.cyber-leading{border-color:#dcb15f;box-shadow:inset 0 0 17px #edbf5a23,0 6px 25px #0006}
+.cyber-result .cyber-team.cyber-leading>span{color:#f4ca7c}
+.cyber-result .cyber-team.cyber-leading>strong{color:#ffe08c;text-shadow:0 0 16px #ffc14f7d}
+.cyber-result .cyber-vs{
+ position:relative;z-index:2;margin:0 -11px;
+ display:grid;place-items:center;aspect-ratio:1;width:clamp(43px,4.5vw,72px);
+ border:2px solid #63d3f7;border-radius:50%;
+ background:linear-gradient(140deg,#264d69,#061b30);
+ box-shadow:0 0 20px #43caff55,inset 0 0 9px #68dbfd66;
+ color:#f6fbff;font:800 clamp(18px,2.4vw,37px) Arial,sans-serif;
+}
+.cyber-result .award-section-code{
+ margin:clamp(7px,2vh,20px) 0 0;
+ color:#c9d9e4;letter-spacing:clamp(2px,.3vw,5px);
+ font-size:clamp(12px,1.3vw,19px);
+}
+.cyber-result .cyber-winner-label{margin:0;color:#f5f8ff;font-size:clamp(16px,2vw,27px);font-weight:800}
+.cyber-result .cyber-winner-title{
+ margin:0;max-width:100%;color:#f5cd72;
+ font-family:var(--kurdish-font,"Noto Sans Arabic",Tahoma,sans-serif);
+ font-weight:900;font-size:clamp(27px,3.6vw,61px);line-height:1.4;
+ text-shadow:0 2px 0 #9d7237,0 4px 3px #000b,0 0 14px #ecc36b43;
+ overflow-wrap:anywhere;animation:award-title-arrive .75s ease-out both;
+}
+.cyber-result .cyber-congrats{color:#8ed8f6;font-size:clamp(11px,1.18vw,18px);margin:0;line-height:1.5;font-weight:700}
+.cyber-result .cyber-cup-stage{
+ position:relative;direction:ltr;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;align-self:stretch;
+ min-width:0;min-height:0;
+}
+.cyber-result .cyber-light-rays{
+ position:absolute;z-index:0;top:12%;bottom:5%;left:-35%;right:-35%;
+ background:radial-gradient(ellipse at 50% 73%,#34d5ff70,transparent 47%),
+ conic-gradient(from 240deg at 50% 85%,transparent 0deg,#38baff18 16deg,transparent 34deg,#8bdbff19 58deg,transparent 86deg,#59ceff26 120deg,transparent 145deg);
+ filter:blur(4px);pointer-events:none;
+}
+.cyber-result .academic-trophy-scene{
+ position:relative;z-index:2;width:clamp(140px,19vw,270px);
+ height:clamp(170px,27vh,310px);
+ margin-bottom:clamp(-18px,-2vh,-8px);
+}
+.cyber-result .academic-trophy-rotator{animation:academic-cup-turn 5.5s ease-in-out infinite;filter:drop-shadow(0 12px 10px #0008) drop-shadow(0 0 12px #e4b45d55)}
+.cyber-result .academic-trophy-halo{background:radial-gradient(circle,#f2dba640 0%,#32c9f827 45%,transparent 75%)}
+.cyber-result .cyber-podium{position:relative;z-index:1;width:min(100%,330px);height:clamp(85px,15vh,155px);display:flex;align-items:center;flex-direction:column}
+.cyber-result .cyber-podium-top{
+ height:27%;width:87%;border-radius:50%;
+ border:4px solid #75ebff;
+ background:radial-gradient(ellipse,#5cf3ffbf 0%,#0a719e 45%,#072941 75%);
+ box-shadow:0 0 10px #77eaff,0 0 30px #10cafc9a,inset 0 0 18px #7be4ff;
+}
+.cyber-result .cyber-podium-face{
+ width:96%;height:42%;margin-top:-8px;
+ border:2px solid #2cadd6;border-top:0;border-radius:0 0 50% 50%/0 0 32% 32%;
+ background:linear-gradient(90deg,#09223b,#22688c 50%,#071b30);
+ box-shadow:0 12px 21px #0008,inset 0 -6px 10px #041224;
+}
+.cyber-result .cyber-podium-floor{
+ position:absolute;bottom:0;width:118%;height:40%;border:2px solid #42c7f0;
+ border-radius:50%;transform:perspective(200px) rotateX(52deg);
+ background:radial-gradient(ellipse,#1cb5e73d,transparent 67%);
+ box-shadow:0 0 20px #36c8ff62;
+}
+.cyber-result .award-roster{
+ position:relative;z-index:2;direction:rtl;min-width:0;max-width:100%;
+ align-self:center;justify-self:stretch;
+ border:2px solid #b48b4a;border-radius:20px;
+ background:linear-gradient(160deg,#092a47,#071b34 70%);
+ box-shadow:0 0 0 5px #062c4b,0 0 20px #58caff3b,inset 0 0 16px #31b4f119;
+ padding:clamp(12px,2vh,25px) clamp(10px,1.3vw,22px);
+ height:max-content;min-height:0;
+}
+.cyber-result .award-roster h2{
+ color:#54d3ff;line-height:1.5;font-size:clamp(16px,1.7vw,27px);
+ text-align:center;font-weight:800;margin:0 0 clamp(9px,1.7vh,18px);
+ padding-bottom:clamp(7px,1vh,12px);
+ border-bottom:1px solid #3ba5d281;
+}
+.cyber-result .award-roster ol{display:flex;flex-direction:column;gap:clamp(5px,.9vh,11px)}
+.cyber-result .award-roster li{
+ display:flex;direction:ltr;align-items:center;min-width:0;gap:8px;
+ padding:clamp(4px,.7vh,8px) 9px;border-radius:6px;
+ border:1px solid #2688b4bb;background:#102d46;
+ box-shadow:inset 0 1px 5px #32c8ff13;
+ color:white;font-size:clamp(12px,1.2vw,19px);
+ line-height:1.4;text-align:right;font-weight:700;
+}
+.cyber-result .award-roster li span:last-child{direction:rtl;flex:1;min-width:0}
+.cyber-result .award-member-number{
+ width:clamp(26px,2.6vw,39px);height:auto;min-height:26px;
+ border:0;border-radius:4px;
+ border-right:1px solid #48c8ec8a;background:transparent;color:#4fcbf7;
+ font-size:clamp(11px,1.1vw,17px);font-weight:800;
+}
+.cyber-result .award-footer{
+ position:relative;z-index:2;border-top:1px solid #2895c487;
+ color:#8dc5dc;direction:rtl;margin:0 clamp(12px,2vw,28px);
+ padding:clamp(7px,1vh,12px) 6px;
+}
+.cyber-result .award-controls{
+ z-index:3;background:#071b2a9e;
+ padding:clamp(6px,.8vh,11px) 12px clamp(10px,1.1vh,15px);
+}
+.cyber-result .award-controls button,.cyber-result .award-tiebreak button{
+ color:#eef8ff;border:1px solid #2b9aca;background:#102a40;
+ box-shadow:0 0 9px #42d1ff32;border-radius:7px;
+}
+.cyber-result .award-controls button:hover,.cyber-result .award-tiebreak button:hover{background:#17425e}
+.cyber-result .award-controls button:last-child{color:#1f2b3b;background:#e8bc5a;border-color:#eacb7a}
+.cyber-result .award-is-tie{grid-template-columns:1fr}
+.cyber-result .award-is-tie .cyber-info{max-width:850px;justify-self:center;width:100%}
+.cyber-result .award-tiebreak{color:#d6eef6}
+.cyber-result .award-tiebreak #tieBox p{color:#e5f2f8}
+.cyber-result .academic-fireworks{z-index:1}
+.cyber-result .academic-firework i{box-shadow:0 0 7px currentColor}
+@media(max-width:1100px){
+ .cyber-result .award-body{grid-template-columns:minmax(0,1fr) minmax(0,.78fr);gap:13px}
+ .cyber-result .cyber-info{grid-column:1;grid-row:1}
+ .cyber-result .cyber-cup-stage{grid-column:2;grid-row:1}
+ .cyber-result .award-roster{grid-column:1/-1;grid-row:2;max-width:850px;justify-self:center;width:100%}
+ .cyber-result .award-roster ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 10px}
+ .cyber-result .award-is-tie .cyber-info{grid-column:1}
+}
+@media(max-width:640px){
+ .cyber-result .award-masthead{grid-template-columns:1fr 1.8fr 1fr;gap:4px;padding:7px 4px}
+ .cyber-result .award-institution{flex-direction:column;font-size:8px;gap:0}
+ .cyber-result .award-institution img{width:29px;height:29px}
+ .cyber-result .award-event strong{font-size:12px}
+ .cyber-result .award-event small{font-size:7px;letter-spacing:0}
+ .cyber-result .award-body{display:flex;flex-direction:column;gap:10px;padding:12px}
+ .cyber-result .cyber-info{order:1;width:100%}
+ .cyber-result .cyber-cup-stage{order:2;min-height:200px}
+ .cyber-result .award-roster{order:3}
+ .cyber-result .award-roster ol{grid-template-columns:1fr}
+ .cyber-result .cyber-team{min-height:92px}
+ .cyber-result .cyber-team>strong{font-size:45px}
+ .cyber-result .academic-trophy-scene{width:122px;height:150px}
+ .cyber-result .cyber-podium{height:65px;width:240px}
+ .cyber-result .cyber-winner-title{font-size:33px}
+}
+@media(max-height:760px) and (min-width:1101px){
+ .cyber-result .award-body{padding-block:7px}
+ .cyber-result .cyber-info{gap:5px}
+ .cyber-result .cyber-team{min-height:95px}
+ .cyber-result .cyber-team>strong{font-size:clamp(38px,5vh,65px)}
+ .cyber-result .cyber-winner-title{font-size:clamp(28px,3vw,45px)}
+ .cyber-result .academic-trophy-scene{height:clamp(135px,25vh,190px);width:clamp(105px,15vw,175px)}
+ .cyber-result .cyber-podium{height:80px}
+ .cyber-result .award-roster{padding:9px 12px}
+ .cyber-result .award-roster ol{gap:4px}
+ .cyber-result .award-roster li{padding:4px 8px;font-size:clamp(11px,1vw,15px)}
+}
+@media(prefers-reduced-motion:reduce){
+ .cyber-result .academic-trophy-rotator,.cyber-result .academic-firework i{animation:none}
+}
