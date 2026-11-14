@@ -119,21 +119,104 @@ if(state.index>=state.questions.length){
  const winnerIndex=state.scores[0]>state.scores[1]?0:1;
  const winner=state.names[winnerIndex];
  const winnerMembers=(state.members[winnerIndex]||[]).filter(name=>typeof name==='string'&&name.trim());
- const trophy=`<div class="academic-trophy-scene" role="img" aria-label="کاسا سەرکەفتنێ">
- <div class="academic-trophy-halo"></div>
- <div class="academic-trophy-rotator"><svg class="academic-trophy" viewBox="0 0 210 245" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
- <defs><linearGradient id="academicGold" x1="0" y1="0" x2="1" y2=".25"><stop offset="0" stop-color="#a76a19"/><stop offset=".13" stop-color="#dfaf46"/><stop offset=".35" stop-color="#fff0a1"/><stop offset=".57" stop-color="#f0bd4d"/><stop offset=".8" stop-color="#b47720"/><stop offset="1" stop-color="#f4d67e"/></linearGradient><linearGradient id="academicGoldStem" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#95611f"/><stop offset=".5" stop-color="#f9df85"/><stop offset="1" stop-color="#95611f"/></linearGradient></defs>
- <ellipse cx="105" cy="231" rx="65" ry="8" fill="#967142" opacity=".18"/>
- <path d="M62 39H31C18 39 16 49 19 63C25 95 41 110 70 112L74 97C54 97 38 85 34 57H64Z" fill="url(#academicGold)" stroke="#99661e" stroke-width="3"/>
- <path d="M148 39H179C192 39 194 49 191 63C185 95 169 110 140 112L136 97C156 97 172 85 176 57H146Z" fill="url(#academicGold)" stroke="#99661e" stroke-width="3"/>
- <path d="M57 24H153L147 102C143 132 126 147 105 147C84 147 67 132 63 102Z" fill="url(#academicGold)" stroke="#99651d" stroke-width="3.5"/>
- <path d="M72 32C77 102 82 119 92 130" fill="none" stroke="#fff5c6" stroke-width="8" opacity=".65" stroke-linecap="round"/>
- <path d="M100 147H110V186H100Z" fill="url(#academicGoldStem)" stroke="#9e7026" stroke-width="2"/>
- <path d="M88 183H122L134 197H76Z" fill="url(#academicGold)" stroke="#9e7026" stroke-width="2.5"/>
- <rect x="66" y="196" width="78" height="15" rx="3" fill="url(#academicGoldStem)" stroke="#96651f" stroke-width="2.5"/>
- <rect x="51" y="210" width="108" height="19" rx="3" fill="url(#academicGoldStem)" stroke="#936326" stroke-width="2.5"/>
- <path d="m105 55 7 14 15 2-11 11 3 15-14-7-14 7 3-15-11-11 15-2Z" fill="#fff3b2" stroke="#b68a37" stroke-width="2"/>
- </svg></div></div>`;
+ const trophy=`<style>
+/* Copy this style and .gaw-award into your winner section. No dependencies. */
+.gaw-award{--cyan:#60fff0;position:relative;display:block;width:min(100%,600px);aspect-ratio:6/7;margin-inline:auto;isolation:isolate;cursor:pointer;-webkit-tap-highlight-color:transparent;perspective:900px}
+.gaw-award svg{width:100%;height:100%;overflow:visible;display:block}.gaw-award .float{animation:gaw-float 5s ease-in-out infinite;transform-origin:300px 300px}.gaw-award .world{animation:gaw-world 24s linear infinite;will-change:transform}.gaw-award .orbit{transform-origin:300px 163px;animation:gaw-orbit 12s linear infinite}.gaw-award .orbit.reverse{animation-direction:reverse;animation-duration:18s}.gaw-award .dust{animation:gaw-rise 4s ease-out infinite;animation-delay:var(--d);transform-box:fill-box;transform-origin:center}.gaw-award .beam{animation:gaw-glimmer 4s ease-in-out infinite;transform-origin:300px 540px}.gaw-award .halo{animation:gaw-glimmer 3s ease-in-out infinite}.gaw-award:hover .float{animation-duration:3s}.gaw-award[data-paused] *{animation-play-state:paused!important}.gaw-award:focus-visible{outline:2px solid #18bdb8;outline-offset:4px;border-radius:30px}
+@keyframes gaw-float{50%{transform:translateY(-11px)}}@keyframes gaw-world{to{transform:translateX(-480px)}}@keyframes gaw-orbit{to{transform:rotate(360deg)}}@keyframes gaw-rise{0%{opacity:0;transform:translateY(0) scale(.3)}20%{opacity:.9}100%{opacity:0;transform:translateY(-190px) scale(1.1)}}@keyframes gaw-glimmer{50%{opacity:.45;transform:scaleX(.97)}}
+@media(prefers-reduced-motion:reduce){.gaw-award *{animation:none!important}}
+
+/* Fit the complete globe, cup and pedestal inside the existing result column. */
+.cyber-result .cyber-cup-stage .gaw-award{width:100%;max-width:360px;flex:none;min-width:0;line-height:0}
+.cyber-result .gaw-award svg{max-width:none;max-height:none}
+@media(max-width:640px){.cyber-result .cyber-cup-stage{width:min(100%,300px);min-height:0}}
+@media(max-height:760px) and (min-width:1101px){.cyber-result .cyber-cup-stage .gaw-award{max-width:260px}}
+</style><div class="gaw-award" role="button" tabindex="0" aria-label="کاسا سەرکەفتنێ؛ بۆ راوەستاندنا جوڵەیێ کلیک بکە." aria-pressed="false">
+<svg viewBox="0 0 600 700" role="img" aria-labelledby="gaw-title gaw-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="gaw-title">Geography Awareness Week winner</title><desc id="gaw-desc">A revolving blue and green Earth floats over a metallic gold star trophy and a glowing turquoise academic pedestal.</desc>
+<defs>
+<linearGradient id="gaw-gold"><stop stop-color="#8b4b0b"/><stop offset=".18" stop-color="#e3a62e"/><stop offset=".36" stop-color="#fff2a4"/><stop offset=".49" stop-color="#d89921"/><stop offset=".68" stop-color="#ffe78b"/><stop offset=".87" stop-color="#c17b15"/><stop offset="1" stop-color="#734009"/></linearGradient>
+<linearGradient id="gaw-edge" x2="0" y2="1"><stop stop-color="#fff6c1"/><stop offset=".4" stop-color="#eab943"/><stop offset="1" stop-color="#926014"/></linearGradient>
+<linearGradient id="gaw-navy" x2="0" y2="1"><stop stop-color="#34455d"/><stop offset=".4" stop-color="#14243c"/><stop offset="1" stop-color="#060e20"/></linearGradient>
+<linearGradient id="gaw-beam" x2="0" y2="1"><stop stop-color="#59ffe5" stop-opacity="0"/><stop offset="1" stop-color="#59ffe5" stop-opacity=".28"/></linearGradient>
+<radialGradient id="gaw-ocean" cx=".33" cy=".24" r=".8"><stop stop-color="#46d8ff"/><stop offset=".45" stop-color="#0783ce"/><stop offset="1" stop-color="#082859"/></radialGradient>
+<radialGradient id="gaw-shade" cx=".31" cy=".23" r=".8"><stop stop-color="#dcffff" stop-opacity=".28"/><stop offset=".5" stop-color="#051936" stop-opacity="0"/><stop offset=".86" stop-color="#001932" stop-opacity=".6"/><stop offset="1" stop-color="#000d23" stop-opacity=".93"/></radialGradient>
+<radialGradient id="gaw-glow"><stop stop-color="#4dffeb" stop-opacity=".35"/><stop offset="1" stop-color="#4dffeb" stop-opacity="0"/></radialGradient>
+<filter id="gaw-neon" x="-70%" y="-150%" width="240%" height="400%"><feGaussianBlur stdDeviation="5"/></filter>
+<clipPath id="gaw-globe"><circle cx="300" cy="164" r="101"/></clipPath>
+<g id="gaw-map" fill="#59c978" stroke="#b0e89b" stroke-width="1.3" stroke-linejoin="round">
+<path d="M8 91 30 68 61 64 80 77 104 71 126 88 115 106 94 112 84 133 65 136 64 153 48 146 38 124 20 117Z M72 143 93 150 111 176 103 191 115 211 103 239 89 260 79 238 76 206 63 178Z M134 64 155 51 172 64 161 89 143 96Z"/>
+<path d="M215 105 226 87 246 89 255 75 276 82 287 70 326 79 348 68 381 87 410 83 435 102 453 110 441 131 410 128 397 144 371 140 359 160 343 147 330 163 318 145 297 141 279 125 260 132 246 118 229 123Z M235 130 267 131 285 151 280 178 263 193 253 223 237 215 227 187 211 171 214 145Z M325 157 340 164 350 187 339 194 332 178Z M371 169 390 176 398 195 382 193Z M384 211 409 201 434 214 443 239 418 248 390 239Z M287 209 295 218 289 239 282 231Z M445 144 450 157 441 165Z"/>
+</g>
+</defs>
+<!-- Ground glow and layered pedestal -->
+<ellipse cx="300" cy="605" rx="250" ry="72" fill="url(#gaw-glow)"/>
+<path d="M100 572v28c0 68 400 68 400 0v-28" fill="url(#gaw-navy)" stroke="#3b536a"/>
+<ellipse cx="300" cy="574" rx="200" ry="52" fill="#172a43" stroke="#42566e" stroke-width="2"/>
+<path d="M123 548v26c0 62 354 62 354 0v-26" fill="url(#gaw-navy)"/>
+<ellipse cx="300" cy="550" rx="177" ry="46" fill="#0c2038" stroke="#338889" stroke-width="2"/>
+<ellipse class="halo" cx="300" cy="548" rx="166" ry="40" fill="none" stroke="#53ffec" stroke-width="12" filter="url(#gaw-neon)"/>
+<ellipse cx="300" cy="548" rx="166" ry="40" fill="none" stroke="#a0fff4" stroke-width="3"/>
+<ellipse cx="300" cy="549" rx="143" ry="32" fill="url(#gaw-glow)" stroke="#47d8ce" stroke-opacity=".5"/>
+<g class="beam" fill="url(#gaw-beam)"><path d="m152 541 25-218 17 224Z M405 547l18-224 25 218Z M218 551l21-154 12 158Z M350 555l11-158 21 154Z"/></g>
+<g fill="#9bfff2">
+<circle class="dust" cx="140" cy="530" r="1.0" style="--d:-0.0s"/>
+<circle class="dust" cx="223" cy="537" r="1.55" style="--d:-0.39s"/>
+<circle class="dust" cx="306" cy="544" r="2.1" style="--d:-0.78s"/>
+<circle class="dust" cx="389" cy="551" r="1.0" style="--d:-1.17s"/>
+<circle class="dust" cx="152" cy="558" r="1.55" style="--d:-1.56s"/>
+<circle class="dust" cx="235" cy="530" r="2.1" style="--d:-1.9500000000000002s"/>
+<circle class="dust" cx="318" cy="537" r="1.0" style="--d:-2.34s"/>
+<circle class="dust" cx="401" cy="544" r="1.55" style="--d:-2.73s"/>
+<circle class="dust" cx="164" cy="551" r="2.1" style="--d:-3.12s"/>
+<circle class="dust" cx="247" cy="558" r="1.0" style="--d:-3.5100000000000002s"/>
+<circle class="dust" cx="330" cy="530" r="1.55" style="--d:-3.9000000000000004s"/>
+<circle class="dust" cx="413" cy="537" r="2.1" style="--d:-4.29s"/>
+<circle class="dust" cx="176" cy="544" r="1.0" style="--d:-4.68s"/>
+<circle class="dust" cx="259" cy="551" r="1.55" style="--d:-5.07s"/>
+<circle class="dust" cx="342" cy="558" r="2.1" style="--d:-5.46s"/>
+<circle class="dust" cx="425" cy="530" r="1.0" style="--d:-5.8500000000000005s"/>
+<circle class="dust" cx="188" cy="537" r="1.55" style="--d:-6.24s"/>
+<circle class="dust" cx="271" cy="544" r="2.1" style="--d:-6.63s"/>
+<circle class="dust" cx="354" cy="551" r="1.0" style="--d:-7.0200000000000005s"/>
+<circle class="dust" cx="437" cy="558" r="1.55" style="--d:-7.41s"/>
+<circle class="dust" cx="200" cy="530" r="2.1" style="--d:-7.800000000000001s"/>
+<circle class="dust" cx="283" cy="537" r="1.0" style="--d:-8.19s"/>
+<circle class="dust" cx="366" cy="544" r="1.55" style="--d:-8.58s"/>
+<circle class="dust" cx="449" cy="551" r="2.1" style="--d:-8.97s"/>
+</g>
+<g class="float">
+<!-- Trophy: curved solid handles, cup, stem and engraved blank plaque -->
+<ellipse cx="300" cy="512" rx="80" ry="15" fill="#00101e" opacity=".3"/>
+<path d="M232 295c-82-35-96 28-63 72 18 24 43 32 77 30l-7-20c-33 1-59-18-65-43-7-31 15-38 55-16Z" fill="url(#gaw-gold)" stroke="#e6b24e" stroke-width="2"/>
+<path d="M368 295c82-35 96 28 63 72-18 24-43 32-77 30l7-20c33 1 59-18 65-43 7-31-15-38-55-16Z" fill="url(#gaw-gold)" stroke="#e6b24e" stroke-width="2"/>
+<path d="M218 292h164c-4 72-18 117-65 129l3 31h-40l3-31c-47-12-61-57-65-129Z" fill="url(#gaw-gold)" stroke="#dcad46" stroke-width="1.5"/>
+<path d="M234 309c4 47 14 78 34 92" fill="none" stroke="#fff3bd" stroke-width="6" opacity=".5"/>
+<ellipse cx="300" cy="292" rx="83" ry="15" fill="url(#gaw-edge)"/>
+<ellipse cx="300" cy="290" rx="72" ry="9" fill="#8a5c1c"/><ellipse cx="300" cy="293" rx="66" ry="6" fill="#d0a345"/>
+<path d="m302 326 12 24 27 4-19 20 5 27-25-13-25 13 5-27-19-20 27-4Z" fill="#956015" opacity=".6" transform="translate(2 4)"/>
+<path d="m300 325 12 24 27 4-19 20 5 27-25-13-25 13 5-27-19-20 27-4Z" fill="url(#gaw-edge)" stroke="#fff2ac" stroke-width="1.5"/>
+<path d="m300 325 0 41-25 34 5-27-19-20 27-4Z" fill="#fff5b6" opacity=".35"/>
+<ellipse cx="300" cy="451" rx="29" ry="7" fill="url(#gaw-edge)"/>
+<path d="M279 451q-4 13-27 17v11h96v-11q-23-4-27-17" fill="url(#gaw-gold)"/>
+<path d="M235 479v24c0 21 130 21 130 0v-24" fill="url(#gaw-navy)" stroke="#4e5b66"/>
+<ellipse cx="300" cy="479" rx="65" ry="15" fill="#28384b" stroke="#bb9142" stroke-width="2"/>
+<rect x="275" y="491" width="50" height="15" rx="3" fill="url(#gaw-edge)" stroke="#ffeeb2"/>
+<circle cx="279" cy="498" r="1" fill="#8b611f"/><circle cx="321" cy="498" r="1" fill="#8b611f"/>
+<!-- Fixed sphere silhouette with a continuous wrapped, moving SVG surface -->
+<circle cx="300" cy="164" r="112" fill="url(#gaw-glow)"/>
+<g class="orbit" fill="none" stroke="#70ffed" stroke-opacity=".4"><ellipse cx="300" cy="164" rx="137" ry="41" transform="rotate(-25 300 164)"/><circle cx="428" cy="126" r="4" fill="#b0fff2" stroke="none"/></g>
+<circle cx="300" cy="164" r="102" fill="url(#gaw-ocean)" stroke="#63dceb" stroke-width="1.5"/>
+<g clip-path="url(#gaw-globe)">
+<g class="world"><use href="#gaw-map" x="60"/><use href="#gaw-map" x="540"/>
+<g fill="none" stroke="#b9faff" stroke-opacity=".14" stroke-width="1"><path d="M60 113h960M60 164h960M60 215h960"/>
+<path d="M100 60v210M160 60v210M220 60v210M280 60v210M340 60v210M400 60v210M460 60v210M520 60v210M580 60v210M640 60v210M700 60v210M760 60v210M820 60v210M880 60v210M940 60v210"/></g></g>
+<circle cx="300" cy="164" r="101" fill="url(#gaw-shade)"/>
+<ellipse cx="267" cy="105" rx="38" ry="12" transform="rotate(-30 267 105)" fill="#e1ffff" opacity=".16"/>
+</g>
+<g class="orbit reverse" fill="none"><ellipse cx="300" cy="164" rx="127" ry="51" transform="rotate(27 300 164)" stroke="#ffdb7a" stroke-opacity=".6"/><circle cx="179" cy="139" r="3.5" fill="#ffdc7c"/><circle cx="399" cy="208" r="2" fill="#fff3c5"/><circle cx="284" cy="113" r="2" fill="#73ffee"/></g>
+</g>
+</svg></div>`;
  const randomFireworkPosition=()=>({left:(9+Math.random()*82).toFixed(1)+'%',top:(17+Math.random()*65).toFixed(1)+'%'});
  const celebration=tie?'':`<div class="academic-fireworks" aria-hidden="true">${Array.from({length:10},(_,burst)=>{
   const position=randomFireworkPosition(),delay=(burst*.31+Math.random()*.95).toFixed(2);
@@ -162,12 +245,16 @@ if(state.index>=state.questions.length){
    <p class="cyber-congrats">${tie?'ئەنجامێ هەردوو تیمان یەکسانە':'پیرۆز بیت · سەرکەفتنا زانستی'}</p>
    ${tie?'<div class="award-tiebreak"><button id="tie">پرسیارا چارەسەرکرنا یەکسانیێ</button><div id="tieBox"></div></div>':''}
   </div>
-  ${tie?'':`<div class="cyber-cup-stage"><div class="cyber-light-rays" aria-hidden="true"></div>${trophy}<div class="cyber-podium" aria-hidden="true"><div class="cyber-podium-top"></div><div class="cyber-podium-face"></div><div class="cyber-podium-floor"></div></div></div>`}
+  ${tie?'':`<div class="cyber-cup-stage">${trophy}</div>`}
   ${winnerList}
  </div>
  <div class="controls award-controls"><button id="back">زڤڕین بۆ قۆناغا دوماهیێ</button><button id="lobby">لاپەڕا سەرەکی</button></div>
  </section>`;
  if(!tie){
+  const award=host.querySelector('.gaw-award');
+  const toggleAward=()=>{const paused=award.toggleAttribute('data-paused');award.setAttribute('aria-pressed',String(paused));};
+  award.addEventListener('click',toggleAward);
+  award.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleAward();}});
   const fireworks=host.querySelector('.academic-fireworks');
   fireworks?.addEventListener('animationiteration',event=>{
    if(event.animationName!=='academic-spark-burst'||!event.target.matches('.academic-firework i:first-child'))return;
@@ -223,3 +310,4 @@ window.addEventListener('resize',fitQuestion);
 document.addEventListener('fullscreenchange',fitQuestion);
 document.addEventListener('load',event=>{if(event.target instanceof HTMLImageElement)fitQuestion();},true);
 document.fonts?.ready.then(fitQuestion);
+
