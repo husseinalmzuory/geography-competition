@@ -446,7 +446,7 @@ function renderAudience(){
  </style><section class="audience-break" aria-labelledby="audienceTitle">
  <p class="audience-kicker">GEOGRAPHY AWARENESS WEEK · AUDIENCE</p>
  <h1 id="audienceTitle">نوکە دۆرا جەماوەرییە!</h1>
- <p class="audience-intro">د ماوەیێ ٣٠ چرکەیان دا بەرسڤ بدەن؛ دوو خاڵ بۆ تیما ب خاڵێن کێمتر دچن.</p>
+ <p class="audience-intro">د ماوەیێ ٣٠ چرکەیان دا بەرسڤ بدەن، پاشی تیمەکێ هەلبژێرن و دوو خاڵان پێ ببەخشن.</p>
  <svg class="audience-scene" viewBox="0 0 600 220" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
  <defs><linearGradient id="audienceLight" x2="0" y2="1"><stop stop-color="#d9bb79" stop-opacity=".05"/><stop offset="1" stop-color="#d9bb79" stop-opacity=".38"/></linearGradient></defs>
  <ellipse cx="300" cy="189" rx="267" ry="18" fill="#b99b6a" opacity=".19"/>
@@ -456,19 +456,22 @@ function renderAudience(){
  <path d="M75 195H525" stroke="#ad8a51" stroke-width="2" stroke-linecap="round"/>
  </svg>
  ${audience.questionVisible?`<div class="audience-question"><h2>${esc(state.audienceQuestion||DEFAULT_AUDIENCE_QUESTION)}</h2>
- ${!audience.resolved?`<div id="audienceTimer" class="audience-timer" role="timer" aria-label="دەمێ مایی">${Math.max(0,Math.ceil((audience.deadline-Date.now())/1000))}</div><button id="audienceCorrect" type="button" class="primary">بەرسڤا دروست · دوو خاڵ بۆ تیما ب خاڵێن کێمتر</button>`:`<p class="audience-answer">${esc(state.audienceAnswer||DEFAULT_AUDIENCE_ANSWER)}</p><p class="audience-awarded" role="status">${awarded?'✓ دوو خاڵ هاتنە بەخشین بۆ '+esc(state.names[audience.awardedTeam]):audience.expired?'دەم تەمام بوو؛ پرسیار سووت و چ خاڵ نەهاتنە بەخشین.':'هەردوو تیم یەکسانن؛ چ خاڵ نەهاتنە بەخشین.'}</p>`}</div>`:'<button id="audienceShowQuestion" class="primary" type="button">دیارکرنا پرسیارێ و دەستپێکرنا ٣٠ چرکەیان</button>'}
- <div class="audience-continue"><button id="audiencePrevious" type="button">یا بەرێ · قۆناغا دووێ</button><button id="audienceContinue" type="button" ${audience.resolved?'':'disabled'}>بەردەوامبوون بۆ قۆناغا سێیێ</button><button id="audienceHome" type="button">لاپەڕا سەرەکی</button></div>
+ ${!audience.resolved?`<div id="audienceTimer" class="audience-timer" role="timer" aria-label="دەمێ مایی">${Math.max(0,Math.ceil((audience.deadline-Date.now())/1000))}</div><button id="audienceCorrect" type="button" class="primary">بەرسڤا دروست · هەلبژارتنا تیمێ</button>`:`<p class="audience-answer">${esc(state.audienceAnswer||DEFAULT_AUDIENCE_ANSWER)}</p><p class="audience-awarded" role="status">${awarded?'✓ دوو خاڵ هاتنە بەخشین بۆ '+esc(state.names[audience.awardedTeam]):audience.expired?'دەم تەمام بوو؛ پرسیار سووت و چ خاڵ نەهاتنە بەخشین.':'بەرسڤ دروستە! تیمەکێ ب هەلبژارتنا جەماوەری هەلبژێرە.'}</p>${!awarded&&!audience.expired?`<div class="audience-team-buttons">${state.names.map((name,team)=>`<button type="button" data-audience-team="${team}">＋٢ · ${esc(name)}</button>`).join('')}</div>`:''}` }</div>`:'<button id="audienceShowQuestion" class="primary" type="button">دیارکرنا پرسیارێ و دەستپێکرنا ٣٠ چرکەیان</button>'}
+ <div class="audience-continue"><button id="audiencePrevious" type="button">یا بەرێ · قۆناغا دووێ</button><button id="audienceContinue" type="button" ${awarded||audience.expired?'':'disabled'}>بەردەوامبوون بۆ قۆناغا سێیێ</button><button id="audienceHome" type="button">لاپەڕا سەرەکی</button></div>
  </section>`;
  if(!audience.questionVisible)$('#audienceShowQuestion').onclick=()=>{if(audience.questionVisible)return;audience.questionVisible=true;if(!audience.resolved)audience.deadline=Date.now()+30000;save();render();};
  if(audience.questionVisible&&!audience.resolved)$('#audienceCorrect').onclick=()=>{
   if(audience.resolved||!audience.active)return;
   if(Date.now()>=audience.deadline){finishAudience(true);return;}
   stopAudienceClock();audience.resolved=true;audience.answerVisible=true;audience.deadline=null;
-  const team=state.scores[0]<state.scores[1]?0:state.scores[1]<state.scores[0]?1:null;
-  if(team!==null){audience.awardedTeam=team;score(team,2);}else{audience.tied=true;save();}
-  render();
+  audience.awaitingTeamChoice=true;delete audience.tied;save();render();
  };
- $('#audienceContinue').onclick=()=>{if(audience.resolved)finishAudience();};
+ host.querySelectorAll('[data-audience-team]').forEach(button=>button.onclick=()=>{
+  if(!audience.active||!audience.resolved||audience.expired||Number.isInteger(audience.awardedTeam))return;
+  const team=Number(button.dataset.audienceTeam);if(team!==0&&team!==1)return;
+  audience.awardedTeam=team;audience.awaitingTeamChoice=false;score(team,2);render();
+ });
+ $('#audienceContinue').onclick=()=>{if(Number.isInteger(audience.awardedTeam)||audience.expired)finishAudience();};
  $('#audiencePrevious').onclick=()=>{
   const lastSecond=state.questions.reduce((last,q,index)=>q.round===1?index:last,-1);
   audience.pending=false;audience.active=false;save();go(lastSecond,true,true,true,true);
