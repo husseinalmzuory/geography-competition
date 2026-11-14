@@ -615,3 +615,93 @@ header>.header-turn.b strong{border-color:#b99750;background:#fff6df;color:#805d
 @media(prefers-reduced-motion:reduce){
  .academic-result .award-emblem,.academic-result .award-result-title{animation:none}
 }
+
+
+/* University award refinements: premium dimensional trophy, understated celebratory sparks,
+   and a content-sized soft slate-blue student roster. */
+.academic-result .academic-trophy-scene{
+ position:relative;flex:none;width:clamp(90px,16vh,158px);
+ height:clamp(108px,19vh,188px);perspective:900px;
+ display:grid;place-items:center;isolation:isolate;
+}
+.academic-result .academic-trophy-halo{
+ position:absolute;z-index:-1;inset:14% -22% 12%;
+ border-radius:50%;background:radial-gradient(circle,#f2dba666 0%,#f8ecc544 39%,transparent 72%);
+}
+.academic-result .academic-trophy-rotator{
+ width:100%;height:100%;transform-style:preserve-3d;
+ animation:academic-cup-turn 5.8s ease-in-out infinite;
+ filter:drop-shadow(0 10px 9px #83601f37);
+}
+.academic-result .academic-trophy{display:block;width:100%;height:100%;overflow:visible;backface-visibility:visible}
+@keyframes academic-cup-turn{
+ 0%,100%{transform:rotateY(-26deg) rotateZ(-1.5deg)}
+ 50%{transform:rotateY(26deg) rotateZ(1.5deg)}
+}
+.academic-result .academic-fireworks{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.academic-result .academic-firework{position:absolute;left:19%;top:29%;width:1px;height:1px}
+.academic-result .academic-firework-2{left:77%;top:22%}
+.academic-result .academic-firework-3{left:62%;top:71%}
+.academic-result .academic-firework i{
+ position:absolute;left:0;top:0;width:3px;height:12px;border-radius:6px;
+ background:var(--spark-color,#c8a15e);
+ transform-origin:50% 100%;opacity:0;
+ animation:academic-spark-burst 4.2s ease-out infinite;
+ animation-delay:var(--delay);
+}
+.academic-result .academic-firework i:nth-child(3n){--spark-color:#5e9eb6}
+.academic-result .academic-firework i:nth-child(3n + 1){--spark-color:#d8ad64}
+.academic-result .academic-firework i:nth-child(3n + 2){--spark-color:#b9c8cc}
+@keyframes academic-spark-burst{
+ 0%,14%{opacity:0;transform:rotate(calc(var(--ray)*30deg)) translateY(0) scale(.25)}
+ 20%{opacity:.85}
+ 45%{opacity:.72;transform:rotate(calc(var(--ray)*30deg)) translateY(-85px) scale(1)}
+ 72%,100%{opacity:0;transform:rotate(calc(var(--ray)*30deg)) translateY(-120px) scale(.3)}
+}
+/* Remove forced stretch: card should hug its seven names. */
+.academic-result .award-body{
+ align-items:center;
+ grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);
+}
+.academic-result .award-roster{
+ align-self:center;justify-content:flex-start;
+ width:100%;height:max-content;min-height:0;
+ padding:clamp(11px,1.7vh,20px) clamp(16px,2vw,26px);
+ border-radius:12px;
+ border:1px solid #a9bec9;
+ background:linear-gradient(150deg,#e6f0f4 0%,#d7e7ee 100%);
+ box-shadow:0 6px 18px #1e556b15;
+ color:#193e56;
+}
+.academic-result .award-roster h2{
+ color:#255c77;border-bottom:1px solid #b8cfdb;
+ margin:0 0 8px;padding-bottom:6px;
+ font-size:clamp(16px,1.45vw,22px);
+}
+.academic-result .award-roster ol{gap:clamp(2px,.5vh,6px)}
+.academic-result .award-roster li{
+ color:#1a3d52;font-weight:700;
+ font-size:clamp(12px,1.18vw,18px);
+ line-height:1.45;
+}
+.academic-result .award-member-number{
+ color:#336e87;border-color:#99b7c8;
+ background:#ffffff73;
+}
+@media(max-width:950px){
+ .academic-result .award-body{grid-template-columns:1fr;align-items:center}
+ .academic-result .award-roster{width:min(100%,750px);justify-self:center}
+}
+@media(max-height:750px) and (min-width:951px){
+ .academic-result .academic-trophy-scene{width:79px;height:95px}
+ .academic-result .award-roster{padding:8px 16px}
+ .academic-result .award-roster h2{margin-bottom:5px;padding-bottom:5px}
+}
+@media(max-width:600px){
+ .academic-result .academic-trophy-scene{width:90px;height:107px}
+ .academic-result .academic-firework{transform:scale(.55)}
+ .academic-result .award-roster ol{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+ .academic-result .academic-trophy-rotator,.academic-result .academic-firework i{animation:none}
+}
