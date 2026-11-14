@@ -970,3 +970,119 @@ header>.header-turn.b strong{border-color:#b99750;background:#fff6df;color:#805d
 @media(prefers-reduced-motion:reduce){
  .cyber-result .academic-trophy-rotator,.cyber-result .academic-firework i{animation:none}
 }
+
+
+/* Harmonize the cinematic result layout with the website's existing sand, coffee,
+   muted slate-teal and antique gold palette. Layout, motion and content unchanged. */
+#stage>.academic-result.cyber-result{
+ --cyber-blue:#547c8b;--cyber-navy:#64513f;--cyber-gold:#b18b48;
+ color:#493c2e;
+ background:radial-gradient(ellipse at 50% 42%,#fffdf8 0%,#f9f3e9 42%,#f0e3d1 100%);
+ border-color:#c7b395;
+ box-shadow:0 16px 42px #57452f20,inset 0 0 35px #d8c4a72e;
+}
+#stage>.cyber-result::before{
+ opacity:.22;
+ background-image:
+ radial-gradient(circle,#8a9c9a77 1px,transparent 1.5px),
+ repeating-linear-gradient(157deg,transparent 0 50px,#99826a29 51px,#99826a29 52px,transparent 53px 96px),
+ repeating-linear-gradient(22deg,transparent 0 78px,#738a8b1d 79px,#738a8b1d 80px,transparent 81px 135px);
+}
+#stage>.cyber-result::after{
+ opacity:.2;
+ background:radial-gradient(ellipse at center,#d2bea665 0%,transparent 70%);
+}
+.cyber-result .award-topline{
+ background:linear-gradient(90deg,#ad8a51 0%,#738b90 47%,#ad8a51 100%);
+}
+.cyber-result .award-masthead{
+ background:#64513f;
+ border-bottom-color:#c7ae885e;
+}
+.cyber-result .award-event strong{color:#fff9ee;text-shadow:none}
+.cyber-result .award-event small{color:#e5d1ad}
+.cyber-result .award-institution{color:#f2e4cf}
+.cyber-result .cyber-team{
+ border-color:#a1aeb0;
+ background:linear-gradient(145deg,#fffefa,#e9eff0);
+ box-shadow:0 6px 18px #4b413022,inset 0 1px 10px #ffffffb3;
+}
+.cyber-result .cyber-team>span{color:#365b6c}
+.cyber-result .cyber-team>strong{color:#376e88;text-shadow:0 2px 12px #a6c0c255}
+.cyber-result .cyber-team.cyber-leading{
+ border-color:#b18b48;
+ background:linear-gradient(145deg,#fff8e8,#f1e1c5);
+ box-shadow:0 6px 20px #785f3033,inset 0 1px 12px #fff8e8;
+}
+.cyber-result .cyber-team.cyber-leading>span{color:#856023}
+.cyber-result .cyber-team.cyber-leading>strong{color:#a67a30;text-shadow:0 2px 10px #eac77d66}
+.cyber-result .cyber-vs{
+ color:#fff9ed;border-color:#ab987d;
+ background:linear-gradient(145deg,#867260,#574637);
+ box-shadow:0 0 0 4px #efe3d2,inset 0 1px 7px #fff5e042;
+}
+.cyber-result .award-section-code{color:#786b5c}
+.cyber-result .cyber-winner-label{color:#66533f}
+.cyber-result .cyber-winner-title{
+ color:#986a28;text-shadow:0 2px 0 #fff9ee,0 5px 12px #8c6f4f30;
+}
+.cyber-result .cyber-congrats{color:#537c87}
+.cyber-result .cyber-light-rays{
+ background:radial-gradient(ellipse at 50% 73%,#b8d7d180,transparent 47%),
+ conic-gradient(from 240deg at 50% 85%,transparent 0deg,#c4a87925 16deg,transparent 34deg,#6e9a9a1c 58deg,transparent 86deg,#bfab862c 120deg,transparent 145deg);
+}
+.cyber-result .academic-trophy-halo{
+ background:radial-gradient(circle,#eac77a66 0%,#b8d5d151 45%,transparent 75%);
+}
+.cyber-result .academic-trophy-rotator{
+ filter:drop-shadow(0 12px 10px #6e553d45) drop-shadow(0 0 9px #cfad6566);
+}
+.cyber-result .cyber-podium-top{
+ border-color:#b7a079;
+ background:radial-gradient(ellipse,#e0efeb 0%,#92b0b1 42%,#547881 76%);
+ box-shadow:0 0 10px #7b999f63,0 0 23px #b4c9c39e,inset 0 0 13px #ecf5ec;
+}
+.cyber-result .cyber-podium-face{
+ border-color:#8da5a6;
+ background:linear-gradient(90deg,#5e7376,#a7c0bb 50%,#556b70);
+ box-shadow:0 10px 20px #554a3c4d,inset 0 -5px 11px #34484c66;
+}
+.cyber-result .cyber-podium-floor{
+ border-color:#9eb2ac;
+ background:radial-gradient(ellipse,#b0d2c552,transparent 67%);
+ box-shadow:0 0 18px #b2c7bd77;
+}
+.cyber-result .award-roster{
+ border-color:#9e8a71;
+ background:linear-gradient(160deg,#75614d,#5b4838 75%);
+ box-shadow:0 0 0 4px #e4d7c3,0 8px 22px #66523c26,inset 0 0 12px #f4dfc012;
+}
+.cyber-result .award-roster h2{
+ color:#f4d59a;border-bottom-color:#e3c69855;
+}
+.cyber-result .award-roster li{
+ color:#fffaf1;border-color:#a9978080;
+ background:#8b756258;box-shadow:inset 0 1px 4px #d7c5a018;
+}
+.cyber-result .award-member-number{
+ color:#f3d6a5;border-right-color:#d4b78788;
+}
+.cyber-result .award-footer{
+ color:#6b635a;border-top-color:#a9967c68;
+}
+.cyber-result .award-controls{
+ background:#e9ddca9e;
+}
+.cyber-result .award-controls button,.cyber-result .award-tiebreak button{
+ color:#493c2e;border-color:#b6a48c;
+ background:#fffaf2;box-shadow:0 1px 6px #79664d18;
+}
+.cyber-result .award-controls button:hover,.cyber-result .award-tiebreak button:hover{background:#f2e5d2}
+.cyber-result .award-controls button:last-child{
+ color:#fffaf1;background:#64513f;border-color:#64513f;
+}
+.cyber-result .award-tiebreak,.cyber-result .award-tiebreak #tieBox p{color:#493c2e}
+.cyber-result .academic-firework i{box-shadow:0 0 6px #ad905f6b}
+.cyber-result .academic-firework i:nth-child(3n){--spark-color:#779b9d}
+.cyber-result .academic-firework i:nth-child(3n + 1){--spark-color:#c8a56c}
+.cyber-result .academic-firework i:nth-child(3n + 2){--spark-color:#d9c8ad}
