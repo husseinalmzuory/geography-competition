@@ -134,7 +134,7 @@ if(state.index>=state.questions.length){
  <rect x="51" y="210" width="108" height="19" rx="3" fill="url(#academicGoldStem)" stroke="#936326" stroke-width="2.5"/>
  <path d="m105 55 7 14 15 2-11 11 3 15-14-7-14 7 3-15-11-11 15-2Z" fill="#fff3b2" stroke="#b68a37" stroke-width="2"/>
  </svg></div></div>`;
- const celebration=tie?'':`<div class="academic-fireworks" aria-hidden="true">${[0,1,2].map((burst)=>`<div class="academic-firework academic-firework-${burst+1}">${Array.from({length:12},(_,i)=>`<i style="--ray:${i};--delay:${burst*.85}s"></i>`).join('')}</div>`).join('')}</div>`;
+ const celebration=tie?'':`<div class="academic-fireworks" aria-hidden="true">${[0,1,2,3,4].map((burst)=>`<div class="academic-firework academic-firework-${burst+1}">${Array.from({length:12},(_,i)=>`<i style="--ray:${i};--delay:${burst*.85}s"></i>`).join('')}</div>`).join('')}</div>`;
  const winnerList=!tie&&winnerMembers.length?`<section class="award-roster"><h2>ئەندامێن تیما سەرکەفتی</h2><ol>${winnerMembers.map((name,i)=>`<li><span class="award-member-number">${String(i+1).padStart(2,'0')}</span><span>${esc(name)}</span></li>`).join('')}</ol></section>`:'';
  host.innerHTML=`<section class="academic-result" aria-live="polite">
  ${celebration}
