@@ -6,9 +6,9 @@ const KEY='geography-competition-v1';
 const TEAM_ROSTER_VERSION=1;
 const DEFAULT_TEAM_NAMES=["هيزا جوكرافي","دلئ جوكرافي"];
 const DEFAULT_TEAM_MEMBERS=[["پیلان کمال فخر الدین","رێژین فرحان حامد","دیدار خیر الدین نجم الدین","دلڤين نقیب صبری","سفيان حازم خدر","جنان الياس جمعه","شەرمین مصطفى شينو"],["رويدة جاسم عران","نڤار عمران محمد صديق","مینا محمدعلی حازم","دلگه ش أحمد زبير","نەوزاد شاهین طە","رنگين سگڤان محمد","لؤي صدقي محمدسعيد"]];
-const AUDIENCE_QUESTION_VERSION=1;
-const DEFAULT_AUDIENCE_QUESTION='كم يبلغ ارتفاع مدينة دهوك عن مستوى سطح البحر؟';
-const DEFAULT_AUDIENCE_ANSWER='بين 490 و520 مترًا';
+const AUDIENCE_QUESTION_VERSION=2;
+const DEFAULT_AUDIENCE_QUESTION='بلندییا باژێرێ دهۆکێ ژ ئاستێ دەریایێ چەندە؟';
+const DEFAULT_AUDIENCE_ANSWER='د ناڤبەرا 490 و520 مەتران دایە.';
 function fresh(){return {audienceQuestionVersion:AUDIENCE_QUESTION_VERSION,teamRosterVersion:TEAM_ROSTER_VERSION,roundIntro:null,visualIntro:null,speedIntro:null,audience:null,audienceQuestion:DEFAULT_AUDIENCE_QUESTION,audienceAnswer:DEFAULT_AUDIENCE_ANSWER,names:[...DEFAULT_TEAM_NAMES],members:structuredClone(DEFAULT_TEAM_MEMBERS),scores:[0,0],index:-1,resumeIndex:null,questions:structuredClone(defaults),awarded:{},revealed:{},sound:true,choices:{},speedCounts:{},buzzerAwards:{},unlocked:{},bankVersion:BANK_VERSION};}
 let state;try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved&&!saved.bankVersion)saved.bankVersion=1;state=saved&&Array.isArray(saved.questions)&&saved.questions.length&&Array.isArray(saved.names)&&Array.isArray(saved.scores)?{...fresh(),...saved,teamRosterVersion:saved.teamRosterVersion||0,audienceQuestionVersion:saved.audienceQuestionVersion||0}:fresh();}catch{state=fresh();}
 // Update old generic names, preserving names already customized in Settings.
@@ -32,6 +32,8 @@ if(state.audienceQuestionVersion<AUDIENCE_QUESTION_VERSION){
  state.audienceQuestionVersion=AUDIENCE_QUESTION_VERSION;
  save();
 }
+// Answer disclosure is a view state; a restored audience screen starts concealed.
+if(state.audience)state.audience.answerVisible=false;
 // Keep accumulated scores and custom questions; remap progress by question ID once.
 if(state.bankVersion<4){
  const previous=state.questions,active=previous[state.index],finished=state.index>=previous.length;
@@ -133,7 +135,7 @@ function startTimer(){if(interval){remaining=Math.max(0,Math.ceil((deadline-Date
 function redrawQuestion(){const seconds=remaining;stop();render();remaining=seconds;updateTimer();if(remaining===0){$('#startTimer').disabled=true;$('#startTimer').textContent='دەم تەمام بوو';$('#timerStatus').textContent='دەم تەمام بوو';}else if(remaining<30){$('#startTimer').textContent='دووبارە دەستپێکرن';$('#timerStatus').textContent='دەمژمێر راوه‌ستیایە';}}
 // A persistent audience stop between rounds two and three, in both navigation directions.
 function go(index,skipAudience=false,skipSpeedIntro=false,skipVisualIntro=false,skipRoundIntro=false){
- stop();
+ stop();if(state.audience)state.audience.answerVisible=false;
  const target=Math.max(-1,Math.min(index,state.questions.length));
  const current=state.questions[state.index],next=state.questions[target];
  const audience=state.audience;
@@ -181,7 +183,7 @@ function go(index,skipAudience=false,skipSpeedIntro=false,skipVisualIntro=false,
  save();render();
 }
 function openRoundIntro(round,targetIndex){
- stop();
+ stop();if(state.audience)state.audience.answerVisible=false;
  for(const key of ['visualIntro','speedIntro','audience'])if(state[key])state[key].active=false;
  state.roundIntro={active:true,pending:true,round,targetIndex};state.resumeIndex=targetIndex;save();render();
 }
@@ -242,7 +244,7 @@ function renderRoundIntro(){
  if(auction)$('#roundIntroHome').onclick=()=>go(-1);
 }
 function openVisualIntro(targetIndex){
- stop();
+ stop();if(state.audience)state.audience.answerVisible=false;
  if(state.roundIntro)state.roundIntro.active=false;
  if(state.audience)state.audience.active=false;
  if(state.speedIntro)state.speedIntro.active=false;
@@ -300,7 +302,7 @@ function renderVisualIntro(){
  $('#visualIntroHome').onclick=()=>go(-1);
 }
 function openSpeedIntro(targetIndex){
- stop();
+ stop();if(state.audience)state.audience.answerVisible=false;
  if(state.roundIntro)state.roundIntro.active=false;
  if(state.audience){state.audience.active=false;state.audience.pending=false;}
  state.speedIntro={active:true,pending:true,targetIndex};
@@ -384,7 +386,7 @@ function renderSpeedIntro(){
  $('#speedIntroStart').onclick=()=>{if(!intro.active)return;intro.pending=false;intro.active=false;save();go(intro.targetIndex,true,true,true,true);};
  $('#speedIntroPrevious').onclick=()=>{
   if(!intro.active)return;intro.active=false;intro.pending=false;
-  state.audience={questionVisible:false,answerVisible:false,awardedTeam:null,completed:false,...state.audience,active:true,pending:true,targetIndex:intro.targetIndex};
+  state.audience={questionVisible:false,answerVisible:false,awardedTeam:null,completed:false,...state.audience,active:true,pending:true,targetIndex:intro.targetIndex,answerVisible:false};
   state.resumeIndex=intro.targetIndex;save();render();
  };
  $('#speedIntroHome').onclick=()=>go(-1);
@@ -392,7 +394,7 @@ function renderSpeedIntro(){
 function stopAudienceClock(){if(audienceInterval!==null)clearInterval(audienceInterval);audienceInterval=null;}
 function finishAudience(expired=false){
  const audience=state.audience;if(!audience?.active)return;
- stopAudienceClock();
+ stopAudienceClock();audience.answerVisible=false;
  if(expired&&!audience.resolved){audience.expired=true;audience.resolved=true;audience.deadline=null;beep();}
  audience.completed=true;audience.pending=false;audience.active=false;save();
  if(state.questions[audience.targetIndex]?.round===2)openSpeedIntro(audience.targetIndex);
@@ -469,14 +471,16 @@ function renderAudience(){
  <path d="M75 195H525" stroke="#ad8a51" stroke-width="2" stroke-linecap="round"/>
  </svg>
  ${audience.questionVisible?`<div class="audience-question"><h2>${esc(state.audienceQuestion||DEFAULT_AUDIENCE_QUESTION)}</h2><figure class="audience-city-photo"><img src="assets/duhok-city-audience.jpg" width="1200" height="800" alt="إطلالة على مدينة دهوك من جبل زاوا" decoding="async" fetchpriority="high"><figcaption><a href="https://commons.wikimedia.org/wiki/File:Duhok_01.jpg" target="_blank" rel="noopener noreferrer">دهوك · Khoshhat</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></figcaption></figure>
- ${!audience.resolved?`<div id="audienceTimer" class="audience-timer" role="timer" aria-label="دەمێ مایی">${Math.max(0,Math.ceil((audience.deadline-Date.now())/1000))}</div><button id="audienceCorrect" type="button" class="primary">بەرسڤا دروست · هەلبژارتنا تیمێ</button>`:`<p class="audience-answer">${esc(state.audienceAnswer||DEFAULT_AUDIENCE_ANSWER)}</p><p class="audience-awarded" role="status">${awarded?'✓ دوو خاڵ هاتنە بەخشین بۆ '+esc(state.names[audience.awardedTeam]):audience.expired?'دەم تەمام بوو؛ پرسیار سووت و چ خاڵ نەهاتنە بەخشین.':'بەرسڤ دروستە! تیمەکێ ب هەلبژارتنا جەماوەری هەلبژێرە.'}</p>${!awarded&&!audience.expired?`<div class="audience-team-buttons">${state.names.map((name,team)=>`<button type="button" data-audience-team="${team}">＋٢ · ${esc(name)}</button>`).join('')}</div>`:''}` }</div>`:'<button id="audienceShowQuestion" class="primary" type="button">دیارکرنا پرسیارێ و دەستپێکرنا ٣٠ چرکەیان</button>'}
+ ${audience.answerVisible?`<p class="audience-answer">${esc(state.audienceAnswer||DEFAULT_AUDIENCE_ANSWER)}</p>`:'<button id="audienceRevealAnswer" type="button">دیارکرنا بەرسڤێ</button>'}
+ ${!audience.resolved?`<div id="audienceTimer" class="audience-timer" role="timer" aria-label="دەمێ مایی">${Math.max(0,Math.ceil((audience.deadline-Date.now())/1000))}</div><button id="audienceCorrect" type="button" class="primary">بەرسڤا دروست · هەلبژارتنا تیمێ</button>`:`<p class="audience-awarded" role="status">${awarded?'✓ دوو خاڵ هاتنە بەخشین بۆ '+esc(state.names[audience.awardedTeam]):audience.expired?'دەم تەمام بوو؛ پرسیار سووت و چ خاڵ نەهاتنە بەخشین.':'بەرسڤ دروستە! تیمەکێ ب هەلبژارتنا جەماوەری هەلبژێرە.'}</p>${!awarded&&!audience.expired?`<div class="audience-team-buttons">${state.names.map((name,team)=>`<button type="button" data-audience-team="${team}">＋٢ · ${esc(name)}</button>`).join('')}</div>`:''}` }</div>`:'<button id="audienceShowQuestion" class="primary" type="button">دیارکرنا پرسیارێ و دەستپێکرنا ٣٠ چرکەیان</button>'}
  <div class="audience-continue"><button id="audiencePrevious" type="button">یا بەرێ · قۆناغا دووێ</button><button id="audienceContinue" type="button" ${awarded||audience.expired?'':'disabled'}>بەردەوامبوون بۆ قۆناغا سێیێ</button><button id="audienceHome" type="button">لاپەڕا سەرەکی</button></div>
  </section>`;
+ if(audience.questionVisible&&!audience.answerVisible)$('#audienceRevealAnswer').onclick=()=>{audience.answerVisible=true;save();render();};
  if(!audience.questionVisible)$('#audienceShowQuestion').onclick=()=>{if(audience.questionVisible)return;audience.questionVisible=true;if(!audience.resolved)audience.deadline=Date.now()+30000;save();render();};
  if(audience.questionVisible&&!audience.resolved)$('#audienceCorrect').onclick=()=>{
   if(audience.resolved||!audience.active)return;
   if(Date.now()>=audience.deadline){finishAudience(true);return;}
-  stopAudienceClock();audience.resolved=true;audience.answerVisible=true;audience.deadline=null;
+  stopAudienceClock();audience.resolved=true;audience.deadline=null;
   audience.awaitingTeamChoice=true;delete audience.tied;save();render();
  };
  host.querySelectorAll('[data-audience-team]').forEach(button=>button.onclick=()=>{
