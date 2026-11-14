@@ -1253,3 +1253,28 @@ body.viewport-fit.home-view .hero>p:not(.eyebrow){margin:0 auto;padding:0}
 body.viewport-fit.home-view .hero>.actions{margin:0;padding:clamp(3px,.6vh,7px) 0;gap:clamp(8px,1vw,14px)}
 body.viewport-fit.home-view .rounds{flex:none;margin:0;padding:0}
 body.viewport-fit.home-view .roundtile{padding-block:clamp(9px,2vh,22px)}
+
+/* One spacing rhythm across the home groups, including the space below the toolbar. */
+body.viewport-fit.home-view #stage{justify-content:space-between;gap:0;padding:0}
+body.viewport-fit.home-view #stage>.hero{display:contents}
+body.viewport-fit.home-view .hero>.eyebrow{font-size:clamp(18px,1.5vw,25px);line-height:1.45;margin:0 auto;padding:0}
+body.viewport-fit.home-view .hero>h1{flex:none;margin:0 auto}
+body.viewport-fit.home-view .hero>p:not(.eyebrow){font-size:clamp(16px,1.4vw,23px);line-height:1.6;max-width:min(100%,1120px);margin:0 auto;padding:0}
+body.viewport-fit.home-view .hero>.actions{margin:0;padding:0}
+body.viewport-fit.home-view .rounds{flex:none;margin:0}
+body.viewport-fit.home-view #beginNew{position:relative;isolation:isolate;animation:home-start-pulse 3s ease-in-out infinite;box-shadow:0 0 0 5px #efc65b24}
+body.viewport-fit.home-view #beginNew:hover,body.viewport-fit.home-view #beginNew:focus-visible{animation-play-state:paused}
+body.viewport-fit.home-view .gaw-word{animation:home-gaw-drift 7s ease-in-out infinite}
+#homeContours{display:none;position:absolute;inset:-6%;width:112%;height:112%;overflow:hidden;opacity:.26;pointer-events:none;mask-image:radial-gradient(ellipse at center,transparent 12%,#000 85%)}
+body.home-view #homeContours{display:block}
+#homeContours .contour-island{transform-box:fill-box;transform-origin:center;will-change:transform}
+@keyframes home-start-pulse{0%,100%{opacity:.9}50%{opacity:1}}
+@keyframes home-gaw-drift{0%,100%{transform:translateY(0);opacity:1}50%{transform:translateY(-3px);opacity:.87}}
+@media(prefers-reduced-motion:reduce){body.viewport-fit.home-view #beginNew,body.viewport-fit.home-view .gaw-word{animation:none}#homeContours .contour-island{will-change:auto}}
+
+body.viewport-fit.home-view #stage::before{content:"";display:block;flex:none;height:0}
+body.viewport-fit.home-view .roundtile{padding-block:clamp(12px,4vh,44px)}
+
+body.viewport-fit.home-view #beginNew::after{content:"";position:absolute;inset:-5px;border:2px solid #e1b84f99;border-radius:inherit;pointer-events:none;z-index:-1;animation:home-start-ring 3s ease-in-out infinite}
+@keyframes home-start-ring{0%,100%{transform:scale(1);opacity:.25}50%{transform:scale(1.05);opacity:.65}}
+@media(prefers-reduced-motion:reduce){body.viewport-fit.home-view #beginNew::after{animation:none;opacity:.3}}
