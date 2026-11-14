@@ -156,6 +156,7 @@ if(state.index>=state.questions.length){
 </g>
 </defs>
 <!-- Ground glow and layered pedestal -->
+<g class="gaw-pedestal-scale" transform="translate(300 548) scale(.72) translate(-300 -548)">
 <ellipse cx="300" cy="605" rx="250" ry="72" fill="url(#gaw-glow)"/>
 <path d="M100 572v28c0 68 400 68 400 0v-28" fill="url(#gaw-navy)" stroke="#3b536a"/>
 <ellipse cx="300" cy="574" rx="200" ry="52" fill="#172a43" stroke="#42566e" stroke-width="2"/>
@@ -190,6 +191,7 @@ if(state.index>=state.questions.length){
 <circle class="dust" cx="283" cy="537" r="1.0" style="--d:-8.19s"/>
 <circle class="dust" cx="366" cy="544" r="1.55" style="--d:-8.58s"/>
 <circle class="dust" cx="449" cy="551" r="2.1" style="--d:-8.97s"/>
+</g>
 </g>
 <g class="float">
 <!-- Reference-inspired polished gold helix and faceted black stone plinth. -->
