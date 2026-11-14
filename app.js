@@ -409,7 +409,11 @@ function stopAudienceClock(){if(audienceInterval!==null)clearInterval(audienceIn
 function finishAudience(expired=false){
  const audience=state.audience;if(!audience?.active)return;
  stopAudienceClock();audience.answerVisible=false;
- if(expired&&!audience.resolved){audience.expired=true;audience.resolved=true;audience.deadline=null;beep();}
+ if(expired){
+  if(!audience.resolved){audience.expired=true;audience.resolved=true;audience.deadline=null;beep();}
+  // Expiry ends the question only; the presenter controls the next page.
+  save();render();return;
+ }
  audience.completed=true;audience.pending=false;audience.active=false;save();
  if(state.questions[audience.targetIndex]?.round===2)openSpeedIntro(audience.targetIndex);
  else go(audience.targetIndex,true,true,true,true);
@@ -491,9 +495,9 @@ function renderAudience(){
  ${audience.questionVisible?`<div class="audience-question"><h2 id="audienceQuestionTitle">${esc(state.audienceQuestion||DEFAULT_AUDIENCE_QUESTION)}</h2><figure class="audience-city-photo"><img src="assets/duhok-city-audience.jpg" width="1200" height="800" alt="إطلالة على مدينة دهوك من جبل زاوا" decoding="async" fetchpriority="high"></figure>
  ${audience.answerVisible?`<p class="audience-answer">${esc(state.audienceAnswer||DEFAULT_AUDIENCE_ANSWER)}</p>`:''}
  <div class="audience-answer-actions"><button id="audienceRevealAnswer" type="button">${audience.answerVisible?'ڤەشارتنا بەرسڤێ':'دیارکرنا بەرسڤێ'}</button>
- ${!audience.resolved?`<div id="audienceTimer" class="audience-timer" role="timer" aria-label="دەمێ مایی">${Math.max(0,Math.ceil((audience.deadline-Date.now())/1000))}</div><button id="audienceCorrect" type="button" class="primary">بەرسڤا دروست · هەلبژارتنا تیمێ</button>`:''}</div>
+ ${!audience.resolved?`<div id="audienceTimer" class="audience-timer" role="timer" aria-label="دەمێ مایی">${Math.max(0,Math.ceil((audience.deadline-Date.now())/1000))}</div><button id="audienceCorrect" type="button" class="primary">بەرسڤا دروست · هەلبژارتنا تیمێ</button>`:audience.expired?'<div id="audienceTimer" class="audience-timer urgent" role="timer" aria-label="دەم تەمام بوو">0</div>':''}</div>
  ${audience.resolved?`<p class="audience-awarded" role="status">${awarded?(audience.replay?'✓ هەلبژارتنا تیمێ هاتە تۆمارکرن':'✓ دوو خاڵ هاتنە بەخشین بۆ '+esc(state.names[audience.awardedTeam])):audience.expired?'دەم تەمام بوو؛ پرسیار سووت و چ خاڵ نەهاتنە بەخشین.':'بەرسڤ دروستە! تیمەکێ ب هەلبژارتنا جەماوەری هەلبژێرە.'}</p>${!awarded&&!audience.expired?`<div class="audience-team-buttons">${state.names.map((name,team)=>`<button type="button" data-audience-team="${team}">＋٢ · ${esc(name)}</button>`).join('')}</div>`:''}`:''}</div>`:'<button id="audienceShowQuestion" class="primary" type="button">دیارکرنا پرسیارێ و دەستپێکرنا ٣٠ چرکەیان</button>'}
- <div class="audience-continue"><button id="audiencePrevious" type="button">یا بەرێ · قۆناغا دووێ</button><button id="audienceContinue" type="button" ${awarded||audience.expired?'':'disabled'}>بەردەوامبوون بۆ قۆناغا سێیێ</button><button id="audienceHome" type="button">لاپەڕا سەرەکی</button></div>
+ <div class="audience-continue"><button id="audiencePrevious" type="button">یا بەرێ · قۆناغا دووێ</button><button id="audienceContinue" type="button" ${awarded||audience.expired?'':'disabled'}>یا پاشێ ←</button><button id="audienceHome" type="button">لاپەڕا سەرەکی</button></div>
  </section>`;
  if(audience.questionVisible)$('#audienceRevealAnswer').onclick=()=>{audience.answerVisible=!audience.answerVisible;save();render();};
  if(!audience.questionVisible)$('#audienceShowQuestion').onclick=()=>{if(audience.questionVisible)return;audience.questionVisible=true;if(!audience.resolved)audience.deadline=Date.now()+30000;save();render();};
