@@ -1239,3 +1239,17 @@ body.viewport-fit #config form{position:absolute;left:12px;top:12px}
 header>#headerTurn.current-team,header>#headerTurn.current-team.b{background:transparent;border:0;box-shadow:none}
 header>#headerTurn.current-team>strong{background:#edf5f9;border-color:#6896ab;color:#275e79}
 header>#headerTurn.current-team.b>strong{background:#fff6df;border-color:#b99750;color:#805d1f}
+
+/* Home only: edge-to-edge map below the toolbar and distributed vertical spacing. */
+body.viewport-fit.home-view .map-background{inset:var(--toolbar-height) 0 0;background-size:100% 100%,cover;background-position:center,center;background-repeat:no-repeat;border-radius:0}
+body.viewport-fit.home-view>main{max-width:none;width:100%;padding:0 clamp(12px,3vw,48px) clamp(5px,.8vh,9px);gap:0}
+body.viewport-fit.home-view #stage{gap:clamp(6px,1.2vh,16px)}
+body.viewport-fit.home-view #stage>.hero{flex:1 0 auto;display:flex;flex-direction:column;justify-content:space-between;align-items:center;gap:clamp(4px,1vh,12px);padding:0;margin:0;min-width:0}
+body.viewport-fit.home-view .hero>*{flex:none}
+body.viewport-fit.home-view .hero>.eyebrow{margin:0;padding:0}
+body.viewport-fit.home-view .hero>h1{margin:0 auto;padding:0;width:100%}
+body.viewport-fit.home-view .hero .gaw-word{margin:clamp(2px,.5vh,6px) auto 0}
+body.viewport-fit.home-view .hero>p:not(.eyebrow){margin:0 auto;padding:0}
+body.viewport-fit.home-view .hero>.actions{margin:0;padding:clamp(3px,.6vh,7px) 0;gap:clamp(8px,1vw,14px)}
+body.viewport-fit.home-view .rounds{flex:none;margin:0;padding:0}
+body.viewport-fit.home-view .roundtile{padding-block:clamp(9px,2vh,22px)}
